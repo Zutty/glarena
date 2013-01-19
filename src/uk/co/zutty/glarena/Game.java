@@ -3,6 +3,7 @@ package uk.co.zutty.glarena;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
+import org.lwjgl.util.glu.GLU;
 
 import static org.lwjgl.opengl.GL11.*;
 import static uk.co.zutty.glarena.VectorUtils.asFloatBuffer;
@@ -13,7 +14,6 @@ import static uk.co.zutty.glarena.VectorUtils.asFloatBuffer;
  */
 public class Game {
 
-    private static Camera cam;
     //private static float[] lightPosition = {-5f, 3f, 10f, 0.0f};
     private static float[] lightPosition = {-1.0f, 0.0f, 0.0f, 0.0f};
     private static Mesh fighter;
@@ -21,7 +21,6 @@ public class Game {
     private static Skybox skybox;
     private static ShaderProgram shader;
     private static ShaderProgram skyboxShader;
-    private static int diffuseModifierUniform;
     private static float pos;
 
     public static void main(String[] args) {
@@ -43,7 +42,7 @@ public class Game {
 
         skyboxShader = ShaderProgram.build("/shaders/skybox_vertex.glsl", "/shaders/skybox_fragment.glsl");
 
-        setUpCamera();
+        //setUpCamera();
         setUpDisplayLists();
         setUpLighting();
         while (!Display.isCloseRequested()) {
@@ -62,7 +61,7 @@ public class Game {
         fighter = loadMesh("/models/gunship.obj", "/textures/gunship_diffuse.png", "/textures/gunship_diffuse.png");
         earth = loadMesh("/models/planet.obj", "/textures/earth/earth_colour.png", "/textures/earth/earth_specular_alti.png");
 
-        skybox = new Skybox(cam);
+        skybox = new Skybox();
     }
 
     private static Mesh loadMesh(String modelFile, String textureFile, String specularMapFile) {//}, String normalMapFile) {
@@ -74,8 +73,8 @@ public class Game {
     }
 
     private static void checkInput() {
-        cam.processMouse(1, 80, -80);
-        cam.processKeyboard(16, 0.003f, 0.003f, 0.003f);
+        //cam.processMouse(1, 80, -80);
+        //cam.processKeyboard(16, 0.003f, 0.003f, 0.003f);
 
         if (Mouse.isButtonDown(0))
             Mouse.setGrabbed(true);
@@ -93,7 +92,15 @@ public class Game {
 
         glLight(GL_LIGHT0, GL_POSITION, asFloatBuffer(lightPosition));
 
-
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        GLU.gluPerspective(70, (float) Display.getWidth()
+                / (float) Display.getHeight(), 0.03f, 200.0f);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        GLU.gluLookAt(0.0f, 10.0f, 0.0f,
+                10.0f, 0.0f, 10.0f,
+                0.0f, 1.0f, 0.0f);
         glPushMatrix();
 
         // Draw the skybox
@@ -125,9 +132,6 @@ public class Game {
         ShaderProgram.useNone();
 
         glPopMatrix();
-
-        cam.applyModelviewMatrix(true);
-
     }
 
     private static void setUpLighting() {
@@ -143,17 +147,6 @@ public class Game {
         //glEnable(GL_COLOR_MATERIAL);
         //glColorMaterial(GL_FRONT, GL_DIFFUSE);
         glEnable(GL_TEXTURE_2D);
-    }
-
-
-
-    private static void setUpCamera() {
-        cam = new Camera((float) Display.getWidth()
-                / (float) Display.getHeight(), -5f, 3f, 10f);
-        cam.setPitch(5f);
-        cam.setYaw(12f);
-        cam.setFov(70);
-        cam.applyProjectionMatrix();
     }
 
     private static void setUpDisplay() {

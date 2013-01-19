@@ -9,11 +9,8 @@ import static org.lwjgl.opengl.GL13.*;
 public class Skybox {
 
     private int texture;
-    private Camera camera;
 
-    public Skybox(Camera camera) {
-        this.camera = camera;
-
+    public Skybox() {
         texture = TextureLoader.loadCubemap("/textures/skybox/test");
     }
 
@@ -22,7 +19,7 @@ public class Skybox {
         glPushMatrix();
 
         //glLoadIdentity();
-        glTranslatef(camera.getX(), camera.getY(), camera.getZ());
+        //glTranslatef(camera.getX(), camera.getY(), camera.getZ());
         //glActiveTexture(GL_TEXTURE0);
         glDepthMask(false);
         glDisable(GL_DEPTH_TEST);
