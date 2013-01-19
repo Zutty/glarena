@@ -23,23 +23,19 @@ public class Mesh {
     private int vboVertexHandle;
     private int vboTexCoordsHandle;
     private int vboNormalHandle;
-    private int vboTangentHandle;
 
     private int numVertices;
     private int texture;
     private int specularMap;
-    private int normalMap;
     public static final Vector3f V = new Vector3f();
 
-    public Mesh(int texture, int specularMap, int normalMap) {
+    public Mesh(int texture, int specularMap) {
         this.texture = texture;
         this.specularMap = specularMap;
-        this.normalMap = normalMap;
 
         vboVertexHandle = glGenBuffers();
         vboTexCoordsHandle = glGenBuffers();
         vboNormalHandle = glGenBuffers();
-        vboTangentHandle = glGenBuffers();
 
         numVertices = 0;
     }
@@ -56,22 +52,20 @@ public class Mesh {
         bindBuffer(normals, vboNormalHandle);
     }
 
-    public void bindTangents(FloatBuffer tangents) {
-        bindBuffer(tangents, vboTangentHandle);
-    }
-
     protected void bindBuffer(FloatBuffer normals, int handle) {
         glBindBuffer(GL_ARRAY_BUFFER, handle);
         glBufferData(GL_ARRAY_BUFFER, normals, GL_STATIC_DRAW);
     }
 
-    public static Mesh fromModel(Model model, int texture, int specularMap, int normalMap) {
-        Mesh mesh = new Mesh(texture, specularMap, normalMap);
+    public static Mesh fromModel(Model model, int texture, int specularMap) {//}, int normalMap) {
+        Mesh mesh = new Mesh(texture, specularMap);
         mesh.numVertices = model.getFaces().size() * 3;
 
         Vector3f s = new Vector3f(0.0f, 0.0f, 0.0f);
         Vector3f t = new Vector3f(0.0f, 0.0f, 0.0f);
         Vector3f[] sArr = zeroArray(mesh.numVertices);
+
+        /*
         Vector3f[] tArr = zeroArray(mesh.numVertices);
 
         for (Face face : model.getFaces()) {
@@ -112,11 +106,11 @@ public class Mesh {
             Vector3f.add(tArr[idx2], t, tArr[idx2]);
             Vector3f.add(tArr[idx3], t, tArr[idx3]);
         }
-
+                          */
         FloatBuffer vertices = BufferUtils.createFloatBuffer(mesh.numVertices * 3);
         FloatBuffer texCoords = BufferUtils.createFloatBuffer(mesh.numVertices * 2);
         FloatBuffer normals = BufferUtils.createFloatBuffer(mesh.numVertices * 3);
-        FloatBuffer tangents = BufferUtils.createFloatBuffer(mesh.numVertices * 4);
+        //FloatBuffer tangents = BufferUtils.createFloatBuffer(mesh.numVertices * 4);
 
         for (Face face : model.getFaces()) {
             int idx1 = face.getVertices().getA() - 1;
@@ -147,20 +141,18 @@ public class Mesh {
             normals.put(asFloats(n2));
             normals.put(asFloats(n3));
 
-            putTangents(tangents, n1, sArr[idx1], tArr[idx1]);
-            putTangents(tangents, n2, sArr[idx2], tArr[idx2]);
-            putTangents(tangents, n3, sArr[idx3], tArr[idx3]);
+            //putTangents(tangents, n1, sArr[idx1], tArr[idx1]);
+            //putTangents(tangents, n2, sArr[idx2], tArr[idx2]);
+            //putTangents(tangents, n3, sArr[idx3], tArr[idx3]);
         }
 
         vertices.flip();
         texCoords.flip();
         normals.flip();
-        tangents.flip();
 
         mesh.bindVertices(vertices);
         mesh.bindTexCoords(texCoords);
         mesh.bindNormals(normals);
-        mesh.bindTangents(tangents);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         return mesh;
@@ -188,7 +180,7 @@ public class Mesh {
 
         glActiveTexture(GL_TEXTURE1);
         glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, normalMap);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
         glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, EXTTextureEnvCombine.GL_COMBINE_EXT);
         glTexEnvf (GL_TEXTURE_ENV, EXTTextureEnvCombine.GL_COMBINE_RGB_EXT, GL_INCR);
 
@@ -208,13 +200,13 @@ public class Mesh {
         glBindBuffer(GL_ARRAY_BUFFER, vboNormalHandle);
         glNormalPointer(GL_FLOAT, 0, 0L);
         // Tangents
-        glBindBuffer(GL_ARRAY_BUFFER, vboTangentHandle);
-        glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0L);
+        //glBindBuffer(GL_ARRAY_BUFFER, vboTangentHandle);
+        //glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0L);
 
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
-        glEnableVertexAttribArray(3);
+        //glEnableVertexAttribArray(3);
 
         glMaterial(GL_FRONT, GL_DIFFUSE, asFloatBuffer(new float[]{1.0f, 1.0f, 1.0f, 1.0f}));
         glMaterial(GL_FRONT, GL_SPECULAR, asFloatBuffer(new float[]{1.0f, 1.0f, 1.0f, 1.0f}));
@@ -226,7 +218,7 @@ public class Mesh {
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
-        glDisableVertexAttribArray(3);
+        //glDisableVertexAttribArray(3);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
@@ -236,6 +228,6 @@ public class Mesh {
         glDeleteBuffers(vboVertexHandle);
         glDeleteBuffers(vboTexCoordsHandle);
         glDeleteBuffers(vboNormalHandle);
-        glDeleteBuffers(vboTangentHandle);
+        //glDeleteBuffers(vboTangentHandle);
     }
 }

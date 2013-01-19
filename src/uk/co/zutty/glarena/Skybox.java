@@ -14,7 +14,7 @@ public class Skybox {
     public Skybox(Camera camera) {
         this.camera = camera;
 
-        texture = TextureLoader.loadCubemap("C:\\Users\\George\\Java\\3DGame\\assets\\textures\\skybox\\test");
+        texture = TextureLoader.loadCubemap("/textures/skybox/test");
     }
 
     public void draw() {

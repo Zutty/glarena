@@ -15,12 +15,7 @@ public class IOUtils {
     }
 
     public static CharSequence readSource(String filename) {
-        Reader reader;
-        try {
-            reader = new FileReader(filename);
-        } catch (FileNotFoundException e) {
-            return "";
-        }
+        Reader reader = new InputStreamReader(IOUtils.class.getResourceAsStream(filename));
 
         StringBuilder builder = new StringBuilder();
         char[] buffer = new char[1024];

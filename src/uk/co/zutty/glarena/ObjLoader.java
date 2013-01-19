@@ -3,10 +3,7 @@ package uk.co.zutty.glarena;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -52,12 +49,7 @@ public class ObjLoader {
     }
 
     private Iterable<String[]> parse(String filename) {
-        final BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(filename));
-        } catch (FileNotFoundException e) {
-            return Collections.emptyList();
-        }
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
 
         return new Iterable<String[]>() {
             public Iterator<String[]> iterator() {

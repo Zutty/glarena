@@ -2,10 +2,7 @@ package uk.co.zutty.glarena;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static uk.co.zutty.glarena.VectorUtils.asFloatBuffer;
@@ -32,17 +29,19 @@ public class Game {
 
         pos = 0f;
 
+        System.out.println(glGetString(GL_VERSION));
+
         if(!GLContext.getCapabilities().OpenGL20) {
             System.out.println("ONOES!");
             System.exit(1);
         }
 
-        shader = ShaderProgram.build("C:\\Users\\George\\Java\\3DGame\\assets\\vert_norm.glsl", "C:\\Users\\George\\Java\\3DGame\\assets\\frag_norm.glsl");
-        //shader.initUniform("colorMap");
-        //shader.initUniform("specMap");
-        shader.initUniform("normalMap");
+        shader = ShaderProgram.build("/shaders/vertex.glsl", "/shaders/fragment.glsl");
+        shader.initUniform("colorMap");
+        shader.initUniform("specMap");
+        //shader.initUniform("normalMap");
 
-        skyboxShader = ShaderProgram.build("C:\\Users\\George\\Java\\3DGame\\assets\\skybox_vertex.glsl", "C:\\Users\\George\\Java\\3DGame\\assets\\skybox_fragment.glsl");
+        skyboxShader = ShaderProgram.build("/shaders/skybox_vertex.glsl", "/shaders/skybox_fragment.glsl");
 
         setUpCamera();
         setUpDisplayLists();
@@ -60,18 +59,18 @@ public class Game {
     }
 
     private static void setUpDisplayLists() {
-        //fighter = loadMesh("C:\\Users\\George\\Java\\3DGame\\assets\\fighter.obj", "C:\\Users\\George\\Java\\3DGame\\assets\\fighter_tex.png", "C:\\Users\\George\\Java\\3DGame\\assets\\fighter_tex_ao.png", "C:\\Users\\George\\Java\\3DGame\\assets\\fighter_tex_ao.png");
-        earth = loadMesh("C:\\Users\\George\\Java\\3DGame\\assets\\planet.obj", "C:\\Users\\George\\Java\\3DGame\\assets\\textures\\earth\\earth_colour.png", "C:\\Users\\George\\Java\\3DGame\\assets\\textures\\earth\\earth_specular.png", "C:\\Users\\George\\Java\\3DGame\\assets\\textures\\earth\\earth_normal.png");
+        fighter = loadMesh("/models/gunship.obj", "/textures/gunship_diffuse.png", "/textures/gunship_diffuse.png");
+        earth = loadMesh("/models/planet.obj", "/textures/earth/earth_colour.png", "/textures/earth/earth_specular_alti.png");
 
         skybox = new Skybox(cam);
     }
 
-    private static Mesh loadMesh(String modelFile, String textureFile, String specularMapFile, String normalMapFile) {
+    private static Mesh loadMesh(String modelFile, String textureFile, String specularMapFile) {//}, String normalMapFile) {
         Model m = new ObjLoader().loadModel(modelFile);
         int t = TextureLoader.loadTexture(textureFile);
         int sp = TextureLoader.loadTexture(specularMapFile);
-        int n = TextureLoader.loadTexture(normalMapFile);
-        return Mesh.fromModel(m, t, sp, n);
+        //int n = TextureLoader.loadTexture(normalMapFile);
+        return Mesh.fromModel(m, t, sp);
     }
 
     private static void checkInput() {
@@ -91,7 +90,6 @@ public class Game {
 
     private static void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        cam.applyModelviewMatrix(true);
 
         glLight(GL_LIGHT0, GL_POSITION, asFloatBuffer(lightPosition));
 
@@ -104,11 +102,11 @@ public class Game {
 
         // Draw the rest of the scene
         shader.use();
-        //shader.setUniform("colorMap", 0);
-        //shader.setUniform("specMap", 1);
-        shader.setUniform("normalMap", 1);
+        shader.setUniform("colorMap", 0);
+        shader.setUniform("specMap", 1);
+        //shader.setUniform("normalMap", 1);
 
-        GL20.glBindAttribLocation(shader.getHandle(), 3, "vTangent");
+        //GL20.glBindAttribLocation(shader.getHandle(), 3, "vTangent");
 
         glPushMatrix();
         glRotatef(23.4f, 0, 0, 1);
@@ -116,17 +114,20 @@ public class Game {
         earth.render();
         glPopMatrix();
 
-        /*
         glPushMatrix();
-        glTranslatef(10f * (float) Math.cos(pos * Math.PI), 0f, 10f * (float) Math.sin(pos * Math.PI));
-        glRotatef(pos * 180, 0, -1, 0);
-        glRotatef(30f, 0, 0, 1);
+        //glTranslatef(10f * (float) Math.cos(pos * Math.PI), 0f, 10f * (float) Math.sin(pos * Math.PI));
+        glTranslatef(10f, 0f, 10f);
+        //glRotatef(pos * 180, 0, -1, 0);
+        //glRotatef(30f, 0, 0, 1);
         fighter.render();
-        glPopMatrix();*/
+        glPopMatrix();
 
         ShaderProgram.useNone();
 
         glPopMatrix();
+
+        cam.applyModelviewMatrix(true);
+
     }
 
     private static void setUpLighting() {
@@ -160,7 +161,12 @@ public class Game {
             Display.setDisplayMode(new DisplayMode(1024, 768));
             Display.setVSyncEnabled(true);
             Display.setTitle("3D Game");
-            Display.create();
+
+            PixelFormat pixelFormat = new PixelFormat();
+            ContextAttribs contextAtrributes = new ContextAttribs(3, 2);
+            contextAtrributes.withForwardCompatible(true);
+            contextAtrributes.withProfileCore(true);
+            Display.create(pixelFormat, contextAtrributes);
         } catch (LWJGLException e) {
             System.err.println("The display wasn't initialized correctly. :(");
             Display.destroy();

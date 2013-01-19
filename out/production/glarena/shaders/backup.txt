@@ -1,0 +1,37 @@
+
+uniform sampler2D normalMap;
+
+varying vec3 lightVec;
+varying vec3 halfVec;
+varying vec3 eyeVec;
+
+
+/*
+	vec3 normal = 2.0 * texture2D (normalMap, gl_TexCoord[0].st).rgb - 1.0;
+	normal = normalize(normal);
+	
+	float lamberFactor = max (dot (lightVec, normal), 0.0);
+	vec4 diffuseMaterial = 0.0;
+	vec4 diffuseLight = 0.0;
+	
+	vec4 specularMaterial;
+	vec4 specularLight;
+	float shininess;
+  
+	vec4 ambientLight = gl_LightSource[0].ambient;
+	
+	if (lamberFactor > 0.0) {
+		diffuseMaterial = texture2D(colorMap, gl_TexCoord[0].st);
+		diffuseLight  = gl_LightSource[0].diffuse;
+		
+		specularMaterial =  vec4(1.0);
+		specularLight = gl_LightSource[0].specular;
+		shininess = pow(max(dot(halfVec, normal), 0.0), 2.0);
+		 
+		gl_FragColor = diffuseMaterial * diffuseLight * lamberFactor;
+		gl_FragColor +=	specularMaterial * specularLight * shininess;
+	
+	}
+	
+	gl_FragColor +=	ambientLight;
+	      */

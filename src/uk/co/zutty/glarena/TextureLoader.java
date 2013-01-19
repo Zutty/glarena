@@ -23,7 +23,7 @@ public class TextureLoader {
         glBindTexture(GL_TEXTURE_2D, texture);
         InputStream in = null;
         try {
-            in = new FileInputStream(location);
+            in = TextureLoader.class.getResourceAsStream(location);
             PNGDecoder decoder = new PNGDecoder(in);
             ByteBuffer buffer = BufferUtils.createByteBuffer(4 * decoder.getWidth() * decoder.getHeight());
             decoder.decode(buffer, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
@@ -73,12 +73,7 @@ public class TextureLoader {
     }
 
     public static ByteBuffer loadPNG(String filename) {
-        try {
-            return loadPNG(new FileInputStream(filename));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            return null;
-        }
+        return loadPNG(TextureLoader.class.getResourceAsStream(filename));
     }
 
     public static ByteBuffer loadPNG(InputStream in) {
