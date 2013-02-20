@@ -32,8 +32,8 @@ public class Shader {
     public void compile() {
         glCompileShader(shader);
 
-        if (glGetShader(shader, GL_COMPILE_STATUS) == GL_FALSE) {
-            int len = glGetShader(shader, GL_INFO_LOG_LENGTH);
+        if (glGetShaderi(shader, GL_COMPILE_STATUS) == GL_FALSE) {
+            int len = glGetShaderi(shader, GL_INFO_LOG_LENGTH);
             String msg = glGetShaderInfoLog(shader, len);
             throw new GameException("Failed to compile shader: " + msg);
         }
