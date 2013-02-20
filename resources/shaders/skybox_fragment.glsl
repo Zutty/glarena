@@ -1,3 +1,5 @@
+#version 150
+
 uniform samplerCube cubemap;
 
 void main () {

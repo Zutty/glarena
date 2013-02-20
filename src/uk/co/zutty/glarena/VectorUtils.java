@@ -34,4 +34,10 @@ public class VectorUtils {
     public static float[] asFloats(Vector2f v) {
         return new float[]{v.x, 1 - v.y};
     }
+
+    public static void put(FloatBuffer buffer, Vector3f vector3f) {
+        buffer.put(vector3f.x);
+        buffer.put(vector3f.y);
+        buffer.put(vector3f.z);
+    }
 }

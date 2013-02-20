@@ -1,5 +1,9 @@
 package uk.co.zutty.glarena;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Matrix4f;
+
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +17,7 @@ public class ShaderProgram {
 
     private int shaderProgram;
     private Map<String, Integer> uniforms;
+    private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public ShaderProgram() {
         shaderProgram = glCreateProgram();
@@ -63,6 +68,12 @@ public class ShaderProgram {
         glUniform1i(getUniformLocation(name), value);
     }
 
+    public void setUniform(String name, Matrix4f value) {
+        value.store(matrixBuffer);
+        matrixBuffer.flip();
+        glUniformMatrix4(getUniformLocation(name), false, matrixBuffer);
+    }
+
     protected int getUniformLocation(String name) {
         if(!uniforms.containsKey(name)) {
             throw new GameException("Uniform '" + name + "' not initialised.");
@@ -70,9 +81,21 @@ public class ShaderProgram {
         return uniforms.get(name);
     }
 
+    public void bindAttribLocation(int index, String name) {
+        glBindAttribLocation(shaderProgram, index, name);
+    }
+
     @Override
     protected void finalize() throws Throwable {
+        super.finalize();
         glDeleteProgram(shaderProgram);
+        //GL20.glUseProgram(0);
+        //GL20.glDetachShader(pId, vsId);
+        //GL20.glDetachShader(pId, fsId);
+
+        //GL20.glDeleteShader();
+        //GL20.glDeleteShader(fsId);
+        //GL20.glDeleteProgram(pId);
     }
 
     public static ShaderProgram build(String vertexFile, String fragmentFile) {
@@ -88,8 +111,8 @@ public class ShaderProgram {
         fragmentShader.compile();
         shader.attachShader(fragmentShader);
 
-        shader.link();
-        shader.validate();
+        //shader.link();
+        //shader.validate();
 
         return shader;
     }

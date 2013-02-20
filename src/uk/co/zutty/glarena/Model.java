@@ -15,47 +15,28 @@ import java.util.List;
  */
 public class Model {
 
-    private final List<Vector3f> vertices;
-    private final List<Vector3f> normals;
-    private final List<Face> faces;
-    private final List<Vector2f> texCoords;
+    private List<Vertex> vertices;
+    private List<Short> indeces;
 
     public Model() {
-        vertices = new ArrayList<Vector3f>();
-        normals = new ArrayList<Vector3f>();
-        faces = new ArrayList<Face>();
-        texCoords = new ArrayList<Vector2f>();
+        vertices = new ArrayList<Vertex>();
+        indeces = new ArrayList<Short>();
     }
 
-    public void addVertex(Vector3f vertex) {
+    public int addVertex(Vertex vertex) {
         vertices.add(vertex);
+        return vertices.size() - 1;
     }
 
-    public void addNormal(Vector3f normal) {
-        normals.add(normal);
+    public void addIndex(int index) {
+        indeces.add((short)index);
     }
 
-    public void addFace(Face face) {
-        faces.add(face);
+    public List<Vertex> getVertices() {
+        return vertices;
     }
 
-    public void addTexCoord(Vector2f texCoord) {
-        texCoords.add(texCoord);
-    }
-
-    public Vector3f getVertex(int idx) {
-        return vertices.get(idx);
-    }
-
-    public Vector3f getNormal(int idx) {
-        return normals.get(idx);
-    }
-
-    public Vector2f getTexCoord(int idx) {
-        return texCoords.get(idx);
-    }
-
-    public List<Face> getFaces() {
-        return faces;
+    public List<Short> getIndeces() {
+        return indeces;
     }
 }

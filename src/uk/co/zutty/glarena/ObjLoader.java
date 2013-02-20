@@ -4,8 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.*;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,30 +13,38 @@ public class ObjLoader {
     public Model loadModel(String filename) {
         Model m = new Model();
 
+        List<Vector3f> positions = new ArrayList<Vector3f>();
+        List<Vector3f> normals = new ArrayList<Vector3f>();
+        List<Vector2f> texCoords = new ArrayList<Vector2f>();
+        Map<String, Integer> inverseIndex = new HashMap<String, Integer>();
+
         for(String[] line: parse(filename)) {
             if(line[0].equals("v")) {
-                m.addVertex(parseVector3f(line));
+                positions.add(parseVector3f(line));
             } else if(line[0].equals("vn")) {
-                m.addNormal(parseVector3f(line));
-            } else if(line[0].equals("f")) {
-                int a = Integer.valueOf(line[1].split("/")[0]);
-                int b = Integer.valueOf(line[2].split("/")[0]);
-                int c = Integer.valueOf(line[3].split("/")[0]);
-                Vector3i verts = new Vector3i(a, b, c);
-
-                int d = Integer.valueOf(line[1].split("/")[1]);
-                int e = Integer.valueOf(line[2].split("/")[1]);
-                int f = Integer.valueOf(line[3].split("/")[1]);
-                Vector3i texCoords = new Vector3i(d, e, f);
-
-                int g = Integer.valueOf(line[1].split("/")[2]);
-                int h = Integer.valueOf(line[2].split("/")[2]);
-                int i = Integer.valueOf(line[3].split("/")[2]);
-                Vector3i norms = new Vector3i(g, h, i);
-
-                m.addFace(new Face(norms, texCoords, verts));
+                normals.add(parseVector3f(line));
             } else if(line[0].equals("vt")) {
-                m.addTexCoord(new Vector2f(Float.valueOf(line[1]), Float.valueOf(line[2])));
+                texCoords.add(parseVector2f(line));
+            } else if(line[0].equals("f")) {
+                for(int i = 1; i < line.length; i++) {
+                    String vertexTriple = line[i];
+                    if(!inverseIndex.containsKey(vertexTriple))  {
+                        // Format is pos/tex/norm
+                        String[] vtParts = vertexTriple.split("/");
+                        int positionIdx = Integer.valueOf(vtParts[0]);
+                        int texCoordIdx = Integer.valueOf(vtParts[1]);
+                        int normalIdx = Integer.valueOf(vtParts[2]);
+
+                        Vertex v = new Vertex();
+                        v.setPosition(positions.get(positionIdx - 1));
+                        v.setTexCoord(texCoords.get(texCoordIdx - 1));
+                        v.setNormal(normals.get(normalIdx - 1));
+
+                        inverseIndex.put(vertexTriple, m.addVertex(v));
+                    }
+
+                    m.addIndex(inverseIndex.get(vertexTriple));
+                }
             }
         }
 
@@ -46,6 +53,9 @@ public class ObjLoader {
 
     private Vector3f parseVector3f(String[] line) {
         return new Vector3f(Float.valueOf(line[1]), Float.valueOf(line[2]), Float.valueOf(line[3]));
+    }
+    private Vector2f parseVector2f(String[] line) {
+        return new Vector2f(Float.valueOf(line[1]), 1-Float.valueOf(line[2]));
     }
 
     private Iterable<String[]> parse(String filename) {
