@@ -1,5 +1,7 @@
 package uk.co.zutty.glarena;
 
+import org.lwjgl.opengl.GL20;
+
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 import static uk.co.zutty.glarena.util.IOUtils.readSource;
@@ -11,14 +13,14 @@ public class Shader {
 
     static enum Type { VERTEX, FRAGMENT }
 
-    private int shader;
+    private int glShader;
 
     public Shader(Type type) {
-        shader = glCreateShader(type == Type.VERTEX ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+        glShader = glCreateShader(type == Type.VERTEX ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
     }
 
-    int getHandle() {
-        return shader;
+    public int getGlObject() {
+        return glShader;
     }
 
     public void loadSource(String filename) {
@@ -26,22 +28,20 @@ public class Shader {
     }
 
     public void setSource(CharSequence source) {
-        glShaderSource(shader, source);
+        glShaderSource(glShader, source);
     }
 
     public void compile() {
-        glCompileShader(shader);
+        glCompileShader(glShader);
 
-        if (glGetShaderi(shader, GL_COMPILE_STATUS) == GL_FALSE) {
-            int len = glGetShaderi(shader, GL_INFO_LOG_LENGTH);
-            String msg = glGetShaderInfoLog(shader, len);
+        if (glGetShaderi(glShader, GL_COMPILE_STATUS) == GL_FALSE) {
+            int len = glGetShaderi(glShader, GL_INFO_LOG_LENGTH);
+            String msg = glGetShaderInfoLog(glShader, len);
             throw new GameException("Failed to compile shader: " + msg);
         }
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        glDeleteShader(shader);
+    public void destroy() {
+        glDeleteShader(glShader);
     }
 }

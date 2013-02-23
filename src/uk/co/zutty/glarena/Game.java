@@ -161,7 +161,7 @@ public class Game {
                 modelMatrix, modelMatrix);
 
         // Upload matrices to the uniform variables
-        GL20.glUseProgram(shader.getHandle());
+        GL20.glUseProgram(shader.getGlObject());
 
         shader.setUniform("projectionMatrix", projectionMatrix);
         shader.setUniform("viewMatrix", viewMatrix);
@@ -194,38 +194,9 @@ public class Game {
     }
 
     private void destroyOpenGL() {
-        // Delete the texture
-        //GL11.glDeleteTextures(texIds[0]);
-        //GL11.glDeleteTextures(texIds[1]);
+        shader.destroy();
 
-        // Delete the shaders
-        GL20.glUseProgram(0);
-        //GL20.glDetachShader(shader.getHandle(), vsId);
-        //GL20.glDetachShader(shader.getHandle(), fsId);
-
-        ///GL20.glDeleteShader(vsId);
-        //GL20.glDeleteShader(fsId);
-        GL20.glDeleteProgram(shader.getHandle());
-
-        // Select the VAO
-        //GL30.glBindVertexArray(ftvvaoId);
-
-        // Disable the VBO index from the VAO attributes list
-        GL20.glDisableVertexAttribArray(0);
-        GL20.glDisableVertexAttribArray(1);
-        GL20.glDisableVertexAttribArray(2);
-
-        // Delete the vertex VBO
-        //GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-        //GL15.glDeleteBuffers(vboId);
-
-        // Delete the index VBO
-        //GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
-        //GL15.glDeleteBuffers(vboiId);
-
-        // Delete the VAO
-        GL30.glBindVertexArray(0);
-        //GL30.glDeleteVertexArrays(vaoId);
+        cube.destroy();
 
         this.exitOnGLError("destroyOpenGL");
 

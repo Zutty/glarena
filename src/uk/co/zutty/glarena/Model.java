@@ -2,10 +2,12 @@ package uk.co.zutty.glarena;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
+import org.lwjgl.util.vector.Matrix4f;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static uk.co.zutty.glarena.VectorUtils.asFloats;
 
 /**
@@ -13,14 +15,15 @@ import static uk.co.zutty.glarena.VectorUtils.asFloats;
  */
 public class Model {
 
-    private int vaoId;
-    private int iboId;
+    private int glVao;
+    private int glVertexVbo;
+    private int glIndexVbo;
 
     private int numIndeces;
-    private int texture;
+    private int glTexture;
 
     public Model(int texture) {
-        this.texture = texture;
+        this.glTexture = texture;
 
         numIndeces = 0;
     }
@@ -43,11 +46,11 @@ public class Model {
         vertexBuffer.flip();
         indexBuffer.flip();
 
-        model.vaoId = GL30.glGenVertexArrays();
-        GL30.glBindVertexArray(model.vaoId);
+        model.glVao = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(model.glVao);
 
-        int vboId = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
+        model.glVertexVbo = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, model.glVertexVbo);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STREAM_DRAW);
 
         GL20.glVertexAttribPointer(0, Vertex.POSITION_ELEMENTS, GL11.GL_FLOAT, false, Vertex.STRIDE, Vertex.POSITION_OFFSET);
@@ -57,8 +60,8 @@ public class Model {
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         GL30.glBindVertexArray(0);
 
-        model.iboId = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, model.iboId);
+        model.glIndexVbo = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, model.glIndexVbo);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -68,7 +71,7 @@ public class Model {
     public void render() {
         // Bind the texture
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTexture);
         //glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, EXTTextureEnvCombine.GL_COMBINE_EXT);
         //glTexEnvf (GL_TEXTURE_ENV, EXTTextureEnvCombine.GL_COMBINE_RGB_EXT, GL_INCR);
 
@@ -79,13 +82,13 @@ public class Model {
         //glTexEnvf (GL_TEXTURE_ENV, EXTTextureEnvCombine.GL_COMBINE_RGB_EXT, GL_INCR);
 
 // Bind to the VAO that has all the information about the vertices
-        GL30.glBindVertexArray(vaoId);
+        GL30.glBindVertexArray(glVao);
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
 
 // Bind to the index VBO that has all the information about the order of the vertices
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, iboId);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, glIndexVbo);
 
 // Draw the vertices
         GL11.glDrawElements(GL11.GL_TRIANGLES, numIndeces, GL11.GL_UNSIGNED_SHORT, 0);
@@ -98,12 +101,23 @@ public class Model {
         GL30.glBindVertexArray(0);
     }
 
-    /*@Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        //glDeleteBuffers(vboVertexHandle);
-        //glDeleteBuffers(vboTexCoordsHandle);
-        //glDeleteBuffers(vboNormalHandle);
-        //glDeleteBuffers(vboTangentHandle);
-    } */
+    public void destroy() {
+        // Delete texture
+        GL11.glDeleteTextures(glTexture);
+
+        // Delete the mesh
+        GL30.glBindVertexArray(glVao);
+
+        // Delete the vertex VBO
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        GL15.glDeleteBuffers(glVertexVbo);
+
+        // Delete the index VBO
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+        GL15.glDeleteBuffers(glIndexVbo);
+
+        // Delete the VAO
+        GL30.glBindVertexArray(0);
+        GL30.glDeleteVertexArrays(glVao);
+    }
 }

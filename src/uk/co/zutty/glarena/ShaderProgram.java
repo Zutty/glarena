@@ -15,33 +15,36 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class ShaderProgram {
 
-    private int shaderProgram;
-    private Map<String, Integer> uniforms;
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
+    private int glProgram;
+    private Shader vertexShader;
+    private Shader fragmentShader;
+    private Map<String, Integer> uniforms;
+
     public ShaderProgram() {
-        shaderProgram = glCreateProgram();
+        glProgram = glCreateProgram();
         uniforms = new HashMap<String, Integer>();
     }
 
-    int getHandle() {
-        return shaderProgram;
+    public int getGlObject() {
+        return glProgram;
     }
 
     public void attachShader(Shader shader) {
-        glAttachShader(shaderProgram, shader.getHandle());
+        glAttachShader(glProgram, shader.getGlObject());
     }
 
     public void link() {
-        glLinkProgram(shaderProgram);
+        glLinkProgram(glProgram);
     }
 
     public void validate() {
-        glValidateProgram(shaderProgram);
+        glValidateProgram(glProgram);
     }
 
     public void use() {
-        glUseProgram(shaderProgram);
+        glUseProgram(glProgram);
     }
 
     public static void useNone() {
@@ -49,7 +52,7 @@ public class ShaderProgram {
     }
 
     public void initUniform(String name) {
-        int loc = glGetUniformLocation(shaderProgram, name);
+        int loc = glGetUniformLocation(glProgram, name);
         if(loc < 0) {
             throw new GameException("Uniform '" + name + "' not found.");
         }
@@ -82,20 +85,25 @@ public class ShaderProgram {
     }
 
     public void bindAttribLocation(int index, String name) {
-        glBindAttribLocation(shaderProgram, index, name);
+        glBindAttribLocation(glProgram, index, name);
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        glDeleteProgram(shaderProgram);
-        //GL20.glUseProgram(0);
-        //GL20.glDetachShader(pId, vsId);
-        //GL20.glDetachShader(pId, fsId);
+    public void destroy() {
+        use();
 
-        //GL20.glDeleteShader();
-        //GL20.glDeleteShader(fsId);
-        //GL20.glDeleteProgram(pId);
+        GL20.glDetachShader(glProgram, vertexShader.getGlObject());
+        GL20.glDetachShader(glProgram, fragmentShader.getGlObject());
+
+        vertexShader.destroy();
+        fragmentShader.destroy();
+        GL20.glDeleteProgram(glProgram);
+
+        // TODO we don't know that these are 0, 1, and 2. Perhaps tie to bindAttribLocation.
+        GL20.glDisableVertexAttribArray(0);
+        GL20.glDisableVertexAttribArray(1);
+        GL20.glDisableVertexAttribArray(2);
+
+        useNone();
     }
 
     public static ShaderProgram build(String vertexFile, String fragmentFile) {
@@ -105,11 +113,13 @@ public class ShaderProgram {
         vertexShader.loadSource(vertexFile);
         vertexShader.compile();
         shader.attachShader(vertexShader);
+        shader.vertexShader = vertexShader;
 
         Shader fragmentShader = new Shader(Shader.Type.FRAGMENT);
         fragmentShader.loadSource(fragmentFile);
         fragmentShader.compile();
         shader.attachShader(fragmentShader);
+        shader.fragmentShader = fragmentShader;
 
         //shader.link();
         //shader.validate();
