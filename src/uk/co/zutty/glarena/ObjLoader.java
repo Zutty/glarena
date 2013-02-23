@@ -10,8 +10,8 @@ import java.util.*;
  * Created with IntelliJ IDEA.
  */
 public class ObjLoader {
-    public Model loadModel(String filename) {
-        Model m = new Model();
+    public Mesh loadModel(String filename) {
+        Mesh m = new Mesh();
 
         List<Vector3f> positions = new ArrayList<Vector3f>();
         List<Vector3f> normals = new ArrayList<Vector3f>();

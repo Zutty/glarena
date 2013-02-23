@@ -13,7 +13,7 @@ public class Entity {
     private float y;
     private float z;
 
-    private Mesh mesh;
+    private Model model;
 
     public void render() {
 

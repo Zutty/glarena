@@ -26,7 +26,7 @@ public class Game {
     private Vector3f modelAngle = null;
     private Vector3f modelScale = null;
     private Vector3f cameraPos = null;
-    private Mesh cube;
+    private Model cube;
 
     public Game() {
         // Initialize OpenGL (Display)
@@ -97,7 +97,7 @@ public class Game {
 
         this.exitOnGLError("setupQuad");
 
-        cube = Mesh.fromModel(new ObjLoader().loadModel("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
+        cube = Model.fromMesh(new ObjLoader().loadModel("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
     }
 
     private void setupShaders() {
