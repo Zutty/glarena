@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static uk.co.zutty.glarena.util.IOUtils.readSource;
 
 /**
- * Created with IntelliJ IDEA.
+ * Represents a shader object in the OpenGL context.
  */
 public class Shader {
 

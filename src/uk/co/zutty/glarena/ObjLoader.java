@@ -7,10 +7,10 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
+ * Loader for wavefront OBJ model data.
  */
 public class ObjLoader {
-    public Mesh loadModel(String filename) {
+    public Mesh loadMesh(String filename) {
         Mesh m = new Mesh();
 
         List<Vector3f> positions = new ArrayList<Vector3f>();

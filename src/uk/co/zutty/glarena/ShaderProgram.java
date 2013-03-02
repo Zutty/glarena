@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * Created with IntelliJ IDEA.
+ * Represents a shader program in the OpenGL context.
  */
 public class ShaderProgram {
 

@@ -8,10 +8,9 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static uk.co.zutty.glarena.VectorUtils.asFloats;
 
 /**
- * Created with IntelliJ IDEA.
+ * Represents a model stored on the GPU that can be rendered.
  */
 public class Model {
 
@@ -19,23 +18,23 @@ public class Model {
     private int glVao;
     private int glVertexVbo;
     private int glIndexVbo;
-    private int numIndeces;
+    private int numIndices;
     private int glTexture;
 
     public Model(int texture, ShaderProgram shader) {
         this.glTexture = texture;
 
-        numIndeces = 0;
+        numIndices = 0;
 
         this.shader = shader;
     }
 
     public static Model fromMesh(Mesh mesh, int texture, ShaderProgram shader) {
         Model model = new Model(texture, shader);
-        model.numIndeces = mesh.getIndices().size();
+        model.numIndices = mesh.getIndices().size();
 
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(mesh.getVertices().size() * Vertex.STRIDE);
-        ShortBuffer indexBuffer = BufferUtils.createShortBuffer(model.numIndeces);
+        ShortBuffer indexBuffer = BufferUtils.createShortBuffer(model.numIndices);
 
         for (Vertex vertex: mesh.getVertices()) {
             vertex.put(vertexBuffer);
@@ -100,7 +99,7 @@ public class Model {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, glIndexVbo);
 
 // Draw the vertices
-        GL11.glDrawElements(GL11.GL_TRIANGLES, numIndeces, GL11.GL_UNSIGNED_SHORT, 0);
+        GL11.glDrawElements(GL11.GL_TRIANGLES, numIndices, GL11.GL_UNSIGNED_SHORT, 0);
 
 // Put everything back to default (deselect)
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);

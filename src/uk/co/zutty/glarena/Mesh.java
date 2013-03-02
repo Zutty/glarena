@@ -7,11 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: George
- * Date: 02/06/12
- * Time: 14:51
- * To change this template use File | Settings | File Templates.
+ * Represents the raw data for a 3D mesh
  */
 public class Mesh {
 

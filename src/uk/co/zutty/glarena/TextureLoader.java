@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL13.*;
 import static uk.co.zutty.glarena.util.IOUtils.closeSilently;
 
 /**
- * Created with IntelliJ IDEA.
+ * Loader for PNG format textures.
  */
 public class TextureLoader {
     public static int loadTexture(String location) {

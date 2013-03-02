@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 import java.nio.FloatBuffer;
 
 /**
- * Vertex definition
+ * Vertex definition for interleaved VBOs.
  */
 public class Vertex {
 
