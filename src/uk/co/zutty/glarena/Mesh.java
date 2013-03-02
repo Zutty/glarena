@@ -16,11 +16,11 @@ import java.util.List;
 public class Mesh {
 
     private List<Vertex> vertices;
-    private List<Short> indeces;
+    private List<Short> indices;
 
     public Mesh() {
         vertices = new ArrayList<Vertex>();
-        indeces = new ArrayList<Short>();
+        indices = new ArrayList<Short>();
     }
 
     public int addVertex(Vertex vertex) {
@@ -29,14 +29,14 @@ public class Mesh {
     }
 
     public void addIndex(int index) {
-        indeces.add((short)index);
+        indices.add((short)index);
     }
 
     public List<Vertex> getVertices() {
         return vertices;
     }
 
-    public List<Short> getIndeces() {
-        return indeces;
+    public List<Short> getIndices() {
+        return indices;
     }
 }

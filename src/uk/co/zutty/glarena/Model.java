@@ -32,7 +32,7 @@ public class Model {
 
     public static Model fromMesh(Mesh mesh, int texture, ShaderProgram shader) {
         Model model = new Model(texture, shader);
-        model.numIndeces = mesh.getIndeces().size();
+        model.numIndeces = mesh.getIndices().size();
 
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(mesh.getVertices().size() * Vertex.STRIDE);
         ShortBuffer indexBuffer = BufferUtils.createShortBuffer(model.numIndeces);
@@ -41,7 +41,7 @@ public class Model {
             vertex.put(vertexBuffer);
         }
 
-         for(short index: mesh.getIndeces()) {
+         for(short index: mesh.getIndices()) {
             indexBuffer.put(index);
         }
 
