@@ -21,12 +21,8 @@ public class Game {
 
     private Matrix4f projectionMatrix = null;
     private Matrix4f viewMatrix = null;
-    private Matrix4f modelMatrix = null;
-    private Vector3f modelPos = null;
-    private Vector3f modelAngle = null;
-    private Vector3f modelScale = null;
     private Vector3f cameraPos = null;
-    private Model cube;
+    private Entity entity;
 
     public Game() {
         // Initialize OpenGL (Display)
@@ -37,8 +33,8 @@ public class Game {
         glCullFace(GL_BACK);
         glClearDepth(1);
 
-        this.setupQuad();
         this.setupShaders();
+        this.setupQuad();
         this.setupMatrices();
 
         Display.setVSyncEnabled(true);
@@ -57,7 +53,6 @@ public class Game {
     private void setupMatrices() {
         projectionMatrix = MatrixUtils.frustum(Display.getWidth(), Display.getHeight(), 60, 0.1f, 100.0f);
         viewMatrix = new Matrix4f();
-        modelMatrix = new Matrix4f();
     }
 
     private void setupOpenGL() {
@@ -88,16 +83,11 @@ public class Game {
     }
 
     private void setupQuad() {
-
-        // Set the default quad rotation, scale and position values
-        modelPos = new Vector3f(0, 0, -1);
-        modelAngle = new Vector3f(0, 0, 0);
-        modelScale = new Vector3f(1, 1, 1);
         cameraPos = new Vector3f(0, 0, 0);
 
         this.exitOnGLError("setupQuad");
 
-        cube = Model.fromMesh(new ObjLoader().loadModel("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
+        entity = new Gunship(shader);
     }
 
     private void setupShaders() {
@@ -139,35 +129,13 @@ public class Game {
             cameraPos.y += 0.01f;
         }
 
-        //modelAngle.x += 0.5f;
-        modelAngle.y += 1f;
-        //modelAngle.z += 0.7f;
+        entity.update();
 
         //-- Update matrices
         // Reset view and model matrices
         viewMatrix = MatrixUtils.lookAt(cameraPos.x, cameraPos.y, cameraPos.z,
                 0.0f, 0.0f, -1f,
                 0.0f, 1.0f, 0.0f);
-        modelMatrix = new Matrix4f();
-
-        // Scale, translate and rotate model
-        Matrix4f.scale(modelScale, modelMatrix, modelMatrix);
-        Matrix4f.translate(modelPos, modelMatrix, modelMatrix);
-        Matrix4f.rotate(degreesToRadians(modelAngle.z), new Vector3f(0, 0, 1),
-                modelMatrix, modelMatrix);
-        Matrix4f.rotate(degreesToRadians(modelAngle.y), new Vector3f(0, 1, 0),
-                modelMatrix, modelMatrix);
-        Matrix4f.rotate(degreesToRadians(modelAngle.x), new Vector3f(1, 0, 0),
-                modelMatrix, modelMatrix);
-
-        // Upload matrices to the uniform variables
-        GL20.glUseProgram(shader.getGlObject());
-
-        shader.setUniform("projectionMatrix", projectionMatrix);
-        shader.setUniform("viewMatrix", viewMatrix);
-        shader.setUniform("modelMatrix", modelMatrix);
-
-        GL20.glUseProgram(0);
 
         this.exitOnGLError("logicCycle");
     }
@@ -177,7 +145,7 @@ public class Game {
 
         shader.use();
 
-        cube.render();
+        entity.render(projectionMatrix, viewMatrix);
 
         ShaderProgram.useNone();
 
@@ -196,7 +164,7 @@ public class Game {
     private void destroyOpenGL() {
         shader.destroy();
 
-        cube.destroy();
+        entity.destroy();
 
         this.exitOnGLError("destroyOpenGL");
 

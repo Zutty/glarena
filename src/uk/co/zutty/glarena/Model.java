@@ -15,21 +15,23 @@ import static uk.co.zutty.glarena.VectorUtils.asFloats;
  */
 public class Model {
 
+    private ShaderProgram shader;
     private int glVao;
     private int glVertexVbo;
     private int glIndexVbo;
-
     private int numIndeces;
     private int glTexture;
 
-    public Model(int texture) {
+    public Model(int texture, ShaderProgram shader) {
         this.glTexture = texture;
 
         numIndeces = 0;
+
+        this.shader = shader;
     }
 
-    public static Model fromMesh(Mesh mesh, int texture) {
-        Model model = new Model(texture);
+    public static Model fromMesh(Mesh mesh, int texture, ShaderProgram shader) {
+        Model model = new Model(texture, shader);
         model.numIndeces = mesh.getIndeces().size();
 
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(mesh.getVertices().size() * Vertex.STRIDE);
@@ -68,7 +70,14 @@ public class Model {
         return model;
     }
 
-    public void render() {
+    public void render(Matrix4f projectionMatrix, Matrix4f viewMatrix, Matrix4f modelMatrix) {
+
+        shader.use();
+
+        shader.setUniform("projectionMatrix", projectionMatrix);
+        shader.setUniform("viewMatrix", viewMatrix);
+        shader.setUniform("modelMatrix", modelMatrix);
+
         // Bind the texture
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTexture);
@@ -99,6 +108,8 @@ public class Model {
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
+
+        ShaderProgram.useNone();
     }
 
     public void destroy() {

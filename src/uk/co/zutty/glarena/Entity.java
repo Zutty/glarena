@@ -1,21 +1,44 @@
 package uk.co.zutty.glarena;
 
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+
+import static uk.co.zutty.glarena.util.MathUtils.degreesToRadians;
+
 /**
- * Created with IntelliJ IDEA.
- * User: George
- * Date: 04/07/12
- * Time: 19:25
- * To change this template use File | Settings | File Templates.
+ * A game object.
  */
-public class Entity {
+public abstract class Entity {
 
-    private float x;
-    private float y;
-    private float z;
+    protected float x;
+    protected float y;
+    protected float z;
 
+    protected float roll;
+    protected float pitch;
+    protected float yaw;
+
+    private Matrix4f matrix;
     private Model model;
 
-    public void render() {
+    protected Entity(Model model) {
+        this.model = model;
+        matrix = new Matrix4f();
+    }
 
+    public void render(Matrix4f projectionMatrix, Matrix4f viewMatrix) {
+        matrix.setIdentity();
+        matrix.translate(new Vector3f(x, y, z));
+        matrix.rotate(degreesToRadians(roll), new Vector3f(1, 0, 0));
+        matrix.rotate(degreesToRadians(pitch), new Vector3f(0, 1, 0));
+        matrix.rotate(degreesToRadians(yaw), new Vector3f(0, 0, 1));
+
+        model.render(projectionMatrix, viewMatrix, matrix);
+    }
+
+    public abstract void update();
+
+    public void destroy() {
+        model.destroy();
     }
 }
