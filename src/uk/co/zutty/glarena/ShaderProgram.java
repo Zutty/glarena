@@ -53,7 +53,7 @@ public class ShaderProgram {
 
     public void initUniform(String name) {
         int loc = glGetUniformLocation(glProgram, name);
-        if(loc < 0) {
+        if (loc < 0) {
             throw new GameException("Uniform '" + name + "' not found.");
         }
         uniforms.put(name, loc);
@@ -78,7 +78,7 @@ public class ShaderProgram {
     }
 
     protected int getUniformLocation(String name) {
-        if(!uniforms.containsKey(name)) {
+        if (!uniforms.containsKey(name)) {
             throw new GameException("Uniform '" + name + "' not initialised.");
         }
         return uniforms.get(name);

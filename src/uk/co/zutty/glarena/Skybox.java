@@ -1,7 +1,7 @@
 package uk.co.zutty.glarena;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,80 +32,80 @@ public class Skybox {
 
         // Render the front quad
         glBegin(GL_QUADS);
-            glTexCoord3f(1.0f, 1.0f, -1.0f);
-            glVertex3f(100.0f, 100.0f, -100.0f);
-            glTexCoord3f(-1.0f, 1.0f, -1.0f);
-            glVertex3f(-100.0f, 100.0f, -100.0f);
-            glTexCoord3f(-1.0f, -1.0f, -1.0f);
-            glVertex3f(-100.0f, -100.0f, -100.0f);
-            glTexCoord3f(1.0f, -1.0f, -1.0f);
-            glVertex3f(100.0f, -100.0f, -100.0f);
+        glTexCoord3f(1.0f, 1.0f, -1.0f);
+        glVertex3f(100.0f, 100.0f, -100.0f);
+        glTexCoord3f(-1.0f, 1.0f, -1.0f);
+        glVertex3f(-100.0f, 100.0f, -100.0f);
+        glTexCoord3f(-1.0f, -1.0f, -1.0f);
+        glVertex3f(-100.0f, -100.0f, -100.0f);
+        glTexCoord3f(1.0f, -1.0f, -1.0f);
+        glVertex3f(100.0f, -100.0f, -100.0f);
         glEnd();
 
         // Render the left quad
         glBegin(GL_QUADS);
-            glTexCoord3f(1.0f, 1.0f, 1.0f);
-            glVertex3f(100.0f, 100.0f, 100.0f);
-            glTexCoord3f(1.0f, 1.0f, -1.0f);
-            glVertex3f(100.0f, 100.0f, -100.0f);
-            glTexCoord3f(1.0f, -1.0f, -1.0f);
-            glVertex3f(100.0f, -100.0f, -100.0f);
-            glTexCoord3f(1.0f, -1.0f, 1.0f);
-            glVertex3f(100.0f, -100.0f, 100.0f);
+        glTexCoord3f(1.0f, 1.0f, 1.0f);
+        glVertex3f(100.0f, 100.0f, 100.0f);
+        glTexCoord3f(1.0f, 1.0f, -1.0f);
+        glVertex3f(100.0f, 100.0f, -100.0f);
+        glTexCoord3f(1.0f, -1.0f, -1.0f);
+        glVertex3f(100.0f, -100.0f, -100.0f);
+        glTexCoord3f(1.0f, -1.0f, 1.0f);
+        glVertex3f(100.0f, -100.0f, 100.0f);
         glEnd();
 
         // Render the back quad
         glBegin(GL_QUADS);
-            glTexCoord3f(-1.0f, 1.0f, 1.0f);
-            glVertex3f(-100.0f, 100.0f, 100.0f);
-            glTexCoord3f(1.0f, 1.0f, 1.0f);
-            glVertex3f(100.0f, 100.0f, 100.0f);
-            glTexCoord3f(1.0f, -1.0f, 1.0f);
-            glVertex3f(100.0f, -100.0f, 100.0f);
-            glTexCoord3f(-1.0f, -1.0f, 1.0f);
-            glVertex3f(-100.0f, -100.0f, 100.0f);
+        glTexCoord3f(-1.0f, 1.0f, 1.0f);
+        glVertex3f(-100.0f, 100.0f, 100.0f);
+        glTexCoord3f(1.0f, 1.0f, 1.0f);
+        glVertex3f(100.0f, 100.0f, 100.0f);
+        glTexCoord3f(1.0f, -1.0f, 1.0f);
+        glVertex3f(100.0f, -100.0f, 100.0f);
+        glTexCoord3f(-1.0f, -1.0f, 1.0f);
+        glVertex3f(-100.0f, -100.0f, 100.0f);
         glEnd();
 
         // Render the right quad
         glBegin(GL_QUADS);
-            glTexCoord3f(-1.0f, 1.0f, -1.0f);
-            glVertex3f(-100.0f, 100.0f, -100.0f);
-            glTexCoord3f(-1.0f, 1.0f, 1.0f);
-            glVertex3f(-100.0f, 100.0f, 100.0f);
-            glTexCoord3f(-1.0f, -1.0f, 1.0f);
-            glVertex3f(-100.0f, -100.0f, 100.0f);
-            glTexCoord3f(-1.0f, -1.0f, -1.0f);
-            glVertex3f(-100.0f, -100.0f, -100.0f);
+        glTexCoord3f(-1.0f, 1.0f, -1.0f);
+        glVertex3f(-100.0f, 100.0f, -100.0f);
+        glTexCoord3f(-1.0f, 1.0f, 1.0f);
+        glVertex3f(-100.0f, 100.0f, 100.0f);
+        glTexCoord3f(-1.0f, -1.0f, 1.0f);
+        glVertex3f(-100.0f, -100.0f, 100.0f);
+        glTexCoord3f(-1.0f, -1.0f, -1.0f);
+        glVertex3f(-100.0f, -100.0f, -100.0f);
         glEnd();
 
         // Render the top quad
         glBegin(GL_QUADS);
-            glTexCoord3f(1.0f, 1.0f, -1.0f);
-            glVertex3f(100.0f, 100.0f, -100.0f);
-            glTexCoord3f(1.0f, 1.0f, 1.0f);
-            glVertex3f(100.0f, 100.0f, 100.0f);
-            glTexCoord3f(-1.0f, 1.0f, 1.0f);
-            glVertex3f(-100.0f, 100.0f, 100.0f);
-            glTexCoord3f(-1.0f, 1.0f, -1.0f);
-            glVertex3f(-100.0f, 100.0f, -100.0f);
+        glTexCoord3f(1.0f, 1.0f, -1.0f);
+        glVertex3f(100.0f, 100.0f, -100.0f);
+        glTexCoord3f(1.0f, 1.0f, 1.0f);
+        glVertex3f(100.0f, 100.0f, 100.0f);
+        glTexCoord3f(-1.0f, 1.0f, 1.0f);
+        glVertex3f(-100.0f, 100.0f, 100.0f);
+        glTexCoord3f(-1.0f, 1.0f, -1.0f);
+        glVertex3f(-100.0f, 100.0f, -100.0f);
         glEnd();
 
         // Render the bottom quad
         glBegin(GL_QUADS);
-            glTexCoord3f(-1.0f, -1.0f, -1.0f);
-            glVertex3f(-100.0f, -100.0f, -100.0f);
-            glTexCoord3f(-1.0f, -1.0f, 1.0f);
-            glVertex3f(-100.0f, -100.0f, 100.0f);
-            glTexCoord3f(1.0f, -1.0f, 1.0f);
-            glVertex3f(100.0f, -100.0f, 100.0f);
-            glTexCoord3f(1.0f, -1.0f, -1.0f);
-            glVertex3f(100.0f, -100.0f, -100.0f);
+        glTexCoord3f(-1.0f, -1.0f, -1.0f);
+        glVertex3f(-100.0f, -100.0f, -100.0f);
+        glTexCoord3f(-1.0f, -1.0f, 1.0f);
+        glVertex3f(-100.0f, -100.0f, 100.0f);
+        glTexCoord3f(1.0f, -1.0f, 1.0f);
+        glVertex3f(100.0f, -100.0f, 100.0f);
+        glTexCoord3f(1.0f, -1.0f, -1.0f);
+        glVertex3f(100.0f, -100.0f, -100.0f);
         glEnd();
 
         // Restore enable bits and matrix
         glDepthMask(true);
         glEnable(GL_DEPTH_TEST);
-       // glPopAttrib();
+        // glPopAttrib();
         glPopMatrix();
 
         glDisable(GL_TEXTURE_CUBE_MAP);

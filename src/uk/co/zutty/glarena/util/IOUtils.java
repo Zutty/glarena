@@ -1,16 +1,20 @@
 package uk.co.zutty.glarena.util;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 /**
  * General IO utils
  */
 public class IOUtils {
     public static void closeSilently(Closeable closeable) {
-        if(closeable != null) {
+        if (closeable != null) {
             try {
                 closeable.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
     }
 
@@ -22,7 +26,7 @@ public class IOUtils {
         int len = 0;
 
         try {
-            while((len = reader.read(buffer)) != -1) {
+            while ((len = reader.read(buffer)) != -1) {
                 builder.append(buffer, 0, len);
             }
         } catch (IOException e) {

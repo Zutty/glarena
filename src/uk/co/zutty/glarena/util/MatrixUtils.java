@@ -3,7 +3,8 @@ package uk.co.zutty.glarena.util;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import static uk.co.zutty.glarena.util.MathUtils.*;
+import static uk.co.zutty.glarena.util.MathUtils.cot;
+import static uk.co.zutty.glarena.util.MathUtils.degreesToRadians;
 
 /**
  * Utility methods to provide stock matrices.

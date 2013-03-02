@@ -14,7 +14,9 @@ public class Cube {
 
     private Vertex vertex(float x, float y, float z, float r, float g, float b, float s, float t) {
         Vertex v = new Vertex();
-        v.setPosition(new Vector3f(x, y, z)); v.setNormal(new Vector3f(r, g, b)); v.setTexCoord(new Vector2f(s, t));
+        v.setPosition(new Vector3f(x, y, z));
+        v.setNormal(new Vector3f(r, g, b));
+        v.setTexCoord(new Vector2f(s, t));
         return v;
     }
             /*

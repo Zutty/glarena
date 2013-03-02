@@ -1,7 +1,5 @@
 package uk.co.zutty.glarena;
 
-import org.lwjgl.opengl.GL20;
-
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 import static uk.co.zutty.glarena.util.IOUtils.readSource;
@@ -11,7 +9,7 @@ import static uk.co.zutty.glarena.util.IOUtils.readSource;
  */
 public class Shader {
 
-    static enum Type { VERTEX, FRAGMENT }
+    static enum Type {VERTEX, FRAGMENT}
 
     private int glShader;
 

@@ -7,8 +7,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-
 /**
  * Represents a model stored on the GPU that can be rendered.
  */
@@ -36,11 +34,11 @@ public class Model {
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(mesh.getVertices().size() * Vertex.STRIDE);
         ShortBuffer indexBuffer = BufferUtils.createShortBuffer(model.numIndices);
 
-        for (Vertex vertex: mesh.getVertices()) {
+        for (Vertex vertex : mesh.getVertices()) {
             vertex.put(vertexBuffer);
         }
 
-         for(short index: mesh.getIndices()) {
+        for (short index : mesh.getIndices()) {
             indexBuffer.put(index);
         }
 

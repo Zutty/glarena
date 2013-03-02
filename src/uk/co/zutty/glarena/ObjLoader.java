@@ -3,7 +3,9 @@ package uk.co.zutty.glarena;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -18,17 +20,17 @@ public class ObjLoader {
         List<Vector2f> texCoords = new ArrayList<Vector2f>();
         Map<String, Integer> inverseIndex = new HashMap<String, Integer>();
 
-        for(String[] line: parse(filename)) {
-            if(line[0].equals("v")) {
+        for (String[] line : parse(filename)) {
+            if (line[0].equals("v")) {
                 positions.add(parseVector3f(line));
-            } else if(line[0].equals("vn")) {
+            } else if (line[0].equals("vn")) {
                 normals.add(parseVector3f(line));
-            } else if(line[0].equals("vt")) {
+            } else if (line[0].equals("vt")) {
                 texCoords.add(parseVector2f(line));
-            } else if(line[0].equals("f")) {
-                for(int i = 1; i < line.length; i++) {
+            } else if (line[0].equals("f")) {
+                for (int i = 1; i < line.length; i++) {
                     String vertexTriple = line[i];
-                    if(!inverseIndex.containsKey(vertexTriple))  {
+                    if (!inverseIndex.containsKey(vertexTriple)) {
                         // Format is pos/tex/norm
                         String[] vtParts = vertexTriple.split("/");
                         int positionIdx = Integer.valueOf(vtParts[0]);
@@ -54,8 +56,9 @@ public class ObjLoader {
     private Vector3f parseVector3f(String[] line) {
         return new Vector3f(Float.valueOf(line[1]), Float.valueOf(line[2]), Float.valueOf(line[3]));
     }
+
     private Vector2f parseVector2f(String[] line) {
-        return new Vector2f(Float.valueOf(line[1]), 1-Float.valueOf(line[2]));
+        return new Vector2f(Float.valueOf(line[1]), 1 - Float.valueOf(line[2]));
     }
 
     private Iterable<String[]> parse(String filename) {

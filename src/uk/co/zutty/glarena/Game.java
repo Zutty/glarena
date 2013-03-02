@@ -9,7 +9,6 @@ import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.util.MatrixUtils;
 
 import static org.lwjgl.opengl.GL11.*;
-import static uk.co.zutty.glarena.util.MathUtils.degreesToRadians;
 
 public class Game {
     // Entry point for the application

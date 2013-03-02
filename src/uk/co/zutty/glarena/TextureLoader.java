@@ -3,14 +3,13 @@ package uk.co.zutty.glarena;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import org.lwjgl.BufferUtils;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
 import static org.lwjgl.opengl.GL13.*;
 import static uk.co.zutty.glarena.util.IOUtils.closeSilently;
 

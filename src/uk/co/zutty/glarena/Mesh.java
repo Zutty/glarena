@@ -1,8 +1,5 @@
 package uk.co.zutty.glarena;
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class Mesh {
     }
 
     public void addIndex(int index) {
-        indices.add((short)index);
+        indices.add((short) index);
     }
 
     public List<Vertex> getVertices() {
