@@ -12,6 +12,6 @@ public class Gunship extends Entity {
 
     @Override
     public void update() {
-        pitch += 1;
+        yaw += 1;
     }
 }

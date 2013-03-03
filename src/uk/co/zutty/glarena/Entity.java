@@ -29,9 +29,9 @@ public abstract class Entity {
     public void render(Matrix4f projectionMatrix, Matrix4f viewMatrix) {
         matrix.setIdentity();
         matrix.translate(new Vector3f(x, y, z));
-        matrix.rotate(degreesToRadians(roll), new Vector3f(1, 0, 0));
-        matrix.rotate(degreesToRadians(pitch), new Vector3f(0, 1, 0));
-        matrix.rotate(degreesToRadians(yaw), new Vector3f(0, 0, 1));
+        matrix.rotate(degreesToRadians(roll), new Vector3f(0, 0, 1));
+        matrix.rotate(degreesToRadians(yaw), new Vector3f(0, 1, 0));
+        matrix.rotate(degreesToRadians(pitch), new Vector3f(1, 0, 0));
 
         model.render(projectionMatrix, viewMatrix, matrix);
     }

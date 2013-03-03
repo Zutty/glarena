@@ -82,7 +82,7 @@ public class Game {
     }
 
     private void setupQuad() {
-        cameraPos = new Vector3f(0, 0, 0);
+        cameraPos = new Vector3f(0f, 10f, -5f);
 
         this.exitOnGLError("setupQuad");
 
@@ -133,7 +133,7 @@ public class Game {
         //-- Update matrices
         // Reset view and model matrices
         viewMatrix = MatrixUtils.lookAt(cameraPos.x, cameraPos.y, cameraPos.z,
-                0.0f, 0.0f, -1f,
+                0.0f, 0f, -1f,
                 0.0f, 1.0f, 0.0f);
 
         this.exitOnGLError("logicCycle");
