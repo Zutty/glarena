@@ -22,8 +22,7 @@ public class Game {
     private ShaderProgram shader;
 
     private Matrix4f projectionMatrix = null;
-    private Matrix4f viewMatrix = null;
-    private Vector3f cameraPos = null;
+    private Camera camera;
     private List<Entity> entities;
 
     public Game() {
@@ -54,7 +53,8 @@ public class Game {
 
     private void setupMatrices() {
         projectionMatrix = MatrixUtils.frustum(Display.getWidth(), Display.getHeight(), 60, 0.1f, 100.0f);
-        viewMatrix = new Matrix4f();
+        camera = new Camera();
+        camera.setPosition(0f, 10f, -5f);
     }
 
     private void setupOpenGL() {
@@ -85,8 +85,6 @@ public class Game {
     }
 
     private void setupQuad() {
-        cameraPos = new Vector3f(0f, 10f, -5f);
-
         this.exitOnGLError("setupQuad");
 
         Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
@@ -124,7 +122,7 @@ public class Game {
 
     private void logicCycle() {
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+        /*if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
             cameraPos.z -= 0.01f;
         } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
             cameraPos.z += 0.01f;
@@ -140,17 +138,14 @@ public class Game {
             cameraPos.y -= 0.01f;
         } else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             cameraPos.y += 0.01f;
-        }
+        }*/
 
         for(Entity entity: entities) {
             entity.update();
         }
 
-        //-- Update matrices
-        // Reset view and model matrices
-        viewMatrix = MatrixUtils.lookAt(cameraPos.x, cameraPos.y, cameraPos.z,
-                0.0f, 0f, -1f,
-                0.0f, 1.0f, 0.0f);
+        camera.setCenter(0f, 0f, -1f);
+        camera.update();
 
         this.exitOnGLError("logicCycle");
     }
@@ -161,7 +156,7 @@ public class Game {
         shader.use();
 
         for(Entity entity: entities) {
-            entity.render(projectionMatrix, viewMatrix);
+            entity.render(projectionMatrix, camera.getViewMatrix());
         }
 
         ShaderProgram.useNone();
