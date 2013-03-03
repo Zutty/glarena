@@ -26,6 +26,12 @@ public abstract class Entity {
         matrix = new Matrix4f();
     }
 
+    public void setPosition(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public void render(Matrix4f projectionMatrix, Matrix4f viewMatrix) {
         matrix.setIdentity();
         matrix.translate(new Vector3f(x, y, z));

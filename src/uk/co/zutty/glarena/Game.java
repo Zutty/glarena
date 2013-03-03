@@ -8,6 +8,9 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.util.MatrixUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class Game {
@@ -21,7 +24,7 @@ public class Game {
     private Matrix4f projectionMatrix = null;
     private Matrix4f viewMatrix = null;
     private Vector3f cameraPos = null;
-    private Entity entity;
+    private List<Entity> entities;
 
     public Game() {
         // Initialize OpenGL (Display)
@@ -86,7 +89,15 @@ public class Game {
 
         this.exitOnGLError("setupQuad");
 
-        entity = new Gunship(shader);
+        entities = new ArrayList<Entity>();
+
+        Gunship a = new Gunship(shader);
+        a.setPosition(4.5f, 0, -1);
+        entities.add(a);
+
+        Gunship b = new Gunship(shader);
+        b.setPosition(-4.5f, 0, -1);
+        entities.add(b);
     }
 
     private void setupShaders() {
@@ -128,7 +139,9 @@ public class Game {
             cameraPos.y += 0.01f;
         }
 
-        entity.update();
+        for(Entity entity: entities) {
+            entity.update();
+        }
 
         //-- Update matrices
         // Reset view and model matrices
@@ -144,7 +157,9 @@ public class Game {
 
         shader.use();
 
-        entity.render(projectionMatrix, viewMatrix);
+        for(Entity entity: entities) {
+            entity.render(projectionMatrix, viewMatrix);
+        }
 
         ShaderProgram.useNone();
 
@@ -163,7 +178,9 @@ public class Game {
     private void destroyOpenGL() {
         shader.destroy();
 
-        entity.destroy();
+        for(Entity entity: entities) {
+            entity.destroy();
+        }
 
         this.exitOnGLError("destroyOpenGL");
 
