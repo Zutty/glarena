@@ -90,6 +90,7 @@ public class Game {
         this.exitOnGLError("setupQuad");
 
         Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
+        Model ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
 
         entities = new ArrayList<Entity>();
 
@@ -97,7 +98,7 @@ public class Game {
         a.setPosition(4.5f, 0, -1);
         entities.add(a);
 
-        Gunship b = new Gunship(gunshipModel, shader);
+        Ufo b = new Ufo(ufoModel, shader);
         b.setPosition(-4.5f, 0, -1);
         entities.add(b);
     }
