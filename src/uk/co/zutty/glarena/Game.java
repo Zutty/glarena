@@ -89,13 +89,15 @@ public class Game {
 
         this.exitOnGLError("setupQuad");
 
+        Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
+
         entities = new ArrayList<Entity>();
 
-        Gunship a = new Gunship(shader);
+        Gunship a = new Gunship(gunshipModel, shader);
         a.setPosition(4.5f, 0, -1);
         entities.add(a);
 
-        Gunship b = new Gunship(shader);
+        Gunship b = new Gunship(gunshipModel, shader);
         b.setPosition(-4.5f, 0, -1);
         entities.add(b);
     }

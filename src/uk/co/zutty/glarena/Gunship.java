@@ -5,12 +5,14 @@ package uk.co.zutty.glarena;
  */
 public class Gunship extends Entity {
 
-    public Gunship(ShaderProgram shader) {
-        super(Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"), shader));
+    public Gunship(Model model, ShaderProgram shader) {
+        super(model, shader);
     }
 
     @Override
     public void update() {
         yaw += 1;
+
+        super.update();
     }
 }

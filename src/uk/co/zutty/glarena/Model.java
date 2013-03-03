@@ -12,23 +12,19 @@ import java.nio.ShortBuffer;
  */
 public class Model {
 
-    private ShaderProgram shader;
     private int glVao;
     private int glVertexVbo;
     private int glIndexVbo;
     private int numIndices;
     private int glTexture;
 
-    public Model(int texture, ShaderProgram shader) {
-        this.glTexture = texture;
-
+    public Model(int texture) {
+        glTexture = texture;
         numIndices = 0;
-
-        this.shader = shader;
     }
 
-    public static Model fromMesh(Mesh mesh, int texture, ShaderProgram shader) {
-        Model model = new Model(texture, shader);
+    public static Model fromMesh(Mesh mesh, int texture) {
+        Model model = new Model(texture);
         model.numIndices = mesh.getIndices().size();
 
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(mesh.getVertices().size() * Vertex.STRIDE);
@@ -67,14 +63,7 @@ public class Model {
         return model;
     }
 
-    public void render(Matrix4f projectionMatrix, Matrix4f viewMatrix, Matrix4f modelMatrix) {
-
-        shader.use();
-
-        shader.setUniform("projectionMatrix", projectionMatrix);
-        shader.setUniform("viewMatrix", viewMatrix);
-        shader.setUniform("modelMatrix", modelMatrix);
-
+    public void render() {
         // Bind the texture
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTexture);
