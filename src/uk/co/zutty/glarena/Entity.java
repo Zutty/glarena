@@ -50,6 +50,8 @@ public abstract class Entity {
         shader.setUniform("modelMatrix", matrix);
 
         model.render();
+
+        ShaderProgram.useNone();
     }
 
     public void destroy() {

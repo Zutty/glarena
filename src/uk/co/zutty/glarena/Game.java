@@ -1,11 +1,9 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.util.MatrixUtils;
 
 import java.util.ArrayList;
@@ -14,35 +12,24 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Game {
-    // Entry point for the application
-    public static void main(String[] args) {
-        new Game();
-    }
-
-    private ShaderProgram shader;
 
     private Matrix4f projectionMatrix = null;
-    private Camera camera;
+    protected Camera camera;
     private List<Entity> entities;
 
     public Game() {
         // Initialize OpenGL (Display)
         this.setupOpenGL();
 
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glClearDepth(1);
-
-        this.setupShaders();
-        this.setupQuad();
-        this.setupMatrices();
+        setup();
+        init();
+        exitOnGLError("init");
 
         Display.setVSyncEnabled(true);
 
         while (!Display.isCloseRequested()) {
-            // Do a single loop (logic/render)
-            this.loopCycle();
+            update();
+            render();
 
             Display.update();
             Display.sync(60);
@@ -51,10 +38,10 @@ public class Game {
         this.destroyOpenGL();
     }
 
-    private void setupMatrices() {
+    private void setup() {
         projectionMatrix = MatrixUtils.frustum(Display.getWidth(), Display.getHeight(), 60, 0.1f, 100.0f);
         camera = new Camera();
-        camera.setPosition(0f, 10f, -5f);
+        entities = new ArrayList<Entity>();
     }
 
     private void setupOpenGL() {
@@ -78,50 +65,21 @@ public class Game {
         // Setup an XNA like background color
         GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
 
-        // Map the internal OpenGL coordinate system to the entire screen
-        //GL11.glViewport(0, 0, WIDTH, HEIGHT);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glClearDepth(1);
 
-        this.exitOnGLError("setupOpenGL");
+        exitOnGLError("setupOpenGL");
     }
 
-    private void setupQuad() {
-        this.exitOnGLError("setupQuad");
+    protected void init() {}
 
-        Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
-        Model ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
-
-        entities = new ArrayList<Entity>();
-
-        Gunship a = new Gunship(gunshipModel, shader);
-        a.setPosition(4.5f, 0, -1);
-        entities.add(a);
-
-        Ufo b = new Ufo(ufoModel, shader);
-        b.setPosition(-4.5f, 0, -1);
-        entities.add(b);
+    public void add(Entity entity) {
+        entities.add(entity);
     }
 
-    private void setupShaders() {
-        shader = ShaderProgram.build("/shaders/vec.glsl", "/shaders/frag.glsl");
-
-        shader.bindAttribLocation(0, "in_Position");
-        shader.bindAttribLocation(1, "foobar");
-        shader.bindAttribLocation(2, "in_TextureCoord");
-
-        shader.link();
-        shader.validate();
-
-        // Get matrices uniform locations
-        shader.initUniform("projectionMatrix");
-        shader.initUniform("viewMatrix");
-        shader.initUniform("modelMatrix");
-
-        this.exitOnGLError("setupShaders");
-    }
-
-
-    private void logicCycle() {
-
+    protected void update() {
         /*if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
             cameraPos.z -= 0.01f;
         } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
@@ -147,40 +105,25 @@ public class Game {
         camera.setCenter(0f, 0f, -1f);
         camera.update();
 
-        this.exitOnGLError("logicCycle");
+        this.exitOnGLError("update");
     }
 
-    private void renderCycle() {
+    protected void render() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        shader.use();
 
         for(Entity entity: entities) {
             entity.render(projectionMatrix, camera.getViewMatrix());
         }
 
-        ShaderProgram.useNone();
-
-        this.exitOnGLError("renderCycle");
-    }
-
-    private void loopCycle() {
-        // Update logic
-        this.logicCycle();
-        // Update rendered frame
-        this.renderCycle();
-
-        this.exitOnGLError("loopCycle");
+        exitOnGLError("render");
     }
 
     private void destroyOpenGL() {
-        shader.destroy();
-
         for(Entity entity: entities) {
             entity.destroy();
         }
 
-        this.exitOnGLError("destroyOpenGL");
+        exitOnGLError("destroyOpenGL");
 
         Display.destroy();
     }
