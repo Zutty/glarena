@@ -6,6 +6,7 @@ package uk.co.zutty.glarena;
 public class Arena extends Game {
 
     private ShaderProgram shader;
+    private Gunship player;
 
     @Override
     protected void init() {
@@ -23,18 +24,25 @@ public class Arena extends Game {
         shader.initUniform("viewMatrix");
         shader.initUniform("modelMatrix");
 
-        camera.setPosition(0f, 10f, -5f);
+        camera.setPosition(0f, 20f, -25f);
 
         Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
         Model ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
 
-        Gunship a = new Gunship(gunshipModel, shader);
-        a.setPosition(4.5f, 0, -1);
-        add(a);
+        player = new Gunship(gunshipModel, shader);
+        player.setPosition(4.5f, 0, -1);
+        add(player);
 
-        Ufo b = new Ufo(ufoModel, shader);
-        b.setPosition(-4.5f, 0, -1);
-        add(b);
+        Ufo ufo = new Ufo(ufoModel, shader);
+        ufo.setPosition(-4.5f, 0, -1);
+        add(ufo);
+    }
+
+    @Override
+    protected void update() {
+        camera.setCenter(player.x, player.y, -1);
+
+        super.update();
     }
 
     public static void main(String... args) {

@@ -80,29 +80,10 @@ public class Game {
     }
 
     protected void update() {
-        /*if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            cameraPos.z -= 0.01f;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            cameraPos.z += 0.01f;
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            cameraPos.x -= 0.01f;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            cameraPos.x += 0.01f;
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-            cameraPos.y -= 0.01f;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            cameraPos.y += 0.01f;
-        }*/
-
         for(Entity entity: entities) {
             entity.update();
         }
 
-        camera.setCenter(0f, 0f, -1f);
         camera.update();
 
         this.exitOnGLError("update");
