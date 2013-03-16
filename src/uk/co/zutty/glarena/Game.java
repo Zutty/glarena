@@ -13,7 +13,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Game {
 
-    private Matrix4f projectionMatrix = null;
+    protected Matrix4f projectionMatrix = null;
     protected Camera camera;
     private List<Entity> entities;
 
@@ -109,7 +109,7 @@ public class Game {
         Display.destroy();
     }
 
-    private void exitOnGLError(String errorMessage) {
+    protected void exitOnGLError(String errorMessage) {
         int errorValue = GL11.glGetError();
 
         if (errorValue != GL11.GL_NO_ERROR) {

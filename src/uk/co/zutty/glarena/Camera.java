@@ -19,6 +19,10 @@ public class Camera {
         matrix = new Matrix4f();
     }
 
+    public Vector3f getPosition() {
+        return position;
+    }
+
     public void setPosition(float x, float y, float z) {
         position.x = x;
         position.y = y;

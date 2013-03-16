@@ -1,5 +1,7 @@
 package uk.co.zutty.glarena;
 
+import org.lwjgl.util.vector.Matrix4f;
+
 /**
  * Concrete game class for the glArena game.
  */
@@ -7,6 +9,8 @@ public class Arena extends Game {
 
     private ShaderProgram shader;
     private Gunship player;
+
+    private BillboardList billboardList;
 
     @Override
     protected void init() {
@@ -36,6 +40,11 @@ public class Arena extends Game {
         Ufo ufo = new Ufo(ufoModel, shader);
         ufo.setPosition(-4.5f, 0, -1);
         add(ufo);
+
+        billboardList = new BillboardList();
+        billboardList.init("/textures/shot.png");
+
+        exitOnGLError("init");
     }
 
     @Override
@@ -43,6 +52,16 @@ public class Arena extends Game {
         camera.setCenter(player.x, player.y, -1);
 
         super.update();
+    }
+
+    @Override
+    protected void render() {
+        super.render();
+
+        Matrix4f viewProjectionMatrix = new Matrix4f();
+        Matrix4f.mul(projectionMatrix, camera.getViewMatrix(), viewProjectionMatrix);
+
+        billboardList.render(viewProjectionMatrix, camera.getPosition());
     }
 
     public static void main(String... args) {

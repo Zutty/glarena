@@ -2,6 +2,7 @@ package uk.co.zutty.glarena;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.nio.FloatBuffer;
 import java.util.HashMap;
@@ -69,6 +70,10 @@ public class ShaderProgram {
 
     public void setUniform(String name, int value) {
         glUniform1i(getUniformLocation(name), value);
+    }
+
+    public void setUniform(String name, Vector3f value) {
+        glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
     }
 
     public void setUniform(String name, Matrix4f value) {
