@@ -1,7 +1,10 @@
 package uk.co.zutty.glarena;
 
+import org.lwjgl.opengl.GL32;
+
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 import static uk.co.zutty.glarena.util.IOUtils.readSource;
 
 /**
@@ -9,12 +12,32 @@ import static uk.co.zutty.glarena.util.IOUtils.readSource;
  */
 public class Shader {
 
-    static enum Type {VERTEX, FRAGMENT}
+    static enum Type {
+        VERTEX(GL_VERTEX_SHADER),
+        GEOMETRY(GL_GEOMETRY_SHADER),
+        FRAGMENT(GL_FRAGMENT_SHADER);
 
+        private int glType;
+
+        Type(int glType) {
+            this.glType = glType;
+        }
+
+        public int getGlType() {
+            return glType;
+        }
+    }
+
+    private Type type;
     private int glShader;
 
     public Shader(Type type) {
-        glShader = glCreateShader(type == Type.VERTEX ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+        this.type = type;
+        glShader = glCreateShader(type.getGlType());
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public int getGlObject() {

@@ -1,7 +1,6 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 
 import java.nio.FloatBuffer;
@@ -18,12 +17,12 @@ public class ShaderProgram {
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     private int glProgram;
-    private Shader vertexShader;
-    private Shader fragmentShader;
+    private Map<Shader.Type, Shader> shaders;
     private Map<String, Integer> uniforms;
 
     public ShaderProgram() {
         glProgram = glCreateProgram();
+        shaders = new HashMap<Shader.Type, Shader>();
         uniforms = new HashMap<String, Integer>();
     }
 
@@ -33,6 +32,7 @@ public class ShaderProgram {
 
     public void attachShader(Shader shader) {
         glAttachShader(glProgram, shader.getGlObject());
+        shaders.put(shader.getType(), shader);
     }
 
     public void link() {
@@ -91,39 +91,32 @@ public class ShaderProgram {
     public void destroy() {
         use();
 
-        GL20.glDetachShader(glProgram, vertexShader.getGlObject());
-        GL20.glDetachShader(glProgram, fragmentShader.getGlObject());
+        for(Shader shader: shaders.values()) {
+            glDetachShader(glProgram, shader.getGlObject());
+            shader.destroy();
+        }
 
-        vertexShader.destroy();
-        fragmentShader.destroy();
-        GL20.glDeleteProgram(glProgram);
-
-        // TODO we don't know that these are 0, 1, and 2. Perhaps tie to bindAttribLocation.
-        GL20.glDisableVertexAttribArray(0);
-        GL20.glDisableVertexAttribArray(1);
-        GL20.glDisableVertexAttribArray(2);
+        glDeleteProgram(glProgram);
 
         useNone();
     }
 
     public static ShaderProgram build(String vertexFile, String fragmentFile) {
-        ShaderProgram shader = new ShaderProgram();
+        ShaderProgram shaderProgram = new ShaderProgram();
 
         Shader vertexShader = new Shader(Shader.Type.VERTEX);
         vertexShader.loadSource(vertexFile);
         vertexShader.compile();
-        shader.attachShader(vertexShader);
-        shader.vertexShader = vertexShader;
+        shaderProgram.attachShader(vertexShader);
 
         Shader fragmentShader = new Shader(Shader.Type.FRAGMENT);
         fragmentShader.loadSource(fragmentFile);
         fragmentShader.compile();
-        shader.attachShader(fragmentShader);
-        shader.fragmentShader = fragmentShader;
+        shaderProgram.attachShader(fragmentShader);
 
-        //shader.link();
-        //shader.validate();
+        //shaderProgram.link();
+        //shaderProgram.validate();
 
-        return shader;
+        return shaderProgram;
     }
 }
