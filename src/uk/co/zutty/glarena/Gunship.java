@@ -15,11 +15,15 @@ public class Gunship extends Entity {
     private long timer = 10L;
     private float yawRadians = 0;
     private BillboardList billboardList;
-    private Vector4f emitPoint;
+    private Vector4f emitPointL;
+    private Vector4f emitPointR;
+    private boolean emitAlt;
 
     public Gunship(Model model, ShaderProgram shader) {
         super(model, shader);
-        emitPoint = new Vector4f(0,0,3.5f,1);
+        emitPointL = new Vector4f(0.7f,0,2.9f,1);
+        emitPointR = new Vector4f(-0.7f,0,2.9f,1);
+        emitAlt = true;
     }
 
     public void setBillboardList(BillboardList billboardList) {
@@ -63,7 +67,7 @@ public class Gunship extends Entity {
         if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
             if(timer >= 6L) {
                 timer = 0;
-                Vector4f emitPosition = new Vector4f(emitPoint);
+                Vector4f emitPosition = new Vector4f((emitAlt = !emitAlt) ? emitPointL : emitPointR);
                 Matrix4f.transform(matrix, emitPosition, emitPosition);
 
                 billboardList.emitFrom(xyz(emitPosition), new Vector3f((float)Math.sin(yawRadians),0,(float)Math.cos(yawRadians)), 0.4f);
