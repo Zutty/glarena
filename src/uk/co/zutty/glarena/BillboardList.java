@@ -62,11 +62,13 @@ public class BillboardList {
         fragmentShader.compile();
         shader.attachShader(fragmentShader);
 
+        shader.bindAttribLocation(0, "in_Position");
+        shader.bindAttribLocation(1, "in_velocity");
+
         shader.link();
         shader.validate();
 
         shader.initUniform("gVP");
-        shader.initUniform("gCameraPos");
 
         createPositionBuffer();
     }
@@ -77,7 +79,8 @@ public class BillboardList {
 
         glVbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, glVbo);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * 4, 0);   // position
+        glVertexAttribPointer(0, Particle.POSITION_ELEMENTS, GL_FLOAT, false, Particle.STRIDE, Particle.POSITION_OFFSET);   // position
+        glVertexAttribPointer(1, Particle.VELOCITY_ELEMENTS, GL_FLOAT, false, Particle.STRIDE, Particle.VELOCITY_OFFSET);   // position
 
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         GL30.glBindVertexArray(0);
@@ -102,7 +105,7 @@ public class BillboardList {
             }
         }
 
-        FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * 3);
+        FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * Particle.ELEMENTS);
 
         for(Particle p: particles) {
             p.put(positions);
@@ -111,32 +114,38 @@ public class BillboardList {
         positions.flip();
 
         glBindBuffer(GL_ARRAY_BUFFER, glVbo);
-        glBufferData(GL_ARRAY_BUFFER, particles.size() * 3 * 4, GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, particles.size() * Particle.STRIDE, GL_STREAM_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, positions);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
 
     }
 
-    public void render(Matrix4f viewProjectionMatrix, Vector3f cameraPos) {
+    public void render(Matrix4f viewProjectionMatrix) {
+        glDisable(GL_CULL_FACE);
+
         shader.use();
 
         shader.setUniform("gVP", viewProjectionMatrix);
-        shader.setUniform("gCameraPos", cameraPos);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, glTexture);
 
         GL30.glBindVertexArray(glVao);
         glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
 
         glBindBuffer(GL_ARRAY_BUFFER, glVbo);
 
         glDrawArrays(GL_POINTS, 0, particles.size());
 
         glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
         GL30.glBindVertexArray(0);
 
         ShaderProgram.useNone();
+
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
     }
 }

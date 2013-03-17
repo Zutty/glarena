@@ -64,7 +64,7 @@ public class Arena extends Game {
         Matrix4f viewProjectionMatrix = new Matrix4f();
         Matrix4f.mul(projectionMatrix, camera.getViewMatrix(), viewProjectionMatrix);
 
-        billboardList.render(viewProjectionMatrix, camera.getPosition());
+        billboardList.render(viewProjectionMatrix);
     }
 
     public static void main(String... args) {
