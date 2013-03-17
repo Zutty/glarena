@@ -18,7 +18,7 @@ public abstract class Entity {
 
     private Model model;
     private ShaderProgram shader;
-    private Matrix4f matrix;
+    protected Matrix4f matrix;
 
     protected Entity(Model model, ShaderProgram shader) {
         this.model = model;
