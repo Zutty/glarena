@@ -33,25 +33,28 @@ public class Arena extends Game {
         Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
         Model ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
 
+        billboardList = new BillboardList();
+        billboardList.init("/textures/shot.png");
+
         player = new Gunship(gunshipModel, shader);
         player.setPosition(4.5f, 0, -1);
+        player.setBillboardList(billboardList);
         add(player);
 
         Ufo ufo = new Ufo(ufoModel, shader);
         ufo.setPosition(-4.5f, 0, -1);
         add(ufo);
 
-        billboardList = new BillboardList();
-        billboardList.init("/textures/shot.png");
-
         exitOnGLError("init");
     }
 
     @Override
     protected void update() {
-        camera.setCenter(player.x, player.y, -1);
+        camera.setCenter(player.position.x, player.position.y, -1);
 
         super.update();
+
+        billboardList.update();
     }
 
     @Override
