@@ -1,7 +1,6 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
@@ -21,7 +20,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 
 /**
- * Created with IntelliJ IDEA.
+ * A collection of billboarded particles.
  */
 public class BillboardList {
 
@@ -29,27 +28,19 @@ public class BillboardList {
     private int glTexture;
     private int glVao;
     private int glVbo;
-    private List<BParticle> particles;
-
-    class BParticle {
-        private Vector3f position;
-        private Vector3f velocity;
-        private short lifetime;
-    }
+    private List<Particle> particles;
 
     public BillboardList() {
         glTexture = -1;
         glVbo = GL_INVALID_VALUE;
-        particles = new ArrayList<BParticle>();
+        particles = new ArrayList<Particle>();
     }
-
 
     public void destroy() {
         if (glVbo != GL_INVALID_VALUE) {
             glDeleteBuffers(glVbo);
         }
     }
-
 
     public void init(String texFilename) {
         glTexture = TextureLoader.loadTexture(texFilename);
@@ -74,13 +65,11 @@ public class BillboardList {
         shader.link();
         shader.validate();
 
-        //shader.initUniform("gColorMap");
         shader.initUniform("gVP");
         shader.initUniform("gCameraPos");
 
         createPositionBuffer();
     }
-
 
     public void createPositionBuffer() {
         glVao = GL30.glGenVertexArrays();
@@ -96,37 +85,32 @@ public class BillboardList {
     }
 
     public void emitFrom(Vector3f source, Vector3f direction, float speed) {
-        BParticle particle = new BParticle();
-        particle.lifetime = 100;
-        particle.position = new Vector3f(source);
-        particle.velocity = new Vector3f(direction);
-        particle.velocity.normalise();
-        particle.velocity.scale(speed);
+        Particle particle = new Particle();
+        particle.setLifetime((short) 100);
+        particle.setPosition(new Vector3f(source));
+        particle.setVelocity(new Vector3f(direction));
+        particle.getVelocity().normalise().scale(speed);
         particles.add(particle);
     }
 
     public void update() {
-        for(Iterator<BParticle> iter = particles.iterator(); iter.hasNext(); ) {
-            BParticle p = iter.next();
-            p.lifetime--;
-            if(p.lifetime <= 0) {
+        for(Iterator<Particle> iter = particles.iterator(); iter.hasNext(); ) {
+            Particle p = iter.next();
+            p.update();
+            if(p.isDead()) {
                 iter.remove();
             }
-            Vector3f.add(p.position, p.velocity, p.position);
         }
 
         FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * 3);
 
-        for(BParticle p: particles) {
-            positions.put(p.position.x);
-            positions.put(p.position.y);
-            positions.put(p.position.z);
+        for(Particle p: particles) {
+            p.put(positions);
         }
 
         positions.flip();
 
         glBindBuffer(GL_ARRAY_BUFFER, glVbo);
-        //glBufferData(GL_ARRAY_BUFFER, positions, GL_STREAM_DRAW);
         glBufferData(GL_ARRAY_BUFFER, particles.size() * 3 * 4, GL_STREAM_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, positions);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
@@ -137,12 +121,9 @@ public class BillboardList {
     public void render(Matrix4f viewProjectionMatrix, Vector3f cameraPos) {
         shader.use();
 
-        //m_technique.SetVP(VP);
-        //m_technique.SetCameraPosition(CameraPos);
         shader.setUniform("gVP", viewProjectionMatrix);
         shader.setUniform("gCameraPos", cameraPos);
 
-        //m_pTexture->Bind(COLOR_TEXTURE_UNIT);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, glTexture);
 
@@ -150,7 +131,6 @@ public class BillboardList {
         glEnableVertexAttribArray(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, glVbo);
-        //glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);   // position
 
         glDrawArrays(GL_POINTS, 0, particles.size());
 
