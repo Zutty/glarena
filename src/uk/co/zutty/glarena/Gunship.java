@@ -2,6 +2,7 @@ package uk.co.zutty.glarena;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -10,7 +11,7 @@ import org.lwjgl.util.vector.Vector4f;
  */
 public class Gunship extends Entity {
 
-    public static final float SPEED = 0.1f;
+    public static final float SPEED = .4f;
 
     private long timer = 10L;
     private float yawRadians = 0;
@@ -18,12 +19,17 @@ public class Gunship extends Entity {
     private Vector4f emitPointL;
     private Vector4f emitPointR;
     private boolean emitAlt;
+    private Gamepad gamepad;
 
     public Gunship(Model model, ShaderProgram shader) {
         super(model, shader);
         emitPointL = new Vector4f(0.7f,0,2.9f,1);
         emitPointR = new Vector4f(-0.7f,0,2.9f,1);
         emitAlt = true;
+    }
+
+    public void setGamepad(Gamepad gamepad) {
+        this.gamepad = gamepad;
     }
 
     public void setBillboardList(BillboardList billboardList) {
@@ -36,6 +42,7 @@ public class Gunship extends Entity {
         float dx = 0f;
         boolean setYaw = false;
 
+        /*
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
             position.z += SPEED;
             dz = 1;
@@ -55,22 +62,31 @@ public class Gunship extends Entity {
             dx = -1;
             setYaw = true;
         }
+        */
 
-        if(setYaw) {
-            yawRadians = (float)Math.atan2(dx, dz);
-            yaw = yawRadians * (180f/(float)Math.PI);
+        if(gamepad.getLeftStick().lengthSquared() > 0.04f) {
+            position.x -= gamepad.getLeftStick().x * SPEED;
+            position.z -= gamepad.getLeftStick().y * SPEED;
         }
+
+        //position.x += Math.sin(yawRadians) * gamepad.getRightTrigger() * SPEED;
+        //position.z += Math.cos(yawRadians) * gamepad.getRightTrigger() * SPEED;
+
+        Vector2f direction = (gamepad.getRightStick().lengthSquared() > 0.04f) ? gamepad.getRightStick() : gamepad.getLeftStick();
+
+        yawRadians = (float)Math.atan2(-direction.x, -direction.y);
+        yaw = yawRadians * (180f/(float)Math.PI);
 
         super.update();
 
         ++timer;
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-            if(timer >= 6L) {
+        if (gamepad.getRightTrigger() > 0f) {
+            if(timer >= 3L) {
                 timer = 0;
                 Vector4f emitPosition = new Vector4f((emitAlt = !emitAlt) ? emitPointL : emitPointR);
                 Matrix4f.transform(matrix, emitPosition, emitPosition);
 
-                billboardList.emitFrom(xyz(emitPosition), new Vector3f((float)Math.sin(yawRadians),0,(float)Math.cos(yawRadians)), 0.4f);
+                billboardList.emitFrom(xyz(emitPosition), new Vector3f((float)Math.sin(yawRadians), 0, (float)Math.cos(yawRadians)), 1.2f);
             }
         }
     }

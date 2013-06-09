@@ -1,5 +1,8 @@
 package uk.co.zutty.glarena;
 
+import net.java.games.input.Component;
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
 import org.lwjgl.util.vector.Matrix4f;
 
 /**
@@ -9,6 +12,8 @@ public class Arena extends Game {
 
     private ShaderProgram shader;
     private Gunship player;
+
+    private Gamepad gamepad;
 
     private BillboardList billboardList;
 
@@ -30,6 +35,12 @@ public class Arena extends Game {
 
         camera.setPosition(0f, 20f, -25f);
 
+        for(Controller controller: ControllerEnvironment.getDefaultEnvironment().getControllers()) {
+            if(controller.getType() == Controller.Type.GAMEPAD) {
+                gamepad = new Gamepad(controller);
+            }
+        }
+
         Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
         Model ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
 
@@ -39,6 +50,7 @@ public class Arena extends Game {
         player = new Gunship(gunshipModel, shader);
         player.setPosition(4.5f, 0, -1);
         player.setBillboardList(billboardList);
+        player.setGamepad(gamepad);
         add(player);
 
         Ufo ufo = new Ufo(ufoModel, shader);
@@ -51,6 +63,10 @@ public class Arena extends Game {
     @Override
     protected void update() {
         camera.setCenter(player.position.x, player.position.y, -1);
+
+        if(gamepad != null) {
+            gamepad.update();
+        }
 
         super.update();
 
