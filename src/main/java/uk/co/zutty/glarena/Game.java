@@ -84,8 +84,6 @@ public class Game {
             entity.update();
         }
 
-        camera.update();
-
         this.exitOnGLError("update");
     }
 
