@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import uk.co.zutty.glarena.util.MatrixUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -16,6 +17,7 @@ public class Game {
     protected Matrix4f projectionMatrix = null;
     protected Camera camera;
     private List<Entity> entities;
+    private Collection<Entity> toRemove = new ArrayList<Entity>();
 
     public Game() {
         // Initialize OpenGL (Display)
@@ -63,7 +65,8 @@ public class Game {
         }
 
         // Setup an XNA like background color
-        GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
+        //GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
+        GL11.glClearColor(0f, 0f, 0f, 0f);
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
@@ -77,12 +80,23 @@ public class Game {
 
     public void add(Entity entity) {
         entities.add(entity);
+        entity.setGame(this);
+    }
+
+    public void remove(Entity entity) {
+        toRemove.add(entity);
     }
 
     protected void update() {
         for(Entity entity: entities) {
             entity.update();
         }
+
+        // Update list
+        for(Entity r : toRemove) {
+            entities.remove(r);
+        }
+        toRemove.clear();
 
         this.exitOnGLError("update");
     }

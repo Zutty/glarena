@@ -148,4 +148,8 @@ public class BillboardList {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
     }
+
+    public Iterable<Particle> particles() {
+        return particles;
+    }
 }

@@ -1,6 +1,5 @@
 package uk.co.zutty.glarena;
 
-import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import org.lwjgl.util.vector.Matrix4f;
@@ -11,17 +10,22 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class Arena extends Game {
 
-    private final static Vector3f V = new Vector3f();
+    public static final Vector3f V = new Vector3f();
 
     private ShaderProgram shader;
     private ShaderProgram markerShader;
     private Gunship player;
+    private Model ufoModel;
 
     private Gamepad gamepad;
 
     private BillboardList billboardList;
 
     private Vector3f arenaCentre;
+
+    private int spawnTimer = 0;
+    private int waveTimer = 0;
+    private int waveSpawn = 0;
 
     @Override
     protected void init() {
@@ -57,7 +61,7 @@ public class Arena extends Game {
         }
 
         Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
-        Model ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
+        ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
         Model ringModel = Model.fromMesh(new ObjLoader().loadMesh("/models/circle.obj"), TextureLoader.loadTexture("/textures/circle.png"));
 
         billboardList = new BillboardList();
@@ -71,10 +75,6 @@ public class Arena extends Game {
 
         arenaCentre = new Vector3f(0, 0, 0);
 
-        Ufo ufo = new Ufo(ufoModel, shader);
-        ufo.setPosition(-4.5f, 0, -1);
-        add(ufo);
-
         Marker ringMarker = new Marker(ringModel, shader);
         ringMarker.position.y = -1;
         add(ringMarker);
@@ -82,10 +82,27 @@ public class Arena extends Game {
         exitOnGLError("init");
     }
 
+    public void spawnUfo() {
+        Ufo ufo = new Ufo(ufoModel, shader, billboardList);
+        ufo.setPosition(-4.5f, 0, -1);
+        add(ufo);
+    }
+
     @Override
     protected void update() {
         if(gamepad != null) {
             gamepad.update();
+        }
+
+        if(++waveTimer > 200) {
+            waveSpawn = 0;
+            waveTimer = 0;
+        }
+
+        if(++spawnTimer > 15 && waveSpawn < 6) {
+            spawnTimer = 0;
+            ++waveSpawn;
+            spawnUfo();
         }
 
         super.update();

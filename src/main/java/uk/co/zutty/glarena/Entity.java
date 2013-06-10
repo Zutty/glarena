@@ -20,6 +20,8 @@ public abstract class Entity {
     private ShaderProgram shader;
     protected Matrix4f matrix;
 
+    protected Game game;
+
     protected Entity(Model model, ShaderProgram shader) {
         this.model = model;
         this.shader = shader;
@@ -31,6 +33,10 @@ public abstract class Entity {
         position.x = x;
         position.y = y;
         position.z = z;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     public void update() {
