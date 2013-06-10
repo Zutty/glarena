@@ -12,6 +12,7 @@ import org.lwjgl.util.vector.Vector4f;
 public class Gunship extends Entity {
 
     public static final float SPEED = .4f;
+    public static final float DEAD_ZONE = 0.1f;
 
     private long timer = 10L;
     private float yawRadians = 0;
@@ -64,7 +65,7 @@ public class Gunship extends Entity {
         }
         */
 
-        if(gamepad.getLeftStick().lengthSquared() > 0.04f) {
+        if(gamepad.getLeftStick().lengthSquared() > DEAD_ZONE) {
             position.x -= gamepad.getLeftStick().x * SPEED;
             position.z -= gamepad.getLeftStick().y * SPEED;
         }
@@ -72,15 +73,17 @@ public class Gunship extends Entity {
         //position.x += Math.sin(yawRadians) * gamepad.getRightTrigger() * SPEED;
         //position.z += Math.cos(yawRadians) * gamepad.getRightTrigger() * SPEED;
 
-        Vector2f direction = (gamepad.getRightStick().lengthSquared() > 0.04f) ? gamepad.getRightStick() : gamepad.getLeftStick();
+        Vector2f direction = (gamepad.getRightStick().lengthSquared() > DEAD_ZONE) ? gamepad.getRightStick() : ((gamepad.getLeftStick().lengthSquared() > DEAD_ZONE) ? gamepad.getLeftStick() : null);
 
-        yawRadians = (float)Math.atan2(-direction.x, -direction.y);
-        yaw = yawRadians * (180f/(float)Math.PI);
+        if(direction != null) {
+            yawRadians = (float)Math.atan2(-direction.x, -direction.y);
+            yaw = yawRadians * (180f/(float)Math.PI);
+        }
 
         super.update();
 
         ++timer;
-        if (gamepad.getRightTrigger() > 0f) {
+        if (gamepad.getRightStick().lengthSquared() > DEAD_ZONE) {
             if(timer >= 3L) {
                 timer = 0;
                 Vector4f emitPosition = new Vector4f((emitAlt = !emitAlt) ? emitPointL : emitPointR);
