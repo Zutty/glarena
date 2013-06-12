@@ -83,7 +83,7 @@ public class Gunship extends Entity {
         super.update();
 
         ++timer;
-        if (gamepad.getRightStick().lengthSquared() > DEAD_ZONE) {
+        if (gamepad.getRightStick().lengthSquared() > DEAD_ZONE || gamepad.isButtonDown()) {
             if(timer >= 3L) {
                 timer = 0;
                 Vector4f emitPosition = new Vector4f((emitAlt = !emitAlt) ? emitPointL : emitPointR);
