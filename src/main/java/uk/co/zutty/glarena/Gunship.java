@@ -39,39 +39,10 @@ public class Gunship extends Entity {
 
     @Override
     public void update() {
-        float dz = 0f;
-        float dx = 0f;
-        boolean setYaw = false;
-
-        /*
-        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            position.z += SPEED;
-            dz = 1;
-            setYaw = true;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            position.z -= SPEED;
-            dz = -1;
-            setYaw = true;
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            position.x += SPEED;
-            dx = 1;
-            setYaw = true;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            position.x -= SPEED;
-            dx = -1;
-            setYaw = true;
-        }
-        */
-
         if(gamepad.getLeftStick().lengthSquared() > DEAD_ZONE) {
             position.x -= gamepad.getLeftStick().x * SPEED;
             position.z -= gamepad.getLeftStick().y * SPEED;
         }
-
-        //position.x += Math.sin(yawRadians) * gamepad.getRightTrigger() * SPEED;
-        //position.z += Math.cos(yawRadians) * gamepad.getRightTrigger() * SPEED;
 
         Vector2f direction = (gamepad.getRightStick().lengthSquared() > DEAD_ZONE) ? gamepad.getRightStick() : ((gamepad.getLeftStick().lengthSquared() > DEAD_ZONE) ? gamepad.getLeftStick() : null);
 
