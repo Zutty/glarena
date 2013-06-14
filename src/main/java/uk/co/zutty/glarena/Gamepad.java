@@ -37,6 +37,8 @@ public class Gamepad {
         rightTrigger = controller.getComponent(Component.Identifier.Axis.RZ);
     }
 
+    protected Gamepad() {}
+
     public boolean isButtonDown() {
         return aButton.getPollData() != 0;
     }

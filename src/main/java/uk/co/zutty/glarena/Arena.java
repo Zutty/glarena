@@ -59,6 +59,9 @@ public class Arena extends Game {
                 gamepad = new Gamepad(controller);
             }
         }
+        if(gamepad == null) {
+            gamepad = new KeyboardGamepad();
+        }
 
         Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
         ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
