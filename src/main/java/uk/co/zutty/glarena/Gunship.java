@@ -1,6 +1,5 @@
 package uk.co.zutty.glarena;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -46,10 +45,14 @@ public class Gunship extends Entity {
 
         Vector2f direction = (gamepad.getRightStick().lengthSquared() > DEAD_ZONE) ? gamepad.getRightStick() : ((gamepad.getLeftStick().lengthSquared() > DEAD_ZONE) ? gamepad.getLeftStick() : null);
 
+        float prevYaw = yaw;
+
         if(direction != null) {
             yawRadians = (float)Math.atan2(-direction.x, -direction.y);
             yaw = yawRadians * (180f/(float)Math.PI);
         }
+
+        roll = easeAngle(roll, (prevYaw - yaw) * 10f);
 
         super.update();
 
@@ -63,6 +66,16 @@ public class Gunship extends Entity {
                 billboardList.emitFrom(xyz(emitPosition), new Vector3f((float)Math.sin(yawRadians), 0, (float)Math.cos(yawRadians)), 1.2f);
             }
         }
+    }
+
+    private float easeAngle(float current, float target) {
+        return current + delta(target, current) / 10f;
+    }
+
+    private float delta(float a, float b) {
+        float diff = Math.abs(a - b) % 360f;
+        diff = (diff > 180) ? 360f - diff : diff;
+        return (a > b) ? diff : -diff;
     }
 
     public static Vector3f xyz(Vector4f v) {
