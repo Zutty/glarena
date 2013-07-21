@@ -26,6 +26,10 @@ public class VertexBuffer {
         this.format = format;
     }
 
+    public VertexFormat getFormat() {
+        return format;
+    }
+
     public void createBuffer() {
         glVao = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(glVao);
@@ -37,8 +41,6 @@ public class VertexBuffer {
         for(Attribute attribute : format.getAttributes()) {
             glVertexAttribPointer(index++, attribute.getElements(), GL_FLOAT, false, format.getStride(), attribute.getOffset());
         }
-        glVertexAttribPointer(0, Particle.POSITION_ELEMENTS, GL_FLOAT, false, Particle.STRIDE, Particle.POSITION_OFFSET);
-        glVertexAttribPointer(1, Particle.VELOCITY_ELEMENTS, GL_FLOAT, false, Particle.STRIDE, Particle.VELOCITY_OFFSET);
 
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         GL30.glBindVertexArray(0);

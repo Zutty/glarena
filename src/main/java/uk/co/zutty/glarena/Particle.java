@@ -9,19 +9,6 @@ import java.nio.FloatBuffer;
 */
 public class Particle {
 
-    private static final int FLOAT_BYTES = 4;
-    public static final int POSITION_ELEMENTS = 3;
-    public static final int VELOCITY_ELEMENTS = 3;
-    public static final int ELEMENTS = POSITION_ELEMENTS + VELOCITY_ELEMENTS;
-
-    public static final int POSITION_BYTES = POSITION_ELEMENTS * FLOAT_BYTES;
-    public static final int VELOCITY_BYTES = VELOCITY_ELEMENTS * FLOAT_BYTES;
-
-    public static final int POSITION_OFFSET = 0;
-    public static final int VELOCITY_OFFSET = POSITION_OFFSET + POSITION_BYTES;
-
-    public static final int STRIDE = POSITION_BYTES + VELOCITY_BYTES;
-
     private Vector3f position;
     private Vector3f velocity;
     private short lifetime;

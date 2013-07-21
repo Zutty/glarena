@@ -52,7 +52,7 @@ public abstract class Emitter {
             }
         }
 
-        FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * Particle.ELEMENTS);
+        FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * buffer.getFormat().getElements());
 
         for (Particle p : particles()) {
             p.put(positions);
@@ -60,7 +60,7 @@ public abstract class Emitter {
 
         positions.flip();
 
-        buffer.subdata(positions, particles.size() * Particle.STRIDE);
+        buffer.subdata(positions, particles.size() * buffer.getFormat().getStride());
     }
 
 

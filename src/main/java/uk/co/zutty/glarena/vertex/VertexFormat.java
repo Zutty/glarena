@@ -48,7 +48,7 @@ public class VertexFormat {
             attr.setOffset(stride);
             attributes.add(attr);
             stride += elements * FLOAT_BYTES;
-            elements += elements;
+            this.elements += elements;
             return this;
         }
 
