@@ -1,7 +1,7 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL15;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.vertex.VertexBuffer;
 import uk.co.zutty.glarena.vertex.VertexFormat;
@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBufferSubData;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 /**
  * A container for particles that controls their position and other properties.
@@ -44,17 +44,17 @@ public abstract class Emitter {
     }
 
     public void update() {
-        for(Iterator<Particle> iter = particles.iterator(); iter.hasNext(); ) {
+        for (Iterator<Particle> iter = particles.iterator(); iter.hasNext(); ) {
             Particle p = iter.next();
             p.update();
-            if(p.isDead()) {
+            if (p.isDead()) {
                 iter.remove();
             }
         }
 
         FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * Particle.ELEMENTS);
 
-        for(Particle p: particles()) {
+        for (Particle p : particles()) {
             p.put(positions);
         }
 
@@ -62,4 +62,27 @@ public abstract class Emitter {
 
         buffer.subdata(positions, particles.size() * Particle.STRIDE);
     }
+
+
+    public void render(Matrix4f viewProjectionMatrix) {
+        glDisable(GL_CULL_FACE);
+
+        shader.use();
+        shader.setUniform("gVP", viewProjectionMatrix);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, glTexture);
+
+        buffer.bind();
+
+        glDrawArrays(GL_POINTS, 0, particles.size());
+
+        buffer.unbind();
+
+        ShaderProgram.useNone();
+
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+
 }

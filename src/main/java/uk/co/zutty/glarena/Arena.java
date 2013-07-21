@@ -19,7 +19,7 @@ public class Arena extends Game {
 
     private Gamepad gamepad;
 
-    private BulletEmitter bulletEmitter;
+    private Emitter playerBulletEmitter;
 
     private Vector3f arenaCentre;
 
@@ -67,12 +67,11 @@ public class Arena extends Game {
         ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
         Model ringModel = Model.fromMesh(new ObjLoader().loadMesh("/models/circle.obj"), TextureLoader.loadTexture("/textures/circle.png"));
 
-        bulletEmitter = new BulletEmitter();
-        bulletEmitter.init("/textures/shot.png");
+        playerBulletEmitter = new BulletEmitter("/textures/shot.png");
 
         player = new Gunship(gunshipModel, shader);
         player.setPosition(4.5f, 0, -1);
-        player.setBulletEmitter(bulletEmitter);
+        player.setBulletEmitter(playerBulletEmitter);
         player.setGamepad(gamepad);
         add(player);
 
@@ -86,7 +85,7 @@ public class Arena extends Game {
     }
 
     public void spawnUfo() {
-        Ufo ufo = new Ufo(ufoModel, shader, bulletEmitter);
+        Ufo ufo = new Ufo(ufoModel, shader, playerBulletEmitter);
         ufo.setPosition(-4.5f, 0, -1);
         add(ufo);
     }
@@ -117,7 +116,7 @@ public class Arena extends Game {
         camera.setCenter(arenaCentre.x - V.x, 0f, arenaCentre.z - V.z);
         camera.update();
 
-        bulletEmitter.update();
+        playerBulletEmitter.update();
     }
 
     @Override
@@ -127,7 +126,7 @@ public class Arena extends Game {
         Matrix4f viewProjectionMatrix = new Matrix4f();
         Matrix4f.mul(projectionMatrix, camera.getViewMatrix(), viewProjectionMatrix);
 
-        bulletEmitter.render(viewProjectionMatrix);
+        playerBulletEmitter.render(viewProjectionMatrix);
     }
 
     public static void main(String... args) {

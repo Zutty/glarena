@@ -15,7 +15,7 @@ public class Gunship extends Entity {
 
     private long timer = 10L;
     private float yawRadians = 0;
-    private BulletEmitter bulletEmitter;
+    private Emitter bulletEmitter;
     private Vector4f emitPointL;
     private Vector4f emitPointR;
     private boolean emitAlt;
@@ -32,7 +32,7 @@ public class Gunship extends Entity {
         this.gamepad = gamepad;
     }
 
-    public void setBulletEmitter(BulletEmitter bulletEmitter) {
+    public void setBulletEmitter(Emitter bulletEmitter) {
         this.bulletEmitter = bulletEmitter;
     }
 

@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class BulletEmitter extends Emitter {
 
-    public void init(String texFilename) {
+    public BulletEmitter(String texFilename) {
         glTexture = TextureLoader.loadTexture(texFilename);
 
         shader = new ShaderProgram();
@@ -48,26 +48,5 @@ public class BulletEmitter extends Emitter {
                 .withAttribute(3)
                 .withAttribute(3)
                 .build());
-    }
-
-    public void render(Matrix4f viewProjectionMatrix) {
-        glDisable(GL_CULL_FACE);
-
-        shader.use();
-        shader.setUniform("gVP", viewProjectionMatrix);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, glTexture);
-
-        buffer.bind();
-
-        glDrawArrays(GL_POINTS, 0, particles.size());
-
-        buffer.unbind();
-
-        ShaderProgram.useNone();
-
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
     }
 }

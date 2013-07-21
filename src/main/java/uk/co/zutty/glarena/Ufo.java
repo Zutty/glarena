@@ -9,12 +9,12 @@ public class Ufo extends Entity {
 
     private static final float HIT_RADIUS_SQUARED = 1.8f * 1.8f;
 
-    private BulletEmitter bulletEmitter;
+    private Emitter playerBulletEmitter;
     private int timer = 0;
 
-    public Ufo(Model model, ShaderProgram shader, BulletEmitter bulletEmitter) {
+    public Ufo(Model model, ShaderProgram shader, Emitter playerBulletEmitter) {
         super(model, shader);
-        this.bulletEmitter = bulletEmitter;
+        this.playerBulletEmitter = playerBulletEmitter;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class Ufo extends Entity {
         position.x += Math.sin((double)timer / (50.0 - ((double)timer/20.0))) * 0.5f;
         position.z += Math.cos((double)timer / (50.0 - ((double)timer/20.0))) * 0.5f;
 
-        for (Particle p : bulletEmitter.particles()) {
+        for (Particle p : playerBulletEmitter.particles()) {
             Vector3f.sub(p.getPosition(), position, Arena.V);
             if (Arena.V.lengthSquared() < HIT_RADIUS_SQUARED) {
                 game.remove(this);
