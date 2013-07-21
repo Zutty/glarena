@@ -15,7 +15,7 @@ public class Gunship extends Entity {
 
     private long timer = 10L;
     private float yawRadians = 0;
-    private BillboardList billboardList;
+    private BulletEmitter bulletEmitter;
     private Vector4f emitPointL;
     private Vector4f emitPointR;
     private boolean emitAlt;
@@ -32,8 +32,8 @@ public class Gunship extends Entity {
         this.gamepad = gamepad;
     }
 
-    public void setBillboardList(BillboardList billboardList) {
-        this.billboardList = billboardList;
+    public void setBulletEmitter(BulletEmitter bulletEmitter) {
+        this.bulletEmitter = bulletEmitter;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Gunship extends Entity {
                 Vector4f emitPosition = new Vector4f((emitAlt = !emitAlt) ? emitPointL : emitPointR);
                 Matrix4f.transform(matrix, emitPosition, emitPosition);
 
-                billboardList.emitFrom(xyz(emitPosition), new Vector3f((float)Math.sin(yawRadians), 0, (float)Math.cos(yawRadians)), 1.2f);
+                bulletEmitter.emitFrom(xyz(emitPosition), new Vector3f((float)Math.sin(yawRadians), 0, (float)Math.cos(yawRadians)), 1.2f);
             }
         }
     }

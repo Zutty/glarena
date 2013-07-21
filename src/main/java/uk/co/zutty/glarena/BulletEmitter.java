@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * A collection of billboarded particles.
  */
-public class BillboardList extends Emitter {
+public class BulletEmitter extends Emitter {
 
     public void init(String texFilename) {
         glTexture = TextureLoader.loadTexture(texFilename);
