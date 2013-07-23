@@ -23,6 +23,10 @@ public class Camera {
         return position;
     }
 
+    public Vector3f getCenter() {
+        return center;
+    }
+
     public void setPosition(float x, float y, float z) {
         position.x = x;
         position.y = y;

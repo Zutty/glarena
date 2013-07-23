@@ -20,6 +20,7 @@ public class Arena extends Game {
     private Gamepad gamepad;
 
     private Emitter playerBulletEmitter;
+    private Emitter explosionEmitter;
 
     private Vector3f arenaCentre;
 
@@ -68,6 +69,7 @@ public class Arena extends Game {
         Model ringModel = Model.fromMesh(new ObjLoader().loadMesh("/models/circle.obj"), TextureLoader.loadTexture("/textures/circle.png"));
 
         playerBulletEmitter = new BulletEmitter("/textures/shot.png");
+        explosionEmitter = new BillboardEmitter("/textures/cross.png", camera);
 
         player = new Gunship(gunshipModel, shader);
         player.setPosition(4.5f, 0, -1);
@@ -80,6 +82,20 @@ public class Arena extends Game {
         Marker ringMarker = new Marker(ringModel, shader);
         ringMarker.position.y = -1;
         add(ringMarker);
+
+
+        final double DEG_TO_RAD = Math.PI/180.0;
+
+        for(int i = 0; i < 360; i += 10) {
+            float x = (float)Math.sin(i * DEG_TO_RAD) * 10f;
+            float z = (float)Math.cos(i * DEG_TO_RAD) * 10f;
+
+            explosionEmitter.emitFrom(new Vector3f(x, 0, z), new Vector3f(1,0,0), 0f);
+        }
+        explosionEmitter.update();
+
+
+
 
         exitOnGLError("init");
     }
@@ -104,7 +120,7 @@ public class Arena extends Game {
         if(++spawnTimer > 15 && waveSpawn < 6) {
             spawnTimer = 0;
             ++waveSpawn;
-            spawnUfo();
+            //spawnUfo();
         }
 
         super.update();
@@ -117,6 +133,7 @@ public class Arena extends Game {
         camera.update();
 
         playerBulletEmitter.update();
+        explosionEmitter.update();
     }
 
     @Override
@@ -127,6 +144,7 @@ public class Arena extends Game {
         Matrix4f.mul(projectionMatrix, camera.getViewMatrix(), viewProjectionMatrix);
 
         playerBulletEmitter.render(viewProjectionMatrix);
+        explosionEmitter.render(viewProjectionMatrix);
     }
 
     public static void main(String... args) {
