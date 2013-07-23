@@ -48,15 +48,19 @@ public class VertexBuffer {
 
     public void bind() {
         GL30.glBindVertexArray(glVao);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
+        int index = 0;
+        for(Attribute attribute : format.getAttributes()) {
+            glEnableVertexAttribArray(index++);
+        }
 
         glBindBuffer(GL_ARRAY_BUFFER, glVbo);
     }
 
     public void unbind() {
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
+        int index = 0;
+        for(Attribute attribute : format.getAttributes()) {
+            glDisableVertexAttribArray(index++);
+        }
         GL30.glBindVertexArray(0);
     }
 

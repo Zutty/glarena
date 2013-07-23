@@ -40,4 +40,9 @@ public class BulletEmitter extends Emitter {
                 .withAttribute(3)
                 .build());
     }
+
+    @Override
+    protected Particle newParticle() {
+        return new BulletParticle();
+    }
 }

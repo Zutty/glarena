@@ -7,11 +7,11 @@ import java.nio.FloatBuffer;
 /**
 * Representation of a single particle, both the logical game entity and VBO format for OpenGL.
 */
-public class Particle {
+public abstract class Particle {
 
-    private Vector3f position;
-    private Vector3f velocity;
-    private short lifetime;
+    protected Vector3f position;
+    protected Vector3f velocity;
+    protected short lifetime;
 
     public Vector3f getPosition() {
         return position;
@@ -46,13 +46,5 @@ public class Particle {
         Vector3f.add(position, velocity, position);
     }
 
-    public void put(FloatBuffer buffer) {
-        buffer.put(position.x);
-        buffer.put(position.y);
-        buffer.put(position.z);
-
-        buffer.put(velocity.x);
-        buffer.put(velocity.y);
-        buffer.put(velocity.z);
-    }
+    public abstract void put(FloatBuffer buffer);
 }

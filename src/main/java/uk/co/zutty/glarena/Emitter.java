@@ -30,8 +30,10 @@ public abstract class Emitter {
         buffer.createBuffer();
     }
 
+    protected abstract Particle newParticle();
+
     public void emitFrom(Vector3f source, Vector3f direction, float speed) {
-        Particle particle = new Particle();
+        Particle particle = newParticle();
         particle.setLifetime((short) 100);
         particle.setPosition(new Vector3f(source));
         particle.setVelocity(new Vector3f(direction));
@@ -63,12 +65,14 @@ public abstract class Emitter {
         buffer.subdata(positions, particles.size() * buffer.getFormat().getStride());
     }
 
+    protected void initUniforms(ShaderProgram shader) {}
 
     public void render(Matrix4f viewProjectionMatrix) {
         glDisable(GL_CULL_FACE);
 
         shader.use();
         shader.setUniform("gVP", viewProjectionMatrix);
+        initUniforms(shader);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, glTexture);
