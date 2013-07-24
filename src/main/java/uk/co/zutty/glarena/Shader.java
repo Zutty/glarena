@@ -2,6 +2,8 @@ package uk.co.zutty.glarena;
 
 import org.lwjgl.opengl.GL32;
 
+import java.nio.charset.Charset;
+
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
@@ -49,6 +51,9 @@ public class Shader {
     }
 
     public void setSource(CharSequence source) {
+        if(!Charset.forName("US-ASCII").newEncoder().canEncode(source)) {
+            throw new IllegalArgumentException("Shader source contains illegal characters");
+        }
         glShaderSource(glShader, source);
     }
 
