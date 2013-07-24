@@ -36,6 +36,7 @@ public class BillboardEmitter extends Emitter {
         shader.attachShader(fragmentShader);
 
         shader.bindAttribLocation(0, "in_Position");
+        shader.bindAttribLocation(1, "in_rotation");
 
         shader.link();
         shader.validate();
@@ -46,6 +47,7 @@ public class BillboardEmitter extends Emitter {
 
         init(VertexFormat.Builder.format()
                 .withAttribute(3)
+                .withAttribute(1)
                 .build());
     }
 
