@@ -1,57 +1,27 @@
 package uk.co.zutty.glarena.vertex;
 
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
-import uk.co.zutty.glarena.Particle;
-
 import java.nio.FloatBuffer;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_INVALID_VALUE;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glBufferSubData;
-import static org.lwjgl.opengl.GL20.*;
 
 /**
- * Wrapper for  VAO and a single VBO.
+ * Wrapper for a VBO.
  */
 public class VertexBuffer {
 
-    private int glVao = GL_INVALID_VALUE;
     private int glVbo = GL_INVALID_VALUE;
-    private VertexFormat format;
 
-    public VertexBuffer(VertexFormat format) {
-        this.format = format;
-    }
-
-    public VertexFormat getFormat() {
-        return format;
-    }
-
-    public void createBuffer() {
-        glVao = GL30.glGenVertexArrays();
-        GL30.glBindVertexArray(glVao);
-
+    public VertexBuffer() {
         glVbo = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, glVbo);
-
-        int index = 0;
-        for(Attribute attribute : format.getAttributes()) {
-            glEnableVertexAttribArray(index);
-            glVertexAttribPointer(index++, attribute.getElements(), GL_FLOAT, false, format.getStride(), attribute.getOffset());
-        }
-
-        GL30.glBindVertexArray(0);
     }
 
     public void bind() {
-        GL30.glBindVertexArray(glVao);
+        glBindBuffer(GL_ARRAY_BUFFER, glVbo);
     }
 
     public void unbind() {
-        GL30.glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     public void destroy() {
@@ -64,6 +34,6 @@ public class VertexBuffer {
         glBindBuffer(GL_ARRAY_BUFFER, glVbo);
         glBufferData(GL_ARRAY_BUFFER, dataSize, GL_STREAM_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, data);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 }

@@ -3,6 +3,7 @@ package uk.co.zutty.glarena;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import uk.co.zutty.glarena.vertex.VertexArray;
 import uk.co.zutty.glarena.vertex.VertexBuffer;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
@@ -21,13 +22,20 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 public abstract class Emitter {
 
     protected ShaderProgram shader;
+    protected VertexArray array;
     protected VertexBuffer buffer;
+    private VertexFormat format;
     protected int glTexture = -1;
     protected List<Particle> particles = new ArrayList<Particle>();
 
     public void init(VertexFormat format) {
-        buffer = new VertexBuffer(format);
-        buffer.createBuffer();
+        this.format = format;
+        array = new VertexArray();
+        array.bind();
+        buffer = new VertexBuffer();
+        buffer.bind();
+        array.createAttributePointers(format);
+        array.unbind();
     }
 
     protected abstract Particle newParticle();
@@ -54,7 +62,7 @@ public abstract class Emitter {
             }
         }
 
-        FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * buffer.getFormat().getElements());
+        FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * format.getElements());
 
         for (Particle p : particles()) {
             p.put(positions);
@@ -62,7 +70,7 @@ public abstract class Emitter {
 
         positions.flip();
 
-        buffer.subdata(positions, particles.size() * buffer.getFormat().getStride());
+        buffer.subdata(positions, particles.size() * format.getStride());
     }
 
     protected void initUniforms(ShaderProgram shader) {}
@@ -77,11 +85,11 @@ public abstract class Emitter {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, glTexture);
 
-        buffer.bind();
+        array.bind();
 
         glDrawArrays(GL_POINTS, 0, particles.size());
 
-        buffer.unbind();
+        array.unbind();
 
         ShaderProgram.useNone();
 
