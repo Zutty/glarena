@@ -11,29 +11,33 @@ import static org.lwjgl.opengl.GL15.*;
 public class VertexBuffer {
 
     private int glVbo = GL_INVALID_VALUE;
+    private int target;
+
+    public VertexBuffer(int target) {
+        glVbo = glGenBuffers();
+        this.target = target;
+    }
 
     public VertexBuffer() {
-        glVbo = glGenBuffers();
+        this(GL_ARRAY_BUFFER);
     }
 
     public void bind() {
-        glBindBuffer(GL_ARRAY_BUFFER, glVbo);
+        glBindBuffer(target, glVbo);
     }
 
     public void unbind() {
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(target, 0);
     }
 
     public void destroy() {
-        if (glVbo != GL_INVALID_VALUE) {
-            glDeleteBuffers(glVbo);
-        }
+        glDeleteBuffers(glVbo);
     }
 
     public void subdata(FloatBuffer data, long dataSize) {
-        glBindBuffer(GL_ARRAY_BUFFER, glVbo);
-        glBufferData(GL_ARRAY_BUFFER, dataSize, GL_STREAM_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, data);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(target, glVbo);
+        glBufferData(target, dataSize, GL_STREAM_DRAW);
+        glBufferSubData(target, 0, data);
+        glBindBuffer(target, 0);
     }
 }

@@ -2,19 +2,24 @@ package uk.co.zutty.glarena;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.vector.Matrix4f;
+import uk.co.zutty.glarena.vertex.VertexArray;
+import uk.co.zutty.glarena.vertex.VertexBuffer;
+import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static uk.co.zutty.glarena.vertex.VertexFormat.Builder.format;
 
 /**
  * Represents a model stored on the GPU that can be rendered.
  */
 public class Model {
 
-    private int glVao;
-    private int glVertexVbo;
-    private int glIndexVbo;
+    private VertexArray vertexArray;
+    private VertexBuffer vertexBuffer;
+    private VertexBuffer indexBuffer;
     private int numIndices;
     private int glTexture;
 
@@ -24,41 +29,42 @@ public class Model {
     }
 
     public static Model fromMesh(Mesh mesh, int texture) {
+        VertexFormat format = format()
+                .withAttribute(3)
+                .withAttribute(3)
+                .withAttribute(2)
+                .build();
+
         Model model = new Model(texture);
         model.numIndices = mesh.getIndices().size();
 
-        FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(mesh.getVertices().size() * Vertex.STRIDE);
-        ShortBuffer indexBuffer = BufferUtils.createShortBuffer(model.numIndices);
+        FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * format.getStride());
+        ShortBuffer indexData = BufferUtils.createShortBuffer(model.numIndices);
 
         for (Vertex vertex : mesh.getVertices()) {
-            vertex.put(vertexBuffer);
+            vertex.put(vertexData);
         }
 
         for (short index : mesh.getIndices()) {
-            indexBuffer.put(index);
+            indexData.put(index);
         }
 
-        vertexBuffer.flip();
-        indexBuffer.flip();
+        vertexData.flip();
+        indexData.flip();
 
-        model.glVao = GL30.glGenVertexArrays();
-        GL30.glBindVertexArray(model.glVao);
+        model.vertexArray = new VertexArray();
+        model.vertexArray.bind();
 
-        model.glVertexVbo = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, model.glVertexVbo);
+        model.vertexBuffer = new VertexBuffer();
+        model.vertexBuffer.bind();
 
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STREAM_DRAW);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexData, GL15.GL_STATIC_DRAW);
 
-        GL20.glEnableVertexAttribArray(0);
-        GL20.glVertexAttribPointer(0, Vertex.POSITION_ELEMENTS, GL11.GL_FLOAT, false, Vertex.STRIDE, Vertex.POSITION_OFFSET);
-        GL20.glEnableVertexAttribArray(1);
-        GL20.glVertexAttribPointer(1, Vertex.NORMAL_ELEMENTS, GL11.GL_FLOAT, false, Vertex.STRIDE, Vertex.NORMAL_OFFSET);
-        GL20.glEnableVertexAttribArray(2);
-        GL20.glVertexAttribPointer(2, Vertex.TEXCOORD_ELEMENTS, GL11.GL_FLOAT, false, Vertex.STRIDE, Vertex.TEXCOORD_OFFSET);
+        model.vertexArray.createAttributePointers(format);
 
-        model.glIndexVbo = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, model.glIndexVbo);
-        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW);
+        model.indexBuffer = new VertexBuffer(GL_ELEMENT_ARRAY_BUFFER);
+        model.indexBuffer.bind();
+        GL15.glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL15.GL_STATIC_DRAW);
 
         GL30.glBindVertexArray(0);
 
@@ -69,11 +75,11 @@ public class Model {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTexture);
 
-        GL30.glBindVertexArray(glVao);
+        vertexArray.bind();
 
         GL11.glDrawElements(GL11.GL_TRIANGLES, numIndices, GL11.GL_UNSIGNED_SHORT, 0);
 
-        GL30.glBindVertexArray(0);
+        vertexArray.unbind();
     }
 
     public void destroy() {
@@ -81,18 +87,8 @@ public class Model {
         GL11.glDeleteTextures(glTexture);
 
         // Delete the mesh
-        GL30.glBindVertexArray(glVao);
-
-        // Delete the vertex VBO
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-        GL15.glDeleteBuffers(glVertexVbo);
-
-        // Delete the index VBO
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
-        GL15.glDeleteBuffers(glIndexVbo);
-
-        // Delete the VAO
-        GL30.glBindVertexArray(0);
-        GL30.glDeleteVertexArrays(glVao);
+        vertexArray.destroy();
+        vertexBuffer.destroy();
+        indexBuffer.destroy();
     }
 }
