@@ -58,15 +58,15 @@ public class Model {
         model.vertexBuffer = new VertexBuffer();
         model.vertexBuffer.bind();
 
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexData, GL15.GL_STATIC_DRAW);
+        model.vertexBuffer.setData(vertexData);
 
         model.vertexArray.createAttributePointers(format);
 
         model.indexBuffer = new VertexBuffer(GL_ELEMENT_ARRAY_BUFFER);
         model.indexBuffer.bind();
-        GL15.glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL15.GL_STATIC_DRAW);
+        model.indexBuffer.setData(indexData);
 
-        GL30.glBindVertexArray(0);
+        model.vertexArray.unbind();
 
         return model;
     }

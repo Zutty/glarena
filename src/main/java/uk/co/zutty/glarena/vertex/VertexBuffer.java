@@ -1,6 +1,9 @@
 package uk.co.zutty.glarena.vertex;
 
+import org.lwjgl.opengl.GL15;
+
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 import static org.lwjgl.opengl.GL11.GL_INVALID_VALUE;
 import static org.lwjgl.opengl.GL15.*;
@@ -32,6 +35,14 @@ public class VertexBuffer {
 
     public void destroy() {
         glDeleteBuffers(glVbo);
+    }
+
+    public void setData(FloatBuffer data) {
+        GL15.glBufferData(target, data, GL15.GL_STATIC_DRAW);
+    }
+
+    public void setData(ShortBuffer data) {
+        GL15.glBufferData(target, data, GL15.GL_STATIC_DRAW);
     }
 
     public void subdata(FloatBuffer data, long dataSize) {
