@@ -14,6 +14,7 @@ public class IOUtils {
             try {
                 closeable.close();
             } catch (IOException e) {
+                System.err.println("Could not close stream: " + e.getMessage()); // TODO proper logger
             }
         }
     }
@@ -23,7 +24,7 @@ public class IOUtils {
 
         StringBuilder builder = new StringBuilder();
         char[] buffer = new char[1024];
-        int len = 0;
+        int len;
 
         try {
             while ((len = reader.read(buffer)) != -1) {

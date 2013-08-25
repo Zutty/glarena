@@ -20,7 +20,8 @@ public class TextureLoader {
     public static int loadTexture(String location) {
         int texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
-        InputStream in = null;
+        InputStream in;
+
         try {
             in = TextureLoader.class.getResourceAsStream(location);
             PNGDecoder decoder = new PNGDecoder(in);

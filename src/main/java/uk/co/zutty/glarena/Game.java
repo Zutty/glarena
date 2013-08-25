@@ -17,7 +17,7 @@ public class Game {
     protected Matrix4f projectionMatrix = null;
     protected Camera camera;
     private List<Entity> entities;
-    private Collection<Entity> toRemove = new ArrayList<Entity>();
+    private Collection<Entity> toRemove = new ArrayList<>();
     private List<ModelInstance> instances = new ArrayList<>();
 
     public Game() {
@@ -44,7 +44,7 @@ public class Game {
     private void setup() {
         projectionMatrix = MatrixUtils.frustum(Display.getWidth(), Display.getHeight(), 60, 0.1f, 100.0f);
         camera = new Camera();
-        entities = new ArrayList<Entity>();
+        entities = new ArrayList<>();
     }
 
     private void setupOpenGL() {
@@ -118,12 +118,7 @@ public class Game {
     }
 
     private void destroyOpenGL() {
-        for(Entity entity: entities) {
-            entity.destroy();
-        }
-
         exitOnGLError("destroyOpenGL");
-
         Display.destroy();
     }
 

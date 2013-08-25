@@ -24,12 +24,8 @@ public class ShaderProgram {
 
     public ShaderProgram() {
         glProgram = glCreateProgram();
-        shaders = new HashMap<ShaderType, Shader>();
-        uniforms = new HashMap<String, Integer>();
-    }
-
-    public int getGlObject() {
-        return glProgram;
+        shaders = new HashMap<>();
+        uniforms = new HashMap<>();
     }
 
     public void attachShader(Shader shader) {
@@ -105,24 +101,5 @@ public class ShaderProgram {
         glDeleteProgram(glProgram);
 
         useNone();
-    }
-
-    public static ShaderProgram build(String vertexFile, String fragmentFile) {
-        ShaderProgram shaderProgram = new ShaderProgram();
-
-        Shader vertexShader = new Shader(ShaderType.VERTEX);
-        vertexShader.loadSource(vertexFile);
-        vertexShader.compile();
-        shaderProgram.attachShader(vertexShader);
-
-        Shader fragmentShader = new Shader(ShaderType.FRAGMENT);
-        fragmentShader.loadSource(fragmentFile);
-        fragmentShader.compile();
-        shaderProgram.attachShader(fragmentShader);
-
-        //shaderProgram.link();
-        //shaderProgram.validate();
-
-        return shaderProgram;
     }
 }

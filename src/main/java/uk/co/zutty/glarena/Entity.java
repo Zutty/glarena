@@ -46,7 +46,4 @@ public abstract class Entity {
         matrix.rotate(degreesToRadians(yaw), new Vector3f(0, 1, 0));
         matrix.rotate(degreesToRadians(roll), new Vector3f(0, 0, 1));
     }
-
-    public void destroy() {
-    }
 }

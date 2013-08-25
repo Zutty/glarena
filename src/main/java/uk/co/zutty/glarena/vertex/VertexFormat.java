@@ -27,7 +27,7 @@ public class VertexFormat {
 
         private int stride = 0;
         private int elements = 0;
-        private List<Attribute> attributes = new ArrayList<Attribute>();
+        private List<Attribute> attributes = new ArrayList<>();
 
         private Builder() {}
 

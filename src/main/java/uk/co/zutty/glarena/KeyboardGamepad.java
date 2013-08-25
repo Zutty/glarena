@@ -1,6 +1,5 @@
 package uk.co.zutty.glarena;
 
-import net.java.games.input.Controller;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector2f;
 

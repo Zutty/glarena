@@ -12,8 +12,8 @@ public class Mesh {
     private List<Short> indices;
 
     public Mesh() {
-        vertices = new ArrayList<Vertex>();
-        indices = new ArrayList<Short>();
+        vertices = new ArrayList<>();
+        indices = new ArrayList<>();
     }
 
     public int addVertex(Vertex vertex) {

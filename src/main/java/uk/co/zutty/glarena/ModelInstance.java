@@ -19,8 +19,4 @@ public class ModelInstance {
     public Matrix4f getMatrix() {
         return matrix;
     }
-
-    public void setMatrix(Matrix4f matrix) {
-        this.matrix = matrix;
-    }
 }

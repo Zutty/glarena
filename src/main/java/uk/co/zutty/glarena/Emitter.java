@@ -27,7 +27,7 @@ public abstract class Emitter {
     protected VertexBuffer buffer;
     private VertexFormat format;
     protected int glTexture = -1;
-    protected List<Particle> particles = new ArrayList<Particle>();
+    protected List<Particle> particles = new ArrayList<>();
 
     public void init(VertexFormat format) {
         this.format = format;
