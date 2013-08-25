@@ -2,6 +2,7 @@ package uk.co.zutty.glarena;
 
 import uk.co.zutty.glarena.gl.Shader;
 import uk.co.zutty.glarena.gl.ShaderProgram;
+import uk.co.zutty.glarena.gl.ShaderType;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
 /**
@@ -22,17 +23,17 @@ public class BillboardEmitter extends Emitter {
 
         shader = new ShaderProgram();
 
-        Shader vertexShader = new Shader(Shader.Type.VERTEX);
+        Shader vertexShader = new Shader(ShaderType.VERTEX);
         vertexShader.loadSource("/shaders/billboard/vertex.glsl");
         vertexShader.compile();
         shader.attachShader(vertexShader);
 
-        Shader geometryShader = new Shader(Shader.Type.GEOMETRY);
+        Shader geometryShader = new Shader(ShaderType.GEOMETRY);
         geometryShader.loadSource("/shaders/billboard/geometry.glsl");
         geometryShader.compile();
         shader.attachShader(geometryShader);
 
-        Shader fragmentShader = new Shader(Shader.Type.FRAGMENT);
+        Shader fragmentShader = new Shader(ShaderType.FRAGMENT);
         fragmentShader.loadSource("/shaders/billboard/fragment.glsl");
         fragmentShader.compile();
         shader.attachShader(fragmentShader);

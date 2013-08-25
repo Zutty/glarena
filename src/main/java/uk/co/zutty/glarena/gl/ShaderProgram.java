@@ -19,12 +19,12 @@ public class ShaderProgram {
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     private int glProgram;
-    private Map<Shader.Type, Shader> shaders;
+    private Map<ShaderType, Shader> shaders;
     private Map<String, Integer> uniforms;
 
     public ShaderProgram() {
         glProgram = glCreateProgram();
-        shaders = new HashMap<Shader.Type, Shader>();
+        shaders = new HashMap<ShaderType, Shader>();
         uniforms = new HashMap<String, Integer>();
     }
 
@@ -110,12 +110,12 @@ public class ShaderProgram {
     public static ShaderProgram build(String vertexFile, String fragmentFile) {
         ShaderProgram shaderProgram = new ShaderProgram();
 
-        Shader vertexShader = new Shader(Shader.Type.VERTEX);
+        Shader vertexShader = new Shader(ShaderType.VERTEX);
         vertexShader.loadSource(vertexFile);
         vertexShader.compile();
         shaderProgram.attachShader(vertexShader);
 
-        Shader fragmentShader = new Shader(Shader.Type.FRAGMENT);
+        Shader fragmentShader = new Shader(ShaderType.FRAGMENT);
         fragmentShader.loadSource(fragmentFile);
         fragmentShader.compile();
         shaderProgram.attachShader(fragmentShader);

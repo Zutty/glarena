@@ -3,6 +3,7 @@ package uk.co.zutty.glarena;
 import org.lwjgl.util.vector.Matrix4f;
 import uk.co.zutty.glarena.gl.Shader;
 import uk.co.zutty.glarena.gl.ShaderProgram;
+import uk.co.zutty.glarena.gl.ShaderType;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import static uk.co.zutty.glarena.vertex.VertexFormat.Builder.format;
@@ -17,12 +18,12 @@ public class EntityTechnique implements Technique {
     public EntityTechnique() {
         shader = new ShaderProgram();
 
-        Shader vertexShader = new Shader(Shader.Type.VERTEX);
+        Shader vertexShader = new Shader(ShaderType.VERTEX);
         vertexShader.loadSource("/shaders/vec.glsl");
         vertexShader.compile();
         shader.attachShader(vertexShader);
 
-        Shader fragmentShader = new Shader(Shader.Type.FRAGMENT);
+        Shader fragmentShader = new Shader(ShaderType.FRAGMENT);
         fragmentShader.loadSource("/shaders/frag.glsl");
         fragmentShader.compile();
         shader.attachShader(fragmentShader);
