@@ -1,6 +1,8 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.util.vector.Matrix4f;
+import uk.co.zutty.glarena.gl.Shader;
+import uk.co.zutty.glarena.gl.ShaderProgram;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import static uk.co.zutty.glarena.vertex.VertexFormat.Builder.format;

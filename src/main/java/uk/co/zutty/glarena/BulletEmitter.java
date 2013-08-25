@@ -1,5 +1,7 @@
 package uk.co.zutty.glarena;
 
+import uk.co.zutty.glarena.gl.Shader;
+import uk.co.zutty.glarena.gl.ShaderProgram;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
 /**

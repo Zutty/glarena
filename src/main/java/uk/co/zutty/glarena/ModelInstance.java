@@ -1,6 +1,7 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.util.vector.Matrix4f;
+import uk.co.zutty.glarena.gl.Model;
 
 public class ModelInstance {
 

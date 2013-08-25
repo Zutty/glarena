@@ -4,6 +4,7 @@ import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import uk.co.zutty.glarena.gl.Model;
 
 /**
  * Concrete game class for the glArena game.

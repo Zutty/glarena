@@ -3,6 +3,7 @@ package uk.co.zutty.glarena;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import uk.co.zutty.glarena.gl.ShaderProgram;
 import uk.co.zutty.glarena.vertex.VertexArray;
 import uk.co.zutty.glarena.vertex.VertexBuffer;
 import uk.co.zutty.glarena.vertex.VertexFormat;
