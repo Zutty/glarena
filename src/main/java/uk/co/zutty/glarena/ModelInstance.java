@@ -8,12 +8,12 @@ public class ModelInstance {
     private Model model;
     private Matrix4f matrix = new Matrix4f();
 
-    public Model getModel() {
-        return model;
+    public ModelInstance(Model model) {
+        this.model = model;
     }
 
-    public void setModel(Model model) {
-        this.model = model;
+    public Model getModel() {
+        return model;
     }
 
     public Matrix4f getMatrix() {

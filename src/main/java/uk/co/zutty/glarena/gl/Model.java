@@ -68,12 +68,6 @@ public class Model {
         return technique;
     }
 
-    public ModelInstance newInstance() {
-        ModelInstance instance = new ModelInstance();
-        instance.setModel(this);
-        return instance;
-    }
-
     public void render() {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTexture);

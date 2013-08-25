@@ -48,7 +48,7 @@ public class Arena extends Game {
         playerBulletEmitter = new BulletEmitter("/textures/shot.png");
         explosionEmitter = new BillboardEmitter("/textures/cross.png", camera);
 
-        player = new Gunship(gunshipModel.newInstance());
+        player = new Gunship(new ModelInstance(gunshipModel));
         player.setPosition(4.5f, 0, -1);
         player.setBulletEmitter(playerBulletEmitter);
         player.setGamepad(gamepad);
@@ -56,7 +56,7 @@ public class Arena extends Game {
 
         arenaCentre = new Vector3f(0, 0, 0);
 
-        Marker ringMarker = new Marker(ringModel.newInstance());
+        Marker ringMarker = new Marker(new ModelInstance(ringModel));
         ringMarker.position.y = -1;
         add(ringMarker);
 
@@ -74,7 +74,7 @@ public class Arena extends Game {
     }
 
     public void spawnUfo() {
-        Ufo ufo = new Ufo(ufoModel.newInstance(), playerBulletEmitter);
+        Ufo ufo = new Ufo(new ModelInstance(ufoModel), playerBulletEmitter);
         ufo.setPosition(-4.5f, 0, -1);
         add(ufo);
     }
