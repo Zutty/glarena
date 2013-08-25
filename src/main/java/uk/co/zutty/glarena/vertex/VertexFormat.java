@@ -3,13 +3,6 @@ package uk.co.zutty.glarena.vertex;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Zutty
- * Date: 16/06/2013
- * Time: 12:34
- * To change this template use File | Settings | File Templates.
- */
 public class VertexFormat {
 
     private static final int FLOAT_BYTES = 4;

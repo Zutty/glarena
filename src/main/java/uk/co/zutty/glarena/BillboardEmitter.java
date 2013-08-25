@@ -5,13 +5,6 @@ import uk.co.zutty.glarena.gl.ShaderProgram;
 import uk.co.zutty.glarena.gl.ShaderType;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Zutty
- * Date: 21/07/2013
- * Time: 16:33
- * To change this template use File | Settings | File Templates.
- */
 public class BillboardEmitter extends Emitter {
 
     private Camera camera;

@@ -1,8 +1,5 @@
 package uk.co.zutty.glarena.util;
 
-/**
- * Created with IntelliJ IDEA.
- */
 public class MathUtils {
 
     public static final float DEGTORAD = (float) (Math.PI / 180d);
