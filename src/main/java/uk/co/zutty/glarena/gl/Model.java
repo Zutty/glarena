@@ -1,12 +1,8 @@
 package uk.co.zutty.glarena.gl;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import uk.co.zutty.glarena.Mesh;
-import uk.co.zutty.glarena.ModelInstance;
 import uk.co.zutty.glarena.Technique;
-import uk.co.zutty.glarena.Vertex;
 import uk.co.zutty.glarena.vertex.VertexArray;
 import uk.co.zutty.glarena.vertex.VertexBuffer;
 
@@ -27,25 +23,9 @@ public class Model {
     private int numIndices;
     private int glTexture;
 
-    public Model(Technique technique, Mesh mesh, int texture) {
+    public Model(Technique technique, int texture) {
         this.technique = technique;
         glTexture = texture;
-
-        numIndices = mesh.getIndices().size();
-
-        FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * technique.getFormat().getStride());
-        ShortBuffer indexData = BufferUtils.createShortBuffer(numIndices);
-
-        for (Vertex vertex : mesh.getVertices()) {
-            vertex.put(vertexData);
-        }
-
-        for (short index : mesh.getIndices()) {
-            indexData.put(index);
-        }
-
-        vertexData.flip();
-        indexData.flip();
 
         vertexArray = new VertexArray();
         vertexArray.bind();
@@ -53,15 +33,26 @@ public class Model {
         vertexBuffer = new VertexBuffer();
         vertexBuffer.bind();
 
-        vertexBuffer.setData(vertexData);
-
         vertexArray.createAttributePointers(technique.getFormat());
 
         indexBuffer = new VertexBuffer(GL_ELEMENT_ARRAY_BUFFER);
         indexBuffer.bind();
-        indexBuffer.setData(indexData);
 
         vertexArray.unbind();
+    }
+
+    public void setVertexData(FloatBuffer vertexData) {
+        vertexBuffer.bind();
+        vertexBuffer.setData(vertexData);
+        vertexBuffer.unbind();
+    }
+
+    public void setIndexData(ShortBuffer indexData) {
+        numIndices = indexData.capacity();
+
+        indexBuffer.bind();
+        indexBuffer.setData(indexData);
+        indexBuffer.unbind();
     }
 
     public Technique getTechnique() {

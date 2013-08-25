@@ -2,9 +2,13 @@ package uk.co.zutty.glarena;
 
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.gl.Model;
+
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 /**
  * Concrete game class for the glArena game.
@@ -41,9 +45,9 @@ public class Arena extends Game {
         }
 
         Technique entityTechnique = new EntityTechnique();
-        Model gunshipModel = new Model(entityTechnique, new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
-        ufoModel = new Model(entityTechnique, new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
-        Model ringModel = new Model(entityTechnique, new ObjLoader().loadMesh("/models/circle.obj"), TextureLoader.loadTexture("/textures/circle.png"));
+        Model gunshipModel = createModel(entityTechnique, "/models/gunship.obj", "/textures/gunship_diffuse.png");
+        ufoModel = createModel(entityTechnique, "/models/ufo.obj", "/textures/ufo.png");
+        Model ringModel = createModel(entityTechnique, "/models/circle.obj", "/textures/circle.png");
 
         playerBulletEmitter = new BulletEmitter("/textures/shot.png");
         explosionEmitter = new BillboardEmitter("/textures/cross.png", camera);
@@ -71,6 +75,33 @@ public class Arena extends Game {
         explosionEmitter.update();
 
         exitOnGLError("init");
+    }
+
+    private Model createModel(Technique technique, String meshFile, String textureFile) {
+        Mesh mesh = new ObjLoader().loadMesh(meshFile);
+        int texture = TextureLoader.loadTexture(textureFile);
+
+        Model model = new Model(technique, texture);
+
+        FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * technique.getFormat().getStride());
+
+        for (Vertex vertex : mesh.getVertices()) {
+            vertex.put(vertexData);
+        }
+
+        vertexData.flip();
+        model.setVertexData(vertexData);
+
+        ShortBuffer indexData = BufferUtils.createShortBuffer(mesh.getIndices().size());
+
+        for (short index : mesh.getIndices()) {
+            indexData.put(index);
+        }
+
+        indexData.flip();
+        model.setIndexData(indexData);
+
+        return model;
     }
 
     public void spawnUfo() {
