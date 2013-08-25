@@ -10,23 +10,22 @@ import static uk.co.zutty.glarena.util.MathUtils.degreesToRadians;
  */
 public abstract class Entity {
 
-    protected Vector3f position;
+    protected Vector3f position = new Vector3f();
 
     protected float roll;
     protected float pitch;
     protected float yaw;
 
-    private Model model;
-    private ShaderProgram shader;
-    protected Matrix4f matrix;
+    private ModelInstance modelInstance;
 
     protected Game game;
 
-    protected Entity(Model model, ShaderProgram shader) {
-        this.model = model;
-        this.shader = shader;
-        matrix = new Matrix4f();
-        position = new Vector3f();
+    public ModelInstance getModelInstance() {
+        return modelInstance;
+    }
+
+    public void setModelInstance(ModelInstance modelInstance) {
+        this.modelInstance = modelInstance;
     }
 
     public void setPosition(float x, float y, float z) {
@@ -40,6 +39,7 @@ public abstract class Entity {
     }
 
     public void update() {
+        Matrix4f matrix = modelInstance.getMatrix();
         matrix.setIdentity();
         matrix.translate(position);
         matrix.rotate(degreesToRadians(pitch), new Vector3f(1, 0, 0));
@@ -47,19 +47,6 @@ public abstract class Entity {
         matrix.rotate(degreesToRadians(roll), new Vector3f(0, 0, 1));
     }
 
-    public void render(Matrix4f projectionMatrix, Matrix4f viewMatrix) {
-        shader.use();
-
-        shader.setUniform("projectionMatrix", projectionMatrix);
-        shader.setUniform("viewMatrix", viewMatrix);
-        shader.setUniform("modelMatrix", matrix);
-
-        model.render();
-
-        ShaderProgram.useNone();
-    }
-
     public void destroy() {
-        model.destroy();
     }
 }

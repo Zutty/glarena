@@ -21,8 +21,8 @@ public class Gunship extends Entity {
     private boolean emitAlt;
     private Gamepad gamepad;
 
-    public Gunship(Model model, ShaderProgram shader) {
-        super(model, shader);
+    public Gunship(ModelInstance modelInstance) {
+        setModelInstance(modelInstance);
         emitPointL = new Vector4f(0.7f,0,2.9f,1);
         emitPointR = new Vector4f(-0.7f,0,2.9f,1);
         emitAlt = true;
@@ -61,7 +61,7 @@ public class Gunship extends Entity {
             if(timer >= 3L) {
                 timer = 0;
                 Vector4f emitPosition = new Vector4f((emitAlt = !emitAlt) ? emitPointL : emitPointR);
-                Matrix4f.transform(matrix, emitPosition, emitPosition);
+                Matrix4f.transform(getModelInstance().getMatrix(), emitPosition, emitPosition); //TODO a bit of a hack
 
                 bulletEmitter.emitFrom(xyz(emitPosition), new Vector3f((float)Math.sin(yawRadians), 0, (float)Math.cos(yawRadians)), 1.2f);
             }

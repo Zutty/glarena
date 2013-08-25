@@ -12,8 +12,8 @@ public class Ufo extends Entity {
     private Emitter playerBulletEmitter;
     private int timer = 0;
 
-    public Ufo(Model model, ShaderProgram shader, Emitter playerBulletEmitter) {
-        super(model, shader);
+    public Ufo(ModelInstance modelInstance, Emitter playerBulletEmitter) {
+        setModelInstance(modelInstance);
         this.playerBulletEmitter = playerBulletEmitter;
     }
 

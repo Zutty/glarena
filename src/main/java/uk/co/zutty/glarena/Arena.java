@@ -12,8 +12,6 @@ public class Arena extends Game {
 
     public static final Vector3f V = new Vector3f();
 
-    private ShaderProgram shader;
-    private ShaderProgram markerShader;
     private Gunship player;
     private Model ufoModel;
 
@@ -30,29 +28,6 @@ public class Arena extends Game {
 
     @Override
     protected void init() {
-        shader = ShaderProgram.build("/shaders/vec.glsl", "/shaders/frag.glsl");
-
-        shader.bindAttribLocation(0, "in_Position");
-        shader.bindAttribLocation(1, "foobar");
-        shader.bindAttribLocation(2, "in_TextureCoord");
-
-        shader.link();
-        shader.validate();
-
-        markerShader = ShaderProgram.build("/shaders/marker/vertex.glsl", "/shaders/marker/fragment.glsl");
-        markerShader.bindAttribLocation(0, "in_Position");
-        markerShader.bindAttribLocation(1, "in_TextureCoord");
-        markerShader.link();
-        markerShader.validate();
-
-        // Get matrices uniform locations
-        shader.initUniform("projectionMatrix");
-        shader.initUniform("viewMatrix");
-        shader.initUniform("modelMatrix");
-        markerShader.initUniform("projectionMatrix");
-        markerShader.initUniform("viewMatrix");
-        markerShader.initUniform("modelMatrix");
-
         camera.setPosition(0f, 20f, -25f);
 
         for(Controller controller: ControllerEnvironment.getDefaultEnvironment().getControllers()) {
@@ -64,14 +39,15 @@ public class Arena extends Game {
             gamepad = new KeyboardGamepad();
         }
 
-        Model gunshipModel = Model.fromMesh(new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
-        ufoModel = Model.fromMesh(new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
-        Model ringModel = Model.fromMesh(new ObjLoader().loadMesh("/models/circle.obj"), TextureLoader.loadTexture("/textures/circle.png"));
+        Technique entityTechnique = new EntityTechnique();
+        Model gunshipModel = new Model(entityTechnique, new ObjLoader().loadMesh("/models/gunship.obj"), TextureLoader.loadTexture("/textures/gunship_diffuse.png"));
+        ufoModel = new Model(entityTechnique, new ObjLoader().loadMesh("/models/ufo.obj"), TextureLoader.loadTexture("/textures/ufo.png"));
+        Model ringModel = new Model(entityTechnique, new ObjLoader().loadMesh("/models/circle.obj"), TextureLoader.loadTexture("/textures/circle.png"));
 
         playerBulletEmitter = new BulletEmitter("/textures/shot.png");
         explosionEmitter = new BillboardEmitter("/textures/cross.png", camera);
 
-        player = new Gunship(gunshipModel, shader);
+        player = new Gunship(gunshipModel.newInstance());
         player.setPosition(4.5f, 0, -1);
         player.setBulletEmitter(playerBulletEmitter);
         player.setGamepad(gamepad);
@@ -79,10 +55,9 @@ public class Arena extends Game {
 
         arenaCentre = new Vector3f(0, 0, 0);
 
-        Marker ringMarker = new Marker(ringModel, shader);
+        Marker ringMarker = new Marker(ringModel.newInstance());
         ringMarker.position.y = -1;
         add(ringMarker);
-
 
         final double DEG_TO_RAD = Math.PI/180.0;
 
@@ -94,14 +69,11 @@ public class Arena extends Game {
         }
         explosionEmitter.update();
 
-
-
-
         exitOnGLError("init");
     }
 
     public void spawnUfo() {
-        Ufo ufo = new Ufo(ufoModel, shader, playerBulletEmitter);
+        Ufo ufo = new Ufo(ufoModel.newInstance(), playerBulletEmitter);
         ufo.setPosition(-4.5f, 0, -1);
         add(ufo);
     }

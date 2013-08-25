@@ -18,6 +18,7 @@ public class Game {
     protected Camera camera;
     private List<Entity> entities;
     private Collection<Entity> toRemove = new ArrayList<Entity>();
+    private List<ModelInstance> instances = new ArrayList<>();
 
     public Game() {
         // Initialize OpenGL (Display)
@@ -80,6 +81,7 @@ public class Game {
 
     public void add(Entity entity) {
         entities.add(entity);
+        instances.add(entity.getModelInstance());
         entity.setGame(this);
     }
 
@@ -104,8 +106,12 @@ public class Game {
     protected void render() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for(Entity entity: entities) {
-            entity.render(projectionMatrix, camera.getViewMatrix());
+        for(ModelInstance instance : instances) {
+            Technique technique = instance.getModel().getTechnique();
+            technique.setCamera(camera);
+            technique.setProjectionMatrix(projectionMatrix);
+
+            technique.renderInstance(instance);
         }
 
         exitOnGLError("render");

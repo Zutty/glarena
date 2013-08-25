@@ -1,45 +1,36 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import uk.co.zutty.glarena.vertex.VertexArray;
 import uk.co.zutty.glarena.vertex.VertexBuffer;
-import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static uk.co.zutty.glarena.vertex.VertexFormat.Builder.format;
 
 /**
  * Represents a model stored on the GPU that can be rendered.
  */
 public class Model {
 
+    private Technique technique;
     private VertexArray vertexArray;
     private VertexBuffer vertexBuffer;
     private VertexBuffer indexBuffer;
     private int numIndices;
     private int glTexture;
 
-    public Model(int texture) {
+    public Model(Technique technique, Mesh mesh, int texture) {
+        this.technique = technique;
         glTexture = texture;
-        numIndices = 0;
-    }
 
-    public static Model fromMesh(Mesh mesh, int texture) {
-        VertexFormat format = format()
-                .withAttribute(3)
-                .withAttribute(3)
-                .withAttribute(2)
-                .build();
+        numIndices = mesh.getIndices().size();
 
-        Model model = new Model(texture);
-        model.numIndices = mesh.getIndices().size();
-
-        FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * format.getStride());
-        ShortBuffer indexData = BufferUtils.createShortBuffer(model.numIndices);
+        FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * technique.getFormat().getStride());
+        ShortBuffer indexData = BufferUtils.createShortBuffer(numIndices);
 
         for (Vertex vertex : mesh.getVertices()) {
             vertex.put(vertexData);
@@ -52,23 +43,31 @@ public class Model {
         vertexData.flip();
         indexData.flip();
 
-        model.vertexArray = new VertexArray();
-        model.vertexArray.bind();
+        vertexArray = new VertexArray();
+        vertexArray.bind();
 
-        model.vertexBuffer = new VertexBuffer();
-        model.vertexBuffer.bind();
+        vertexBuffer = new VertexBuffer();
+        vertexBuffer.bind();
 
-        model.vertexBuffer.setData(vertexData);
+        vertexBuffer.setData(vertexData);
 
-        model.vertexArray.createAttributePointers(format);
+        vertexArray.createAttributePointers(technique.getFormat());
 
-        model.indexBuffer = new VertexBuffer(GL_ELEMENT_ARRAY_BUFFER);
-        model.indexBuffer.bind();
-        model.indexBuffer.setData(indexData);
+        indexBuffer = new VertexBuffer(GL_ELEMENT_ARRAY_BUFFER);
+        indexBuffer.bind();
+        indexBuffer.setData(indexData);
 
-        model.vertexArray.unbind();
+        vertexArray.unbind();
+    }
 
-        return model;
+    public Technique getTechnique() {
+        return technique;
+    }
+
+    public ModelInstance newInstance() {
+        ModelInstance instance = new ModelInstance();
+        instance.setModel(this);
+        return instance;
     }
 
     public void render() {
