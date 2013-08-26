@@ -5,6 +5,7 @@ import net.java.games.input.ControllerEnvironment;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
 
 import java.nio.FloatBuffer;
@@ -81,7 +82,7 @@ public class Arena extends Game {
         Mesh mesh = new ObjLoader().loadMesh(meshFile);
         int texture = TextureLoader.loadTexture(textureFile);
 
-        Model model = new Model(technique, texture);
+        ElementArrayModel model = new ElementArrayModel(technique, texture);
 
         FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * technique.getFormat().getStride());
 
