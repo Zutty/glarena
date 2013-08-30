@@ -9,7 +9,7 @@ public interface Model {
 
     Technique getTechnique();
 
-    void render();
+    void draw(int mode);
 
     void destroy();
 }

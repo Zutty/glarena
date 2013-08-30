@@ -6,6 +6,7 @@ import uk.co.zutty.glarena.gl.ShaderProgram;
 import uk.co.zutty.glarena.gl.ShaderType;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static uk.co.zutty.glarena.vertex.VertexFormat.Builder.format;
 
 public class EntityTechnique implements Technique {
@@ -70,7 +71,7 @@ public class EntityTechnique implements Technique {
         shader.setUniform("viewMatrix", camera.getViewMatrix());
         shader.setUniform("modelMatrix", instance.getMatrix());
 
-        instance.getModel().render();
+        instance.getModel().draw(GL_TRIANGLES);
 
         ShaderProgram.useNone();
     }

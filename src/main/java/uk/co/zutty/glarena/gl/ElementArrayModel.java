@@ -1,7 +1,6 @@
 package uk.co.zutty.glarena.gl;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 import uk.co.zutty.glarena.Technique;
 import uk.co.zutty.glarena.vertex.Attribute;
 
@@ -9,6 +8,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -70,13 +70,13 @@ public class ElementArrayModel implements Model {
     }
 
     @Override
-    public void render() {
-        glActiveTexture(GL13.GL_TEXTURE0);
-        glBindTexture(GL11.GL_TEXTURE_2D, glTexture);
+    public void draw(int mode) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, glTexture);
 
         glBindVertexArray(glVao);
 
-        glDrawElements(GL11.GL_TRIANGLES, numIndices, GL11.GL_UNSIGNED_SHORT, 0);
+        glDrawElements(mode, numIndices, GL_UNSIGNED_SHORT, 0);
 
         glBindVertexArray(0);
     }
