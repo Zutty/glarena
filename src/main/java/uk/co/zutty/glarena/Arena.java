@@ -50,8 +50,10 @@ public class Arena extends Game {
         ufoModel = createModel(entityTechnique, "/models/ufo.obj", "/textures/ufo.png");
         Model ringModel = createModel(entityTechnique, "/models/circle.obj", "/textures/circle.png");
 
-        playerBulletEmitter = new BulletEmitter(TextureLoader.loadTexture("/textures/shot.png"));
-        explosionEmitter = new BillboardEmitter(TextureLoader.loadTexture("/textures/cross.png"), camera);
+        playerBulletEmitter = new Emitter(new BulletTechnique(), TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
+        explosionEmitter = new Emitter(new BillboardTechnique(), TextureLoader.loadTexture("/textures/cross.png"), BillboardParticle.class);
+        add(playerBulletEmitter);
+        add(explosionEmitter);
 
         player = new Gunship(new ModelInstance(gunshipModel));
         player.setPosition(4.5f, 0, -1);
@@ -139,17 +141,6 @@ public class Arena extends Game {
 
         playerBulletEmitter.update();
         explosionEmitter.update();
-    }
-
-    @Override
-    protected void render() {
-        super.render();
-
-        Matrix4f viewProjectionMatrix = new Matrix4f();
-        Matrix4f.mul(projectionMatrix, camera.getViewMatrix(), viewProjectionMatrix);
-
-        playerBulletEmitter.render(viewProjectionMatrix);
-        explosionEmitter.render(viewProjectionMatrix);
     }
 
     public static void main(String... args) {

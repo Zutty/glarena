@@ -8,7 +8,7 @@ import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class BillboardTechnique implements TempTechnique {
+public class BillboardTechnique implements Technique {
 
     private ShaderProgram shader;
     private VertexFormat format;
@@ -50,11 +50,6 @@ public class BillboardTechnique implements TempTechnique {
     }
 
     @Override
-    public ShaderProgram getShader() {
-        return shader;
-    }
-
-    @Override
     public VertexFormat getFormat() {
         return format;
     }
@@ -74,7 +69,7 @@ public class BillboardTechnique implements TempTechnique {
         glDisable(GL_CULL_FACE);
 
         Matrix4f viewProjectionMatrix = new Matrix4f();
-        Matrix4f.mul(camera.getViewMatrix(), projectionMatrix, viewProjectionMatrix);
+        Matrix4f.mul(projectionMatrix, camera.getViewMatrix(), viewProjectionMatrix);
 
         shader.use();
         shader.setUniform("gVP", viewProjectionMatrix);

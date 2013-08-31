@@ -1,51 +1,34 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.gl.ArrayModel;
-import uk.co.zutty.glarena.gl.ShaderProgram;
-import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
-
 /**
  * A container for particles that controls their position and other properties.
  */
-public abstract class Emitter {
+public class Emitter {
 
-    private TempTechnique technique;
+    private Technique technique;
     private ArrayModel model;
+    private ModelInstance modelInstance;
     private Class<? extends Particle> particleType;
-    protected int glTexture = -1;
-    protected List<Particle> particles = new ArrayList<>();
+    private List<Particle> particles = new ArrayList<>();
 
-    protected Emitter(TempTechnique technique, int glTexture, Class<? extends Particle> particleType) {
+    protected Emitter(Technique technique, int glTexture, Class<? extends Particle> particleType) {
         this.technique = technique;
-        this.glTexture = glTexture;
         this.particleType = particleType;
+        model = new ArrayModel(glTexture, technique);
+        modelInstance = new ModelInstance(model);
+    }
 
-        final VertexFormat fmt = technique.getFormat();
-        model = new ArrayModel(glTexture, new Technique() {
-            @Override
-            public VertexFormat getFormat() {
-                return fmt;
-            }
-
-            @Override
-            public void setProjectionMatrix(Matrix4f projectionMatrix) {}
-
-            @Override
-            public void setCamera(Camera camera) {}
-
-            @Override
-            public void renderInstance(ModelInstance instance) {}
-        });
+    public ModelInstance getModelInstance() {
+        return modelInstance;
     }
 
     public void emitFrom(Vector3f source, Vector3f direction, float speed) {
@@ -87,23 +70,4 @@ public abstract class Emitter {
 
         model.updateVertexData(positions, particles.size());
     }
-
-    protected void initUniforms(ShaderProgram shader) {}
-
-    public void render(Matrix4f viewProjectionMatrix) {
-        glDisable(GL_CULL_FACE);
-
-        ShaderProgram shader = technique.getShader();
-        shader.use();
-        shader.setUniform("gVP", viewProjectionMatrix);
-        initUniforms(shader);
-
-        model.draw(GL_POINTS);
-
-        ShaderProgram.useNone();
-
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-    }
-
 }

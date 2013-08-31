@@ -85,6 +85,10 @@ public class Game {
         entity.setGame(this);
     }
 
+    public void add(Emitter emitter) {
+        instances.add(emitter.getModelInstance());
+    }
+
     public void remove(Entity entity) {
         toRemove.add(entity);
     }

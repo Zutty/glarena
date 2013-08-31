@@ -8,7 +8,7 @@ import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class BulletTechnique implements TempTechnique {
+public class BulletTechnique implements Technique {
 
     private ShaderProgram shader;
     private VertexFormat format;
@@ -48,11 +48,6 @@ public class BulletTechnique implements TempTechnique {
     }
 
     @Override
-    public ShaderProgram getShader() {
-        return shader;
-    }
-
-    @Override
     public VertexFormat getFormat() {
         return format;
     }
@@ -72,7 +67,7 @@ public class BulletTechnique implements TempTechnique {
         glDisable(GL_CULL_FACE);
 
         Matrix4f viewProjectionMatrix = new Matrix4f();
-        Matrix4f.mul(camera.getViewMatrix(), projectionMatrix, viewProjectionMatrix);
+        Matrix4f.mul(projectionMatrix, camera.getViewMatrix(), viewProjectionMatrix);
 
         shader.use();
         shader.setUniform("gVP", viewProjectionMatrix);
