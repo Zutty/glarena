@@ -19,20 +19,18 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public abstract class Emitter {
 
-    protected ShaderProgram shader;
+    private TempTechnique technique;
     private ArrayModel model;
-    private VertexFormat format;
     private Class<? extends Particle> particleType;
     protected int glTexture = -1;
     protected List<Particle> particles = new ArrayList<>();
 
-    protected Emitter(ShaderProgram shader, VertexFormat format, int glTexture, Class<? extends Particle> particleType) {
-        this.shader = shader;
-        this.format = format;
+    protected Emitter(TempTechnique technique, int glTexture, Class<? extends Particle> particleType) {
+        this.technique = technique;
         this.glTexture = glTexture;
         this.particleType = particleType;
 
-        final VertexFormat fmt = format;
+        final VertexFormat fmt = technique.getFormat();
         model = new ArrayModel(glTexture, new Technique() {
             @Override
             public VertexFormat getFormat() {
@@ -79,7 +77,7 @@ public abstract class Emitter {
             }
         }
 
-        FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * format.getElements());
+        FloatBuffer positions = BufferUtils.createFloatBuffer(particles.size() * technique.getFormat().getElements());
 
         for (Particle p : particles()) {
             p.put(positions);
@@ -95,6 +93,7 @@ public abstract class Emitter {
     public void render(Matrix4f viewProjectionMatrix) {
         glDisable(GL_CULL_FACE);
 
+        ShaderProgram shader = technique.getShader();
         shader.use();
         shader.setUniform("gVP", viewProjectionMatrix);
         initUniforms(shader);

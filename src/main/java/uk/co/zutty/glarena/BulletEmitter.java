@@ -11,11 +11,7 @@ import uk.co.zutty.glarena.vertex.VertexFormat;
 public class BulletEmitter extends Emitter {
 
     public BulletEmitter(int glTexture) {
-        super(makeShader(), VertexFormat.Builder.format()
-                .withAttribute(3)
-                .withAttribute(3)
-                .build(),
-                glTexture, BulletParticle.class);
+        super(new BulletTechnique(), glTexture, BulletParticle.class);
     }
 
     private static ShaderProgram makeShader() {

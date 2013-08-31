@@ -10,11 +10,7 @@ public class BillboardEmitter extends Emitter {
     private Camera camera;
 
     public BillboardEmitter(int glTexture, Camera camera) {
-        super(makeShader(), VertexFormat.Builder.format()
-                .withAttribute(3)
-                .withAttribute(1)
-                .build(),
-                glTexture, BillboardParticle.class);
+        super(new BillboardTechnique(), glTexture, BillboardParticle.class);
         this.camera = camera;
     }
 
