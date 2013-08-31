@@ -26,12 +26,12 @@ public abstract class Emitter {
     protected int glTexture = -1;
     protected List<Particle> particles = new ArrayList<>();
 
-    public void setParticleType(Class<? extends Particle> particleType) {
-        this.particleType = particleType;
-    }
-
-    public void init(VertexFormat format) {
+    protected Emitter(ShaderProgram shader, VertexFormat format, int glTexture, Class<? extends Particle> particleType) {
+        this.shader = shader;
         this.format = format;
+        this.glTexture = glTexture;
+        this.particleType = particleType;
+
         final VertexFormat fmt = format;
         model = new ArrayModel(glTexture, new Technique() {
             @Override

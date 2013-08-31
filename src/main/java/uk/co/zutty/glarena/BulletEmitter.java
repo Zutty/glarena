@@ -10,10 +10,16 @@ import uk.co.zutty.glarena.vertex.VertexFormat;
  */
 public class BulletEmitter extends Emitter {
 
-    public BulletEmitter(String texFilename) {
-        glTexture = TextureLoader.loadTexture(texFilename);
+    public BulletEmitter(int glTexture) {
+        super(makeShader(), VertexFormat.Builder.format()
+                .withAttribute(3)
+                .withAttribute(3)
+                .build(),
+                glTexture, BulletParticle.class);
+    }
 
-        shader = new ShaderProgram();
+    private static ShaderProgram makeShader() {
+        ShaderProgram shader = new ShaderProgram();
 
         Shader vertexShader = new Shader(ShaderType.VERTEX);
         vertexShader.loadSource("/shaders/bullet/vertex.glsl");
@@ -38,11 +44,6 @@ public class BulletEmitter extends Emitter {
 
         shader.initUniform("gVP");
 
-        setParticleType(BulletParticle.class);
-
-        init(VertexFormat.Builder.format()
-                .withAttribute(3)
-                .withAttribute(3)
-                .build());
+        return shader;
     }
 }

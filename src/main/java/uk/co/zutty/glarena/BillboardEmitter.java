@@ -9,12 +9,17 @@ public class BillboardEmitter extends Emitter {
 
     private Camera camera;
 
-    public BillboardEmitter(String texFilename, Camera camera) {
+    public BillboardEmitter(int glTexture, Camera camera) {
+        super(makeShader(), VertexFormat.Builder.format()
+                .withAttribute(3)
+                .withAttribute(1)
+                .build(),
+                glTexture, BillboardParticle.class);
         this.camera = camera;
+    }
 
-        glTexture = TextureLoader.loadTexture(texFilename);
-
-        shader = new ShaderProgram();
+    private static ShaderProgram makeShader() {
+        ShaderProgram shader = new ShaderProgram();
 
         Shader vertexShader = new Shader(ShaderType.VERTEX);
         vertexShader.loadSource("/shaders/billboard/vertex.glsl");
@@ -41,12 +46,7 @@ public class BillboardEmitter extends Emitter {
         shader.initUniform("gCameraPos");
         shader.initUniform("gCameraCenter");
 
-        setParticleType(BillboardParticle.class);
-
-        init(VertexFormat.Builder.format()
-                .withAttribute(3)
-                .withAttribute(1)
-                .build());
+        return shader;
     }
 
     @Override

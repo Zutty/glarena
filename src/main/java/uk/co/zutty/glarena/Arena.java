@@ -50,8 +50,8 @@ public class Arena extends Game {
         ufoModel = createModel(entityTechnique, "/models/ufo.obj", "/textures/ufo.png");
         Model ringModel = createModel(entityTechnique, "/models/circle.obj", "/textures/circle.png");
 
-        playerBulletEmitter = new BulletEmitter("/textures/shot.png");
-        explosionEmitter = new BillboardEmitter("/textures/cross.png", camera);
+        playerBulletEmitter = new BulletEmitter(TextureLoader.loadTexture("/textures/shot.png"));
+        explosionEmitter = new BillboardEmitter(TextureLoader.loadTexture("/textures/cross.png"), camera);
 
         player = new Gunship(new ModelInstance(gunshipModel));
         player.setPosition(4.5f, 0, -1);
