@@ -91,7 +91,7 @@ public class Arena extends Game {
         }
 
         vertexData.flip();
-        model.setVertexData(vertexData);
+        model.setVertexData(vertexData, mesh.getVertices().size());
 
         ShortBuffer indexData = BufferUtils.createShortBuffer(mesh.getIndices().size());
 
