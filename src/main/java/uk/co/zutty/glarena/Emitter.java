@@ -3,9 +3,8 @@ package uk.co.zutty.glarena;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import uk.co.zutty.glarena.gl.ArrayModel;
 import uk.co.zutty.glarena.gl.ShaderProgram;
-import uk.co.zutty.glarena.vertex.VertexArray;
-import uk.co.zutty.glarena.vertex.VertexBuffer;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import java.nio.FloatBuffer;
@@ -14,8 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 /**
  * A container for particles that controls their position and other properties.
@@ -23,20 +20,29 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 public abstract class Emitter {
 
     protected ShaderProgram shader;
-    protected VertexArray array;
-    protected VertexBuffer buffer;
+    private ArrayModel model;
     private VertexFormat format;
     protected int glTexture = -1;
     protected List<Particle> particles = new ArrayList<>();
 
     public void init(VertexFormat format) {
         this.format = format;
-        array = new VertexArray();
-        array.bind();
-        buffer = new VertexBuffer();
-        buffer.bind();
-        array.createAttributePointers(format);
-        array.unbind();
+        final VertexFormat fmt = format;
+        model = new ArrayModel(glTexture, new Technique() {
+            @Override
+            public VertexFormat getFormat() {
+                return fmt;
+            }
+
+            @Override
+            public void setProjectionMatrix(Matrix4f projectionMatrix) {}
+
+            @Override
+            public void setCamera(Camera camera) {}
+
+            @Override
+            public void renderInstance(ModelInstance instance) {}
+        });
     }
 
     protected abstract Particle newParticle();
@@ -71,7 +77,7 @@ public abstract class Emitter {
 
         positions.flip();
 
-        buffer.subdata(positions, particles.size() * format.getStride());
+        model.updateVertexData(positions, particles.size());
     }
 
     protected void initUniforms(ShaderProgram shader) {}
@@ -83,14 +89,7 @@ public abstract class Emitter {
         shader.setUniform("gVP", viewProjectionMatrix);
         initUniforms(shader);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, glTexture);
-
-        array.bind();
-
-        glDrawArrays(GL_POINTS, 0, particles.size());
-
-        array.unbind();
+        model.draw(GL_POINTS);
 
         ShaderProgram.useNone();
 
