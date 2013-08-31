@@ -8,7 +8,7 @@ import org.lwjgl.util.vector.Vector4f;
 /**
  * Player controlled entity.
  */
-public class Gunship extends Entity {
+public class Gunship extends AbstractEntity {
 
     public static final float SPEED = .4f;
     public static final float DEAD_ZONE = 0.1f;

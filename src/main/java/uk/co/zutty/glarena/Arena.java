@@ -3,7 +3,6 @@ package uk.co.zutty.glarena;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
@@ -24,7 +23,6 @@ public class Arena extends Game {
     private Gamepad gamepad;
 
     private Emitter playerBulletEmitter;
-    private Emitter explosionEmitter;
 
     private Vector3f arenaCentre;
 
@@ -51,8 +49,9 @@ public class Arena extends Game {
         Model ringModel = createModel(entityTechnique, "/models/circle.obj", "/textures/circle.png");
 
         playerBulletEmitter = new Emitter(new BulletTechnique(), TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
-        explosionEmitter = new Emitter(new BillboardTechnique(), TextureLoader.loadTexture("/textures/cross.png"), BillboardParticle.class);
         add(playerBulletEmitter);
+
+        Emitter explosionEmitter = new Emitter(new BillboardTechnique(), TextureLoader.loadTexture("/textures/cross.png"), BillboardParticle.class);
         add(explosionEmitter);
 
         player = new Gunship(new ModelInstance(gunshipModel));
@@ -73,7 +72,7 @@ public class Arena extends Game {
             float x = (float)Math.sin(i * DEG_TO_RAD) * 10f;
             float z = (float)Math.cos(i * DEG_TO_RAD) * 10f;
 
-            explosionEmitter.emitFrom(new Vector3f(x, 0, z), new Vector3f(1,0,0), 0f);
+            explosionEmitter.emitFrom(new Vector3f(x, 0, z), new Vector3f(1, 0, 0), 0f);
         }
         explosionEmitter.update();
 
@@ -109,6 +108,7 @@ public class Arena extends Game {
 
     public void spawnUfo() {
         Ufo ufo = new Ufo(new ModelInstance(ufoModel), playerBulletEmitter);
+        ufo.setGame(this);
         ufo.setPosition(-4.5f, 0, -1);
         add(ufo);
     }
@@ -138,9 +138,6 @@ public class Arena extends Game {
         camera.setPosition(arenaCentre.x - V.x, 20f, arenaCentre.z - 25f - V.z);
         camera.setCenter(arenaCentre.x - V.x, 0f, arenaCentre.z - V.z);
         camera.update();
-
-        playerBulletEmitter.update();
-        explosionEmitter.update();
     }
 
     public static void main(String... args) {

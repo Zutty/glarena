@@ -5,9 +5,10 @@ import org.lwjgl.util.vector.Vector3f;
 /**
  * AI controlled enemy entity.
  */
-public class Ufo extends Entity {
+public class Ufo extends AbstractEntity {
 
     private static final float HIT_RADIUS_SQUARED = 1.8f * 1.8f;
+    protected Game game;
 
     private Emitter playerBulletEmitter;
     private int timer = 0;
@@ -15,6 +16,10 @@ public class Ufo extends Entity {
     public Ufo(ModelInstance modelInstance, Emitter playerBulletEmitter) {
         setModelInstance(modelInstance);
         this.playerBulletEmitter = playerBulletEmitter;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     @Override

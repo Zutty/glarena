@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * A container for particles that controls their position and other properties.
  */
-public class Emitter {
+public class Emitter implements Entity {
 
     private Technique technique;
     private ArrayModel model;
@@ -27,6 +27,7 @@ public class Emitter {
         modelInstance = new ModelInstance(model);
     }
 
+    @Override
     public ModelInstance getModelInstance() {
         return modelInstance;
     }
@@ -51,6 +52,7 @@ public class Emitter {
         return particles;
     }
 
+    @Override
     public void update() {
         for (Iterator<Particle> iter = particles.iterator(); iter.hasNext(); ) {
             Particle p = iter.next();

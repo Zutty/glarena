@@ -82,11 +82,6 @@ public class Game {
     public void add(Entity entity) {
         entities.add(entity);
         instances.add(entity.getModelInstance());
-        entity.setGame(this);
-    }
-
-    public void add(Emitter emitter) {
-        instances.add(emitter.getModelInstance());
     }
 
     public void remove(Entity entity) {
