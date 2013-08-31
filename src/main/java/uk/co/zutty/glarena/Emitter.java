@@ -22,8 +22,13 @@ public abstract class Emitter {
     protected ShaderProgram shader;
     private ArrayModel model;
     private VertexFormat format;
+    private Class<? extends Particle> particleType;
     protected int glTexture = -1;
     protected List<Particle> particles = new ArrayList<>();
+
+    public void setParticleType(Class<? extends Particle> particleType) {
+        this.particleType = particleType;
+    }
 
     public void init(VertexFormat format) {
         this.format = format;
@@ -45,10 +50,15 @@ public abstract class Emitter {
         });
     }
 
-    protected abstract Particle newParticle();
-
     public void emitFrom(Vector3f source, Vector3f direction, float speed) {
-        Particle particle = newParticle();
+        Particle particle;
+
+        try {
+            particle = particleType.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new GameException(e);
+        }
+
         particle.setLifetime((short) 100);
         particle.setPosition(new Vector3f(source));
         particle.setVelocity(new Vector3f(direction));

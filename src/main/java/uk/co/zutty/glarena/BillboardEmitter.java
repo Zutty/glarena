@@ -41,15 +41,12 @@ public class BillboardEmitter extends Emitter {
         shader.initUniform("gCameraPos");
         shader.initUniform("gCameraCenter");
 
+        setParticleType(BillboardParticle.class);
+
         init(VertexFormat.Builder.format()
                 .withAttribute(3)
                 .withAttribute(1)
                 .build());
-    }
-
-    @Override
-    protected Particle newParticle() {
-        return new BillboardParticle();
     }
 
     @Override

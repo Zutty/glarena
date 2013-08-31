@@ -38,14 +38,11 @@ public class BulletEmitter extends Emitter {
 
         shader.initUniform("gVP");
 
+        setParticleType(BulletParticle.class);
+
         init(VertexFormat.Builder.format()
                 .withAttribute(3)
                 .withAttribute(3)
                 .build());
-    }
-
-    @Override
-    protected Particle newParticle() {
-        return new BulletParticle();
     }
 }
