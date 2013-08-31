@@ -24,7 +24,7 @@ public class ElementArrayModel extends ArrayModel {
     private int glIndexVbo = GL_INVALID_VALUE;
     private int numIndices;
 
-    public ElementArrayModel(Technique technique, int texture) {
+    public ElementArrayModel(Technique technique, Texture texture) {
         super(texture, technique);
 
         glBindVertexArray(glVao);
@@ -45,8 +45,7 @@ public class ElementArrayModel extends ArrayModel {
 
     @Override
     public void draw(int mode) {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, glTexture);
+        texture.bind();
 
         glBindVertexArray(glVao);
 

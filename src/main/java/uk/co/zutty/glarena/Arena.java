@@ -6,6 +6,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
+import uk.co.zutty.glarena.gl.Texture;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -81,7 +82,7 @@ public class Arena extends Game {
 
     private Model createModel(Technique technique, String meshFile, String textureFile) {
         Mesh mesh = new ObjLoader().loadMesh(meshFile);
-        int texture = TextureLoader.loadTexture(textureFile);
+        Texture texture = TextureLoader.loadTexture(textureFile);
 
         ElementArrayModel model = new ElementArrayModel(technique, texture);
 

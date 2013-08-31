@@ -3,6 +3,7 @@ package uk.co.zutty.glarena;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.gl.ArrayModel;
+import uk.co.zutty.glarena.gl.Texture;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -20,10 +21,10 @@ public class Emitter implements Entity {
     private Class<? extends Particle> particleType;
     private List<Particle> particles = new ArrayList<>();
 
-    protected Emitter(Technique technique, int glTexture, Class<? extends Particle> particleType) {
+    protected Emitter(Technique technique, Texture texture, Class<? extends Particle> particleType) {
         this.technique = technique;
         this.particleType = particleType;
-        model = new ArrayModel(glTexture, technique);
+        model = new ArrayModel(texture, technique);
         modelInstance = new ModelInstance(model);
     }
 

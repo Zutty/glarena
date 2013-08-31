@@ -23,11 +23,11 @@ public class ArrayModel implements Model {
     protected Technique technique;
     protected int glVao = GL_INVALID_VALUE;
     protected int glArrayVbo = GL_INVALID_VALUE;
-    protected int glTexture;
+    protected Texture texture;
     private int numVertices;
 
-    public ArrayModel(int texture, Technique technique) {
-        glTexture = texture;
+    public ArrayModel(Texture texture, Technique technique) {
+        this.texture = texture;
         this.technique = technique;
 
         glVao = glGenVertexArrays();
@@ -71,8 +71,7 @@ public class ArrayModel implements Model {
 
     @Override
     public void draw(int mode) {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, glTexture);
+        texture.bind();
 
         glBindVertexArray(glVao);
 
@@ -84,7 +83,7 @@ public class ArrayModel implements Model {
     @Override
     public void destroy() {
         // Delete texture
-        GL11.glDeleteTextures(glTexture);
+        texture.delete();
 
         // Delete the arrays and buffers
         glDeleteVertexArrays(glVao);

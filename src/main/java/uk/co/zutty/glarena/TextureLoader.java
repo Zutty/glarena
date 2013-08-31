@@ -2,6 +2,7 @@ package uk.co.zutty.glarena;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import org.lwjgl.BufferUtils;
+import uk.co.zutty.glarena.gl.Texture;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,9 +18,8 @@ import static uk.co.zutty.glarena.util.IOUtils.closeSilently;
  * Loader for PNG format textures.
  */
 public class TextureLoader {
-    public static int loadTexture(String location) {
-        int texture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, texture);
+    public static Texture loadTexture(String location) {
+        Texture texture = null;
         InputStream in;
 
         try {
@@ -29,9 +29,7 @@ public class TextureLoader {
             decoder.decode(buffer, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
             buffer.flip();
             in.close();
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+            texture = new Texture(buffer, decoder.getWidth(), decoder.getHeight());
 
         } catch (FileNotFoundException e) {
             System.err.println("Texture file could not be found.");
