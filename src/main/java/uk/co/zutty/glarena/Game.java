@@ -24,7 +24,6 @@ package uk.co.zutty.glarena;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Matrix4f;
 import uk.co.zutty.glarena.util.MatrixUtils;
 
@@ -48,7 +47,7 @@ public class Game {
 
         setup();
         init();
-        exitOnGLError("init");
+        Util.checkGLError();
 
         Display.setVSyncEnabled(true);
 
@@ -96,7 +95,7 @@ public class Game {
         glCullFace(GL_BACK);
         glClearDepth(1);
 
-        exitOnGLError("setupOpenGL");
+        Util.checkGLError();
     }
 
     protected void init() {
@@ -122,7 +121,7 @@ public class Game {
         }
         toRemove.clear();
 
-        this.exitOnGLError("update");
+        Util.checkGLError();
     }
 
     protected void render() {
@@ -136,23 +135,11 @@ public class Game {
             technique.renderInstance(instance);
         }
 
-        exitOnGLError("render");
+        Util.checkGLError();
     }
 
     private void destroyOpenGL() {
-        exitOnGLError("destroyOpenGL");
+        Util.checkGLError();
         Display.destroy();
-    }
-
-    protected void exitOnGLError(String errorMessage) {
-        int errorValue = GL11.glGetError();
-
-        if (errorValue != GL11.GL_NO_ERROR) {
-            String errorString = GLU.gluErrorString(errorValue);
-            System.err.println("ERROR - " + errorMessage + ": " + errorString);
-
-            if (Display.isCreated()) Display.destroy();
-            System.exit(-1);
-        }
     }
 }

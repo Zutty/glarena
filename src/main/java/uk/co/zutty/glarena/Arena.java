@@ -25,6 +25,7 @@ package uk.co.zutty.glarena;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.Util;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
@@ -98,7 +99,7 @@ public class Arena extends Game {
         }
         explosionEmitter.update();
 
-        exitOnGLError("init");
+        Util.checkGLError();
     }
 
     private Model createModel(Technique technique, String meshFile) {
