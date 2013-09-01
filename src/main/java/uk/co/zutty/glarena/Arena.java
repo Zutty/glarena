@@ -107,7 +107,7 @@ public class Arena extends Game {
 
         ElementArrayModel model = new ElementArrayModel(technique);
 
-        FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * technique.getFormat().getStride());
+        FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * technique.getFormat().getElements());
 
         for (Vertex vertex : mesh.getVertices()) {
             vertex.put(vertexData);
