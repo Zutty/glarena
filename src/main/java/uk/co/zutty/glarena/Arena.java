@@ -40,6 +40,7 @@ public class Arena extends Game {
 
     public static final Vector3f V = new Vector3f();
 
+    private ObjLoader objLoader;
     private Gunship player;
     private Model ufoModel;
 
@@ -66,10 +67,14 @@ public class Arena extends Game {
             gamepad = new KeyboardGamepad();
         }
 
+        objLoader = new ObjLoader();
+
         Technique entityTechnique = new EntityTechnique();
-        Model gunshipModel = createModel(entityTechnique, "/models/gunship.obj");
-        ufoModel = createModel(entityTechnique, "/models/ufo.obj");
-        Model ringModel = createModel(entityTechnique, "/models/circle.obj");
+        Model gunshipModel = createModel(entityTechnique, objLoader.loadEntityMesh("/models/gunship.obj"));
+        ufoModel = createModel(entityTechnique, objLoader.loadEntityMesh("/models/ufo.obj"));
+
+        Technique unlitTechnique = new UnlitTechnique();
+        Model ringModel = createModel(unlitTechnique, objLoader.loadUnlitMesh("/models/circle.obj"));
 
         playerBulletEmitter = new Emitter(new BulletTechnique(), TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
         add(playerBulletEmitter);
@@ -102,9 +107,7 @@ public class Arena extends Game {
         Util.checkGLError();
     }
 
-    private Model createModel(Technique technique, String meshFile) {
-        Mesh mesh = new ObjLoader().loadMesh(meshFile);
-
+    private Model createModel(Technique technique, Mesh mesh) {
         ElementArrayModel model = new ElementArrayModel(technique);
 
         FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * technique.getFormat().getElements());

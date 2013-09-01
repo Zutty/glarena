@@ -22,15 +22,38 @@
 
 package uk.co.zutty.glarena;
 
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
+
 import java.nio.FloatBuffer;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Zutty
- * Date: 01/09/13
- * Time: 18:27
- * To change this template use File | Settings | File Templates.
- */
-public interface Vertex {
-    void put(FloatBuffer vertexBuffer);
+public class UnlitVertex implements Vertex {
+
+    private float positionX;
+    private float positionY;
+    private float positionZ;
+
+    private float texCoordS;
+    private float texCoordT;
+
+    public void setPosition(Vector3f position) {
+        positionX = position.x;
+        positionY = position.y;
+        positionZ = position.z;
+    }
+
+    public void setTexCoord(Vector2f texCoord) {
+        texCoordS = texCoord.x;
+        texCoordT = texCoord.y;
+    }
+
+    @Override
+    public void put(FloatBuffer vertexBuffer) {
+        vertexBuffer.put(positionX);
+        vertexBuffer.put(positionY);
+        vertexBuffer.put(positionZ);
+
+        vertexBuffer.put(texCoordS);
+        vertexBuffer.put(texCoordT);
+    }
 }

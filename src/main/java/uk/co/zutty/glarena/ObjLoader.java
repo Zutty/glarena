@@ -34,7 +34,15 @@ import java.util.*;
  * Loader for wavefront OBJ model data.
  */
 public class ObjLoader {
-    public Mesh loadMesh(String filename) {
+    public Mesh loadEntityMesh(String filename) {
+        return loadMesh(filename, new EntityVertexMapper());
+    }
+
+    public Mesh loadUnlitMesh(String filename) {
+        return loadMesh(filename, new UnlitVertexMapper());
+    }
+
+    private Mesh loadMesh(String filename, VertexMapper mapper) {
         Mesh m = new Mesh();
 
         List<Vector3f> positions = new ArrayList<>();
@@ -63,10 +71,7 @@ public class ObjLoader {
                             int texCoordIdx = Integer.valueOf(vtParts[1]);
                             int normalIdx = Integer.valueOf(vtParts[2]);
 
-                            Vertex v = new Vertex();
-                            v.setPosition(positions.get(positionIdx - 1));
-                            v.setTexCoord(texCoords.get(texCoordIdx - 1));
-                            v.setNormal(normals.get(normalIdx - 1));
+                            Vertex v = mapper.makeVertex(positions.get(positionIdx - 1), normals.get(normalIdx - 1), texCoords.get(texCoordIdx - 1));
 
                             inverseIndex.put(vertexTriple, m.addVertex(v));
                         }
@@ -78,6 +83,29 @@ public class ObjLoader {
         }
 
         return m;
+    }
+
+    private interface VertexMapper {
+        Vertex makeVertex(Vector3f position, Vector3f normal, Vector2f texCoord);
+    }
+
+    private class EntityVertexMapper implements VertexMapper {
+        public Vertex makeVertex(Vector3f position, Vector3f normal, Vector2f texCoord) {
+            EntityVertex v = new EntityVertex();
+            v.setPosition(position);
+            v.setNormal(normal);
+            v.setTexCoord(texCoord);
+            return v;
+        }
+    }
+
+    private class UnlitVertexMapper implements VertexMapper {
+        public Vertex makeVertex(Vector3f position, Vector3f normal, Vector2f texCoord) {
+            UnlitVertex v = new UnlitVertex();
+            v.setPosition(position);
+            v.setTexCoord(texCoord);
+            return v;
+        }
     }
 
     private Vector3f parseVector3f(String[] line) {
