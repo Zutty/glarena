@@ -67,7 +67,7 @@ public class KeyboardGamepad extends Gamepad {
             rightAxis.x += 1;
         }
 
-        if(leftAxis.lengthSquared() != 0) leftAxis.normalise();
-        if(rightAxis.lengthSquared() != 0) rightAxis.normalise();
+        if (leftAxis.lengthSquared() != 0) leftAxis.normalise();
+        if (rightAxis.lengthSquared() != 0) rightAxis.normalise();
     }
 }

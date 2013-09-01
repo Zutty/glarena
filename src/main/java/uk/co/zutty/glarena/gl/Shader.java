@@ -34,7 +34,7 @@ public class Shader {
     }
 
     public void setSource(CharSequence source) {
-        if(!Charset.forName("US-ASCII").newEncoder().canEncode(source)) {
+        if (!Charset.forName("US-ASCII").newEncoder().canEncode(source)) {
             throw new IllegalArgumentException("Shader source contains illegal characters");
         }
         glShaderSource(glShader, source);

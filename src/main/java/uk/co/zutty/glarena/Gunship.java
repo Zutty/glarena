@@ -23,8 +23,8 @@ public class Gunship extends AbstractEntity {
 
     public Gunship(ModelInstance modelInstance) {
         setModelInstance(modelInstance);
-        emitPointL = new Vector4f(0.7f,0,2.9f,1);
-        emitPointR = new Vector4f(-0.7f,0,2.9f,1);
+        emitPointL = new Vector4f(0.7f, 0, 2.9f, 1);
+        emitPointR = new Vector4f(-0.7f, 0, 2.9f, 1);
         emitAlt = true;
     }
 
@@ -38,7 +38,7 @@ public class Gunship extends AbstractEntity {
 
     @Override
     public void update() {
-        if(gamepad.getLeftStick().lengthSquared() > DEAD_ZONE) {
+        if (gamepad.getLeftStick().lengthSquared() > DEAD_ZONE) {
             position.x -= gamepad.getLeftStick().x * SPEED;
             position.z -= gamepad.getLeftStick().y * SPEED;
         }
@@ -47,9 +47,9 @@ public class Gunship extends AbstractEntity {
 
         float prevYaw = yaw;
 
-        if(direction != null) {
-            yawRadians = (float)Math.atan2(-direction.x, -direction.y);
-            yaw = yawRadians * (180f/(float)Math.PI);
+        if (direction != null) {
+            yawRadians = (float) Math.atan2(-direction.x, -direction.y);
+            yaw = yawRadians * (180f / (float) Math.PI);
         }
 
         roll = easeAngle(roll, (prevYaw - yaw) * 10f);
@@ -58,12 +58,12 @@ public class Gunship extends AbstractEntity {
 
         ++timer;
         if (gamepad.getRightStick().lengthSquared() > DEAD_ZONE || gamepad.isButtonDown()) {
-            if(timer >= 3L) {
+            if (timer >= 3L) {
                 timer = 0;
                 Vector4f emitPosition = new Vector4f((emitAlt = !emitAlt) ? emitPointL : emitPointR);
                 Matrix4f.transform(getModelInstance().getMatrix(), emitPosition, emitPosition); //TODO a bit of a hack
 
-                bulletEmitter.emitFrom(xyz(emitPosition), new Vector3f((float)Math.sin(yawRadians), 0, (float)Math.cos(yawRadians)), 1.2f);
+                bulletEmitter.emitFrom(xyz(emitPosition), new Vector3f((float) Math.sin(yawRadians), 0, (float) Math.cos(yawRadians)), 1.2f);
             }
         }
     }

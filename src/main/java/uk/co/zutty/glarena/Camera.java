@@ -41,8 +41,8 @@ public class Camera {
 
     public void update() {
         matrix = MatrixUtils.lookAt(position.x, position.y, position.z,
-                    center.x, center.y, center.z,
-                    0f, 1f, 0f);
+                center.x, center.y, center.z,
+                0f, 1f, 0f);
     }
 
     public Matrix4f getViewMatrix() {

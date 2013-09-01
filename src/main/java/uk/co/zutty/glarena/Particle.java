@@ -5,8 +5,8 @@ import org.lwjgl.util.vector.Vector3f;
 import java.nio.FloatBuffer;
 
 /**
-* Representation of a single particle, both the logical game entity and VBO format for OpenGL.
-*/
+ * Representation of a single particle, both the logical game entity and VBO format for OpenGL.
+ */
 public abstract class Particle {
 
     protected Vector3f position;

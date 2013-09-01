@@ -34,12 +34,12 @@ public class Arena extends Game {
     protected void init() {
         camera.setPosition(0f, 20f, -25f);
 
-        for(Controller controller: ControllerEnvironment.getDefaultEnvironment().getControllers()) {
-            if(controller.getType() == Controller.Type.GAMEPAD) {
+        for (Controller controller : ControllerEnvironment.getDefaultEnvironment().getControllers()) {
+            if (controller.getType() == Controller.Type.GAMEPAD) {
                 gamepad = new Gamepad(controller);
             }
         }
-        if(gamepad == null) {
+        if (gamepad == null) {
             gamepad = new KeyboardGamepad();
         }
 
@@ -66,11 +66,11 @@ public class Arena extends Game {
         ringMarker.position.y = -1;
         add(ringMarker);
 
-        final double DEG_TO_RAD = Math.PI/180.0;
+        final double DEG_TO_RAD = Math.PI / 180.0;
 
-        for(int i = 0; i < 360; i += 10) {
-            float x = (float)Math.sin(i * DEG_TO_RAD) * 10f;
-            float z = (float)Math.cos(i * DEG_TO_RAD) * 10f;
+        for (int i = 0; i < 360; i += 10) {
+            float x = (float) Math.sin(i * DEG_TO_RAD) * 10f;
+            float z = (float) Math.cos(i * DEG_TO_RAD) * 10f;
 
             explosionEmitter.emitFrom(new Vector3f(x, 0, z), new Vector3f(1, 0, 0), 0f);
         }
@@ -114,16 +114,16 @@ public class Arena extends Game {
 
     @Override
     protected void update() {
-        if(gamepad != null) {
+        if (gamepad != null) {
             gamepad.update();
         }
 
-        if(++waveTimer > 200) {
+        if (++waveTimer > 200) {
             waveSpawn = 0;
             waveTimer = 0;
         }
 
-        if(++spawnTimer > 15 && waveSpawn < 6) {
+        if (++spawnTimer > 15 && waveSpawn < 6) {
             spawnTimer = 0;
             ++waveSpawn;
             //spawnUfo();

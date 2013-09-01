@@ -29,7 +29,8 @@ public class VertexFormat {
         private int elements = 0;
         private List<Attribute> attributes = new ArrayList<>();
 
-        private Builder() {}
+        private Builder() {
+        }
 
         public static Builder format() {
             return new Builder();

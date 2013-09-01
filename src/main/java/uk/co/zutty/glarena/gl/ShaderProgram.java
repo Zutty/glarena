@@ -93,7 +93,7 @@ public class ShaderProgram {
     public void destroy() {
         use();
 
-        for(Shader shader: shaders.values()) {
+        for (Shader shader : shaders.values()) {
             glDetachShader(glProgram, shader.getGlObject());
             shader.destroy();
         }

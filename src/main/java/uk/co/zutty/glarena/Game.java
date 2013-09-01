@@ -77,7 +77,8 @@ public class Game {
         exitOnGLError("setupOpenGL");
     }
 
-    protected void init() {}
+    protected void init() {
+    }
 
     public void add(Entity entity) {
         entities.add(entity);
@@ -89,12 +90,12 @@ public class Game {
     }
 
     protected void update() {
-        for(Entity entity: entities) {
+        for (Entity entity : entities) {
             entity.update();
         }
 
         // Update list
-        for(Entity r : toRemove) {
+        for (Entity r : toRemove) {
             entities.remove(r);
         }
         toRemove.clear();
@@ -105,7 +106,7 @@ public class Game {
     protected void render() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for(ModelInstance instance : instances) {
+        for (ModelInstance instance : instances) {
             Technique technique = instance.getModel().getTechnique();
             technique.setCamera(camera);
             technique.setProjectionMatrix(projectionMatrix);

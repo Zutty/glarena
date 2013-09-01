@@ -28,14 +28,14 @@ public class Ufo extends AbstractEntity {
 
         ++timer;
 
-        position.x += Math.sin((double)timer / (50.0 - ((double)timer/20.0))) * 0.5f;
-        position.z += Math.cos((double)timer / (50.0 - ((double)timer/20.0))) * 0.5f;
+        position.x += Math.sin((double) timer / (50.0 - ((double) timer / 20.0))) * 0.5f;
+        position.z += Math.cos((double) timer / (50.0 - ((double) timer / 20.0))) * 0.5f;
 
         for (Particle p : playerBulletEmitter.particles()) {
             Vector3f.sub(p.getPosition(), position, Arena.V);
             if (Arena.V.lengthSquared() < HIT_RADIUS_SQUARED) {
                 game.remove(this);
-                p.setLifetime((short)0);
+                p.setLifetime((short) 0);
             }
         }
 
