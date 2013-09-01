@@ -24,8 +24,8 @@ public class Emitter implements Entity {
     protected Emitter(Technique technique, Texture texture, Class<? extends Particle> particleType) {
         this.technique = technique;
         this.particleType = particleType;
-        model = new ArrayModel(texture, technique);
-        modelInstance = new ModelInstance(model);
+        model = new ArrayModel(technique);
+        modelInstance = new ModelInstance(model, texture);
     }
 
     @Override

@@ -71,6 +71,8 @@ public class EntityTechnique implements Technique {
         shader.setUniform("viewMatrix", camera.getViewMatrix());
         shader.setUniform("modelMatrix", instance.getMatrix());
 
+        instance.getTexture().bind();
+
         instance.getModel().draw(GL_TRIANGLES);
 
         ShaderProgram.useNone();

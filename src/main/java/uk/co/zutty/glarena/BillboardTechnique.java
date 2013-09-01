@@ -76,6 +76,8 @@ public class BillboardTechnique implements Technique {
         shader.setUniform("gCameraPos", camera.getPosition());
         shader.setUniform("gCameraCenter", camera.getCenter());
 
+        instance.getTexture().bind();
+
         instance.getModel().draw(GL_POINTS);
 
         ShaderProgram.useNone();

@@ -72,6 +72,8 @@ public class BulletTechnique implements Technique {
         shader.use();
         shader.setUniform("gVP", viewProjectionMatrix);
 
+        instance.getTexture().bind();
+
         instance.getModel().draw(GL_POINTS);
 
         ShaderProgram.useNone();

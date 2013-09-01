@@ -6,7 +6,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
-import uk.co.zutty.glarena.gl.Texture;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -45,9 +44,9 @@ public class Arena extends Game {
         }
 
         Technique entityTechnique = new EntityTechnique();
-        Model gunshipModel = createModel(entityTechnique, "/models/gunship.obj", "/textures/gunship_diffuse.png");
-        ufoModel = createModel(entityTechnique, "/models/ufo.obj", "/textures/ufo.png");
-        Model ringModel = createModel(entityTechnique, "/models/circle.obj", "/textures/circle.png");
+        Model gunshipModel = createModel(entityTechnique, "/models/gunship.obj");
+        ufoModel = createModel(entityTechnique, "/models/ufo.obj");
+        Model ringModel = createModel(entityTechnique, "/models/circle.obj");
 
         playerBulletEmitter = new Emitter(new BulletTechnique(), TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
         add(playerBulletEmitter);
@@ -55,7 +54,7 @@ public class Arena extends Game {
         Emitter explosionEmitter = new Emitter(new BillboardTechnique(), TextureLoader.loadTexture("/textures/cross.png"), BillboardParticle.class);
         add(explosionEmitter);
 
-        player = new Gunship(new ModelInstance(gunshipModel));
+        player = new Gunship(new ModelInstance(gunshipModel, TextureLoader.loadTexture("/textures/gunship_diffuse.png")));
         player.setPosition(4.5f, 0, -1);
         player.setBulletEmitter(playerBulletEmitter);
         player.setGamepad(gamepad);
@@ -63,7 +62,7 @@ public class Arena extends Game {
 
         arenaCentre = new Vector3f(0, 0, 0);
 
-        Marker ringMarker = new Marker(new ModelInstance(ringModel));
+        Marker ringMarker = new Marker(new ModelInstance(ringModel, TextureLoader.loadTexture("/textures/circle.png")));
         ringMarker.position.y = -1;
         add(ringMarker);
 
@@ -80,11 +79,10 @@ public class Arena extends Game {
         exitOnGLError("init");
     }
 
-    private Model createModel(Technique technique, String meshFile, String textureFile) {
+    private Model createModel(Technique technique, String meshFile) {
         Mesh mesh = new ObjLoader().loadMesh(meshFile);
-        Texture texture = TextureLoader.loadTexture(textureFile);
 
-        ElementArrayModel model = new ElementArrayModel(technique, texture);
+        ElementArrayModel model = new ElementArrayModel(technique);
 
         FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * technique.getFormat().getStride());
 
@@ -108,7 +106,7 @@ public class Arena extends Game {
     }
 
     public void spawnUfo() {
-        Ufo ufo = new Ufo(new ModelInstance(ufoModel), playerBulletEmitter);
+        Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter);
         ufo.setGame(this);
         ufo.setPosition(-4.5f, 0, -1);
         add(ufo);
