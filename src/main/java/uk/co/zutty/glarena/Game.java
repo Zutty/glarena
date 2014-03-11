@@ -118,6 +118,7 @@ public class Game {
         // Update list
         for (Entity r : toRemove) {
             entities.remove(r);
+            instances.remove(r.getModelInstance());
         }
         toRemove.clear();
 
