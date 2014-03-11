@@ -45,6 +45,11 @@ public class Texture {
         glBindTexture(GL_TEXTURE_2D, glTexture);
     }
 
+    public void unbind() {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
     public void delete() {
         glDeleteTextures(glTexture);
     }
