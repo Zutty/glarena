@@ -82,22 +82,22 @@ public class Arena extends Game {
         Model ringModel = createModel(unlitTechnique, objLoader.loadUnlitMesh("/models/circle.obj"));
 
         playerBulletEmitter = new Emitter(new BulletTechnique(), TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
-        add(playerBulletEmitter);
+        add(playerBulletEmitter, true);
 
         explosionEmitter = new Emitter(new BillboardTechnique(), TextureLoader.loadTexture("/textures/cross.png"), BillboardParticle.class);
-        add(explosionEmitter);
+        add(explosionEmitter, true);
 
         player = new Gunship(new ModelInstance(gunshipModel, TextureLoader.loadTexture("/textures/gunship_diffuse.png")));
         player.setPosition(4.5f, 0, -1);
         player.setBulletEmitter(playerBulletEmitter);
         player.setGamepad(gamepad);
-        add(player);
+        add(player, false);
 
         arenaCentre = new Vector3f(0, 0, 0);
 
         Marker ringMarker = new Marker(new ModelInstance(ringModel, TextureLoader.loadTexture("/textures/circle.png")));
         ringMarker.position.y = -1;
-        add(ringMarker);
+        add(ringMarker, false);
 
         Util.checkGLError();
     }
@@ -140,7 +140,7 @@ public class Arena extends Game {
         Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter);
         ufo.setGame(this);
         ufo.setPosition(-4.5f, 0, -1);
-        add(ufo);
+        add(ufo, false);
     }
 
     @Override

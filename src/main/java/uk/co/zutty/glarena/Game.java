@@ -40,6 +40,7 @@ public class Game {
     private List<Entity> entities;
     private Collection<Entity> toRemove = new ArrayList<>();
     private List<ModelInstance> instances = new ArrayList<>();
+    private List<ModelInstance> transparentInstances = new ArrayList<>();
 
     public Game() {
         // Initialize OpenGL (Display)
@@ -101,9 +102,9 @@ public class Game {
     protected void init() {
     }
 
-    public void add(Entity entity) {
+    public void add(Entity entity, boolean transparent) {
         entities.add(entity);
-        instances.add(entity.getModelInstance());
+        (transparent ? transparentInstances : instances).add(entity.getModelInstance());
     }
 
     public void remove(Entity entity) {
@@ -119,6 +120,7 @@ public class Game {
         for (Entity r : toRemove) {
             entities.remove(r);
             instances.remove(r.getModelInstance());
+            transparentInstances.remove(r.getModelInstance());
         }
         toRemove.clear();
 
@@ -128,15 +130,28 @@ public class Game {
     protected void render() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for (ModelInstance instance : instances) {
+        renderList(instances);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthMask(false);
+
+        renderList(transparentInstances);
+
+        glDepthMask(true);
+        glDisable(GL_BLEND);
+
+        Util.checkGLError();
+    }
+
+    private void renderList(List<ModelInstance> list) {
+        for (ModelInstance instance : list) {
             Technique technique = instance.getModel().getTechnique();
             technique.setCamera(camera);
             technique.setProjectionMatrix(projectionMatrix);
 
             technique.renderInstance(instance);
         }
-
-        Util.checkGLError();
     }
 
     private void destroyOpenGL() {
