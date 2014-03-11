@@ -40,6 +40,10 @@ public class MathUtils {
         return ((float) Math.random() * (to - from)) + from;
     }
 
+    public static int randRange(int from, int to) {
+        return (int)(Math.random() * (double)(to - from)) + from;
+    }
+
     public static float randAngle() {
         return (float) (Math.random() * 2.0 * Math.PI);
     }
