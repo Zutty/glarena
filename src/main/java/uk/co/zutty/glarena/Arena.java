@@ -104,7 +104,7 @@ public class Arena extends Game {
 
     public void explode(Vector3f at) {
         for (int i = 0; i < 30; i ++) {
-            BillboardParticle billboard = (BillboardParticle)explosionEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(0.05f, 0.2f));
+            BillboardParticle billboard = (BillboardParticle)explosionEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(0.05f, 0.2f), randRange(15, 30));
             billboard.setRotation(randAngle());
             billboard.setRotationSpeed(randRange(0.01f, 0.2f));
             billboard.setScale(new Tween(randRange(.8f, 1.2f), randRange(3f, 6f)));

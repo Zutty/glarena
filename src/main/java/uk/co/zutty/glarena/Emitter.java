@@ -55,7 +55,7 @@ public class Emitter implements Entity {
         return modelInstance;
     }
 
-    public Particle emitFrom(Vector3f source, Vector3f direction, float speed) {
+    public Particle emitFrom(Vector3f source, Vector3f direction, float speed, int lifetime) {
         Particle particle;
 
         try {
@@ -64,7 +64,7 @@ public class Emitter implements Entity {
             throw new GameException(e);
         }
 
-        particle.setLifetime((short) 100);
+        particle.setLifetime((short) lifetime);
         particle.setPosition(new Vector3f(source));
         particle.setVelocity(new Vector3f(direction));
         particle.getVelocity().normalise().scale(speed);

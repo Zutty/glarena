@@ -85,7 +85,7 @@ public class Gunship extends AbstractEntity {
                 Vector4f emitPosition = new Vector4f((emitAlt = !emitAlt) ? emitPointL : emitPointR);
                 Matrix4f.transform(getModelInstance().getMatrix(), emitPosition, emitPosition); //TODO a bit of a hack
 
-                bulletEmitter.emitFrom(xyz(emitPosition), new Vector3f((float) Math.sin(yawRadians), 0, (float) Math.cos(yawRadians)), 1.2f);
+                bulletEmitter.emitFrom(xyz(emitPosition), new Vector3f((float) Math.sin(yawRadians), 0, (float) Math.cos(yawRadians)), 1.2f, 100);
             }
         }
     }
