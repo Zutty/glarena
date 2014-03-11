@@ -57,6 +57,7 @@ public class Ufo extends AbstractEntity {
             Vector3f.sub(p.getPosition(), position, Arena.V);
             if (Arena.V.lengthSquared() < HIT_RADIUS_SQUARED) {
                 game.remove(this);
+                ((Arena)game).explode(position);
                 p.setLifetime((short) 0);
             }
         }

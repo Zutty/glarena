@@ -1,4 +1,4 @@
-#version 150
+#version 330
 
 uniform sampler2D gColorMap;
 
@@ -11,11 +11,11 @@ out vec4 FragColor;
 
 void main()
 {
-    FragColor = texture(gColorMap, frag.texCoord);
+    vec4 color = texture(gColorMap, frag.texCoord);
 
-    if (FragColor.r == 0 && FragColor.g == 0 && FragColor.b == 0) {
+    if (color.r == 0 && color.g == 0 && color.b == 0) {
         discard;
     }
 
-    FragColor *= frag.fade;
+    FragColor = vec4(color.rgb, frag.fade);
 }

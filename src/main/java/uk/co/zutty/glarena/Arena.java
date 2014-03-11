@@ -29,9 +29,13 @@ import org.lwjgl.opengl.Util;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
+import uk.co.zutty.glarena.util.MathUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+
+import static uk.co.zutty.glarena.util.MathUtils.randAngle;
+import static uk.co.zutty.glarena.util.MathUtils.randRange;
 
 /**
  * Concrete game class for the glArena game.
@@ -47,6 +51,7 @@ public class Arena extends Game {
     private Gamepad gamepad;
 
     private Emitter playerBulletEmitter;
+    private Emitter explosionEmitter;
 
     private Vector3f arenaCentre;
 
@@ -79,7 +84,7 @@ public class Arena extends Game {
         playerBulletEmitter = new Emitter(new BulletTechnique(), TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
         add(playerBulletEmitter);
 
-        Emitter explosionEmitter = new Emitter(new BillboardTechnique(), TextureLoader.loadTexture("/textures/cross.png"), BillboardParticle.class);
+        explosionEmitter = new Emitter(new BillboardTechnique(), TextureLoader.loadTexture("/textures/cross.png"), BillboardParticle.class);
         add(explosionEmitter);
 
         player = new Gunship(new ModelInstance(gunshipModel, TextureLoader.loadTexture("/textures/gunship_diffuse.png")));
@@ -94,19 +99,17 @@ public class Arena extends Game {
         ringMarker.position.y = -1;
         add(ringMarker);
 
-        final double DEG_TO_RAD = Math.PI / 180.0;
-
-        for (int i = 0; i < 360; i += 10) {
-            float x = (float) Math.sin(i * DEG_TO_RAD) * 10f;
-            float z = (float) Math.cos(i * DEG_TO_RAD) * 10f;
-
-            BillboardParticle billboard = (BillboardParticle)explosionEmitter.emitFrom(new Vector3f(x, 0, z), new Vector3f(1, 0, 0), 0f);
-            billboard.setScale((float)(Math.random() + 0.5));
-            billboard.setFade((float)Math.random());
-        }
-        explosionEmitter.update();
-
         Util.checkGLError();
+    }
+
+    public void explode(Vector3f at) {
+        for (int i = 0; i < 30; i ++) {
+            BillboardParticle billboard = (BillboardParticle)explosionEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(0.05f, 0.2f));
+            billboard.setRotation(randAngle());
+            billboard.setRotationSpeed(randRange(0.01f, 0.2f));
+            billboard.setScale(new Tween(randRange(.8f, 1.2f), randRange(3f, 6f)));
+            billboard.setFade(new Tween(1f, 0f));
+        }
     }
 
     private Model createModel(Technique technique, Mesh mesh) {
@@ -137,7 +140,7 @@ public class Arena extends Game {
         Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter);
         ufo.setGame(this);
         ufo.setPosition(-4.5f, 0, -1);
-        //add(ufo);
+        add(ufo);
     }
 
     @Override

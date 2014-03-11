@@ -22,6 +22,8 @@
 
 package uk.co.zutty.glarena.util;
 
+import org.lwjgl.util.vector.Vector3f;
+
 public class MathUtils {
 
     public static final float DEGTORAD = (float) (Math.PI / 180d);
@@ -32,5 +34,20 @@ public class MathUtils {
 
     public static float degreesToRadians(float degrees) {
         return degrees * DEGTORAD;
+    }
+
+    public static float randRange(float from, float to) {
+        return ((float) Math.random() * (to - from)) + from;
+    }
+
+    public static float randAngle() {
+        return (float) (Math.random() * 2.0 * Math.PI);
+    }
+
+    public static Vector3f randomDirection() {
+        double azimuth = Math.random() * 2.0 * Math.PI;
+        float z = (float) ((Math.random() * 2.0) - 1.0);
+        float f = (float) Math.sqrt(1.0 - z * z);
+        return new Vector3f((float) Math.cos(azimuth) * f, (float) Math.sin(azimuth) * f, z);
     }
 }

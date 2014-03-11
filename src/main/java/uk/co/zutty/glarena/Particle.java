@@ -34,6 +34,7 @@ public abstract class Particle {
     protected Vector3f position;
     protected Vector3f velocity;
     protected short lifetime;
+    protected short timeToLive;
 
     public Vector3f getPosition() {
         return position;
@@ -57,15 +58,28 @@ public abstract class Particle {
 
     public void setLifetime(short lifetime) {
         this.lifetime = lifetime;
+        this.timeToLive = lifetime;
+    }
+
+    public short getTimeToLive() {
+        return timeToLive;
+    }
+
+    public void setTimeToLive(short timeToLive) {
+        this.timeToLive = timeToLive;
     }
 
     public boolean isDead() {
-        return lifetime <= 0;
+        return timeToLive <= 0;
     }
 
     public void update() {
-        //--lifetime;
+        --timeToLive;
         Vector3f.add(position, velocity, position);
+    }
+
+    public float getTweenFactor() {
+        return (float)(lifetime - timeToLive) / (float)lifetime;
     }
 
     public abstract void put(FloatBuffer buffer);
