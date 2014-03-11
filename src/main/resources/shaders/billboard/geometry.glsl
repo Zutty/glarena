@@ -2,7 +2,7 @@
 
 layout(points) in;
 layout(triangle_strip) out;
-layout(max_vertices = 8) out;
+layout(max_vertices = 4) out;
 
 uniform mat4 gVP;
 uniform vec3 gCameraDir;
