@@ -8,6 +8,7 @@ uniform mat4 gVP;
 uniform vec3 gCameraDir;
 
 in bb_vertex {
+    vec4 position;
     float rotation;
     float scale;
     float fade;
@@ -29,7 +30,7 @@ mat3 rotationMatrix(vec3 axis, float angle) {
 
 void main()
 {
-    vec3 bbpos = gl_in[0].gl_Position.xyz;
+    vec3 bbpos = vertex[0].position.xyz;
     vec3 Pos = vec3(0,0,0);
     vec3 up = vec3(0.0, 1.0, 0.0);
     vec3 right = rotationMatrix(gCameraDir, vertex[0].rotation) * normalize(cross(gCameraDir, up));

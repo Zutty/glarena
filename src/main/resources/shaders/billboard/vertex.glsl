@@ -1,12 +1,12 @@
 #version 330
 
-
 in vec4 position;
 in float rotation;
 in float scale;
 in float fade;
 
 out bb_vertex {
+    vec4 position;
     float rotation;
     float scale;
     float fade;
@@ -14,7 +14,7 @@ out bb_vertex {
 
 void main()
 {
-    gl_Position = position;
+    pass.position = position;
     pass.rotation = rotation;
     pass.scale = scale;
     pass.fade = fade;
