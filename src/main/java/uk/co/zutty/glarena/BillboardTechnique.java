@@ -105,6 +105,7 @@ public class BillboardTechnique implements Technique {
         instance.getModel().draw(GL_POINTS);
 
         ShaderProgram.useNone();
+        instance.getTexture().unbind();
 
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
