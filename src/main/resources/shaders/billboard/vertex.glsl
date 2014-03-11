@@ -1,12 +1,21 @@
-#version 150
+#version 330
 
-in vec4 in_Position;
-in float in_rotation;
 
-out float pass_rotation;
+in vec4 position;
+in float rotation;
+in float scale;
+in float fade;
+
+out bb_vertex {
+    float rotation;
+    float scale;
+    float fade;
+} pass;
 
 void main()
 {
-    gl_Position = in_Position;
-    pass_rotation = in_rotation;
+    gl_Position = position;
+    pass.rotation = rotation;
+    pass.scale = scale;
+    pass.fade = fade;
 }

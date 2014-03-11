@@ -100,7 +100,9 @@ public class Arena extends Game {
             float x = (float) Math.sin(i * DEG_TO_RAD) * 10f;
             float z = (float) Math.cos(i * DEG_TO_RAD) * 10f;
 
-            explosionEmitter.emitFrom(new Vector3f(x, 0, z), new Vector3f(1, 0, 0), 0f);
+            BillboardParticle billboard = (BillboardParticle)explosionEmitter.emitFrom(new Vector3f(x, 0, z), new Vector3f(1, 0, 0), 0f);
+            billboard.setScale((float)(Math.random() + 0.5));
+            billboard.setFade((float)Math.random());
         }
         explosionEmitter.update();
 
@@ -135,7 +137,7 @@ public class Arena extends Game {
         Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter);
         ufo.setGame(this);
         ufo.setPosition(-4.5f, 0, -1);
-        add(ufo);
+        //add(ufo);
     }
 
     @Override
@@ -152,7 +154,7 @@ public class Arena extends Game {
         if (++spawnTimer > 15 && waveSpawn < 6) {
             spawnTimer = 0;
             ++waveSpawn;
-            //spawnUfo();
+            spawnUfo();
         }
 
         super.update();

@@ -27,6 +27,8 @@ import java.nio.FloatBuffer;
 public class BillboardParticle extends Particle {
 
     private float rotation;
+    private float scale;
+    private float fade;
 
     public float getRotation() {
         return rotation;
@@ -34,6 +36,22 @@ public class BillboardParticle extends Particle {
 
     public void setRotation(float rotation) {
         this.rotation = rotation;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
+    public float getFade() {
+        return fade;
+    }
+
+    public void setFade(float fade) {
+        this.fade = fade;
     }
 
     @Override
@@ -47,5 +65,7 @@ public class BillboardParticle extends Particle {
         buffer.put(position.y);
         buffer.put(position.z);
         buffer.put(rotation);
+        buffer.put(scale);
+        buffer.put(fade);
     }
 }

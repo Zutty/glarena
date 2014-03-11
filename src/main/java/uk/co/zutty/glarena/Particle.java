@@ -64,7 +64,7 @@ public abstract class Particle {
     }
 
     public void update() {
-        --lifetime;
+        //--lifetime;
         Vector3f.add(position, velocity, position);
     }
 

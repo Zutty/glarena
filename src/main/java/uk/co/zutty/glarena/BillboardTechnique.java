@@ -55,8 +55,10 @@ public class BillboardTechnique implements Technique {
         fragmentShader.compile();
         shader.attachShader(fragmentShader);
 
-        shader.bindAttribLocation(0, "in_Position");
-        shader.bindAttribLocation(1, "in_rotation");
+        shader.bindAttribLocation(0, "position");
+        shader.bindAttribLocation(1, "rotation");
+        shader.bindAttribLocation(2, "scale");
+        shader.bindAttribLocation(3, "fade");
 
         shader.link();
         shader.validate();
@@ -67,6 +69,8 @@ public class BillboardTechnique implements Technique {
 
         format = VertexFormat.Builder.format()
                 .withAttribute(3)
+                .withAttribute(1)
+                .withAttribute(1)
                 .withAttribute(1)
                 .build();
     }

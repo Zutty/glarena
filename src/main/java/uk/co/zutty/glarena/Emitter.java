@@ -55,7 +55,7 @@ public class Emitter implements Entity {
         return modelInstance;
     }
 
-    public void emitFrom(Vector3f source, Vector3f direction, float speed) {
+    public Particle emitFrom(Vector3f source, Vector3f direction, float speed) {
         Particle particle;
 
         try {
@@ -69,6 +69,8 @@ public class Emitter implements Entity {
         particle.setVelocity(new Vector3f(direction));
         particle.getVelocity().normalise().scale(speed);
         particles.add(particle);
+
+        return particle;
     }
 
     public Iterable<Particle> particles() {
