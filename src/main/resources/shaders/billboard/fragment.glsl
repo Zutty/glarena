@@ -13,9 +13,9 @@ void main()
 {
     vec4 color = texture(gColorMap, frag.texCoord);
 
-    if (color.r == 0 && color.g == 0 && color.b == 0) {
+    if (color.a == 0) {
         discard;
     }
 
-    FragColor = vec4(color.rgb, frag.fade);
+    FragColor = vec4(color.rgb, color.a * frag.fade);
 }
