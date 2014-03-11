@@ -5,8 +5,7 @@ layout(triangle_strip) out;
 layout(max_vertices = 8) out;
 
 uniform mat4 gVP;
-uniform vec3 gCameraPos;
-uniform vec3 gCameraCenter;
+uniform vec3 gCameraDir;
 
 in bb_vertex {
     float rotation;
@@ -32,10 +31,9 @@ void main()
 {
     vec3 bbpos = gl_in[0].gl_Position.xyz;
     vec3 Pos = vec3(0,0,0);
-    vec3 toCamera = normalize(gCameraPos - gCameraCenter);
     vec3 up = vec3(0.0, 1.0, 0.0);
-    vec3 right = rotationMatrix(toCamera, vertex[0].rotation) * normalize(cross(toCamera, up));
-    up = normalize(cross(right, toCamera));
+    vec3 right = rotationMatrix(gCameraDir, vertex[0].rotation) * normalize(cross(gCameraDir, up));
+    up = normalize(cross(right, gCameraDir));
 
     Pos -= (right * 0.5);
     Pos -= (up * 0.5);

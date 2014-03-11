@@ -41,12 +41,9 @@ public class Camera {
         matrix = new Matrix4f();
     }
 
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    public Vector3f getCenter() {
-        return center;
+    public Vector3f getDirection() {
+        Vector3f dir = Vector3f.sub(position, center, null);
+        return dir.normalise(dir);
     }
 
     public void setPosition(float x, float y, float z) {

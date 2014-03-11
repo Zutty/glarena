@@ -64,8 +64,7 @@ public class BillboardTechnique implements Technique {
         shader.validate();
 
         shader.initUniform("gVP");
-        shader.initUniform("gCameraPos");
-        shader.initUniform("gCameraCenter");
+        shader.initUniform("gCameraDir");
 
         format = VertexFormat.Builder.format()
                 .withAttribute(3)
@@ -99,8 +98,7 @@ public class BillboardTechnique implements Technique {
 
         shader.use();
         shader.setUniform("gVP", viewProjectionMatrix);
-        shader.setUniform("gCameraPos", camera.getPosition());
-        shader.setUniform("gCameraCenter", camera.getCenter());
+        shader.setUniform("gCameraDir", camera.getDirection());
 
         instance.getTexture().bind();
 
