@@ -28,8 +28,6 @@ public class BillboardParticle extends Particle {
 
     private float rotation;
     private float rotationSpeed;
-    private Tween scale;
-    private Tween fade;
 
     public float getRotation() {
         return rotation;
@@ -45,22 +43,6 @@ public class BillboardParticle extends Particle {
 
     public void setRotationSpeed(float rotationSpeed) {
         this.rotationSpeed = rotationSpeed;
-    }
-
-    public Tween getScale() {
-        return scale;
-    }
-
-    public void setScale(Tween scale) {
-        this.scale = scale;
-    }
-
-    public Tween getFade() {
-        return fade;
-    }
-
-    public void setFade(Tween fade) {
-        this.fade = fade;
     }
 
     @Override

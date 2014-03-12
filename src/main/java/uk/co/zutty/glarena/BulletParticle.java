@@ -33,5 +33,8 @@ public class BulletParticle extends Particle {
         buffer.put(velocity.x);
         buffer.put(velocity.y);
         buffer.put(velocity.z);
+
+        buffer.put(scale.getValue(getTweenFactor()));
+        buffer.put(fade.getValue(getTweenFactor()));
     }
 }

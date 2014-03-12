@@ -35,6 +35,8 @@ public abstract class Particle {
     protected Vector3f velocity;
     protected short lifetime;
     protected short timeToLive;
+    protected Tween scale;
+    protected Tween fade;
 
     public Vector3f getPosition() {
         return position;
@@ -71,6 +73,22 @@ public abstract class Particle {
 
     public boolean isDead() {
         return timeToLive <= 0;
+    }
+
+    public Tween getScale() {
+        return scale;
+    }
+
+    public void setScale(Tween scale) {
+        this.scale = scale;
+    }
+
+    public Tween getFade() {
+        return fade;
+    }
+
+    public void setFade(Tween fade) {
+        this.fade = fade;
     }
 
     public void update() {

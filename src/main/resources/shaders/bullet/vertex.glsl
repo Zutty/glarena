@@ -1,12 +1,21 @@
 #version 150
 
-in vec4 in_Position;
-in vec3 in_velocity;
+in vec4 position;
+in vec3 velocity;
+in float scale;
+in float fade;
 
-out vec3 pass_velocity;
+out bullet_vertex {
+    vec4 position;
+    vec3 velocity;
+    float scale;
+    float fade;
+} vertex;
 
 void main()
 {
-    gl_Position = in_Position;
-    pass_velocity = in_velocity;
+    vertex.position = position;
+    vertex.velocity = velocity;
+    vertex.scale = scale;
+    vertex.fade = fade;
 }
