@@ -18,6 +18,12 @@ public class Tween {
             public float apply(float x) {
                 return (float)Math.pow(2, 10f * (x - 1));
             }
+        }),
+        QUAD_INOUT(new EasingFunction() {
+            @Override
+            public float apply(float x) {
+                return 1f - (float)Math.pow(1f - (2f * x), 2);
+            }
         });
 
         private EasingFunction f;

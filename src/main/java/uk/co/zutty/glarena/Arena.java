@@ -34,6 +34,8 @@ import uk.co.zutty.glarena.util.MathUtils;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import static uk.co.zutty.glarena.Tween.Easing.LINEAR;
+import static uk.co.zutty.glarena.Tween.Easing.QUAD_INOUT;
 import static uk.co.zutty.glarena.util.MathUtils.randAngle;
 import static uk.co.zutty.glarena.util.MathUtils.randRange;
 
@@ -51,7 +53,9 @@ public class Arena extends Game {
     private Gamepad gamepad;
 
     private Emitter playerBulletEmitter;
-    private Emitter explosionEmitter;
+    private Emitter explosionFireballEmitter;
+    private Emitter explosionFlashEmitter;
+    private Emitter explosionSparkEmitter;
 
     private Vector3f arenaCentre;
 
@@ -81,11 +85,20 @@ public class Arena extends Game {
         Technique unlitTechnique = new UnlitTechnique();
         Model ringModel = createModel(unlitTechnique, objLoader.loadUnlitMesh("/models/circle.obj"));
 
-        playerBulletEmitter = new Emitter(new BulletTechnique(), TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
+        BulletTechnique bulletTechnique = new BulletTechnique();
+        BillboardTechnique billboardTechnique = new BillboardTechnique();
+
+        playerBulletEmitter = new Emitter(bulletTechnique, TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
         add(playerBulletEmitter, true);
 
-        explosionEmitter = new Emitter(new BillboardTechnique(), TextureLoader.loadTexture("/textures/cross.png"), BillboardParticle.class);
-        add(explosionEmitter, true);
+        explosionFireballEmitter = new Emitter(billboardTechnique, TextureLoader.loadTexture("/textures/explosion.png"), BillboardParticle.class);
+        add(explosionFireballEmitter, true);
+
+        explosionFlashEmitter = new Emitter(billboardTechnique, TextureLoader.loadTexture("/textures/flash.png"), BillboardParticle.class);
+        add(explosionFlashEmitter, true);
+
+        explosionSparkEmitter = new Emitter(bulletTechnique, TextureLoader.loadTexture("/textures/spark.png"), BulletParticle.class);
+        add(explosionSparkEmitter, true);
 
         player = new Gunship(new ModelInstance(gunshipModel, TextureLoader.loadTexture("/textures/gunship_diffuse.png")));
         player.setPosition(4.5f, 0, -1);
@@ -103,12 +116,24 @@ public class Arena extends Game {
     }
 
     public void explode(Vector3f at) {
-        for (int i = 0; i < 30; i ++) {
-            BillboardParticle billboard = (BillboardParticle)explosionEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(0.05f, 0.2f), randRange(15, 30));
+        BillboardParticle flashParticle = (BillboardParticle)explosionFlashEmitter.emitFrom(at, new Vector3f(0f, 1f, 0f), 0f, 10);
+        flashParticle.setFade(new Tween(0f, 1f, QUAD_INOUT));
+        flashParticle.setScale(new Tween(0f, 5f, QUAD_INOUT));
+
+        int numSparks = randRange(5, 10);
+        for (int i = 0; i < numSparks; i ++) {
+            Particle spark = explosionSparkEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(.6f, .8f), randRange(5, 20));
+            spark.setScale(new Tween(1f, 1f, LINEAR));
+            spark.setFade(new Tween(1f, 0f, LINEAR));
+        }
+
+        int numFireballs = randRange(10, 20);
+        for (int i = 0; i < numFireballs; i++) {
+            BillboardParticle billboard = (BillboardParticle)explosionFireballEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(0.05f, 0.2f), randRange(15, 25));
             billboard.setRotation(randAngle());
-            billboard.setRotationSpeed(randRange(0.01f, 0.2f));
-            billboard.setScale(new Tween(randRange(.8f, 1.2f), randRange(3f, 6f), Tween.Easing.LINEAR));
-            billboard.setFade(new Tween(1f, 0f, Tween.Easing.LINEAR));
+            billboard.setRotationSpeed(randRange(0.01f, 0.02f));
+            billboard.setScale(new Tween(randRange(.8f, 1.2f), randRange(3f, 6f), LINEAR));
+            billboard.setFade(new Tween(1f, 0f, LINEAR));
         }
     }
 
