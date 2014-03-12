@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
 import uk.co.zutty.glarena.engine.Camera;

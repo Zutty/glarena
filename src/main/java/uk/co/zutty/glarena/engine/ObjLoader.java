@@ -24,7 +24,7 @@ package uk.co.zutty.glarena.engine;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import uk.co.zutty.glarena.UnlitVertex;
+import uk.co.zutty.glarena.shaders.UnlitVertex;
 import uk.co.zutty.glarena.shaders.EntityVertex;
 
 import java.io.BufferedReader;
