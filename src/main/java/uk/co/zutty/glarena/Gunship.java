@@ -27,6 +27,9 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import static uk.co.zutty.glarena.Tween.Easing.EXPO_OUT;
+import static uk.co.zutty.glarena.Tween.Easing.LINEAR;
+
 /**
  * Player controlled entity.
  */
@@ -86,8 +89,8 @@ public class Gunship extends AbstractEntity {
                 Matrix4f.transform(getModelInstance().getMatrix(), emitPosition, emitPosition); //TODO a bit of a hack
 
                 Particle particle = bulletEmitter.emitFrom(xyz(emitPosition), new Vector3f((float) Math.sin(yawRadians), 0, (float) Math.cos(yawRadians)), 1.2f, 100);
-                particle.setScale(new Tween(1f, 1f));
-                particle.setFade(new Tween(1f, 0f));
+                particle.setScale(new Tween(1f, 1f, LINEAR));
+                particle.setFade(new Tween(1f, 0f, EXPO_OUT));
             }
         }
     }

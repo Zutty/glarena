@@ -107,8 +107,8 @@ public class Arena extends Game {
             BillboardParticle billboard = (BillboardParticle)explosionEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(0.05f, 0.2f), randRange(15, 30));
             billboard.setRotation(randAngle());
             billboard.setRotationSpeed(randRange(0.01f, 0.2f));
-            billboard.setScale(new Tween(randRange(.8f, 1.2f), randRange(3f, 6f)));
-            billboard.setFade(new Tween(1f, 0f));
+            billboard.setScale(new Tween(randRange(.8f, 1.2f), randRange(3f, 6f), Tween.Easing.LINEAR));
+            billboard.setFade(new Tween(1f, 0f, Tween.Easing.LINEAR));
         }
     }
 
