@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.engine.Tween;

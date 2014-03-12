@@ -22,7 +22,7 @@
 
 package uk.co.zutty.glarena.shaders;
 
-import uk.co.zutty.glarena.Particle;
+import uk.co.zutty.glarena.engine.Particle;
 
 import java.nio.FloatBuffer;
 
