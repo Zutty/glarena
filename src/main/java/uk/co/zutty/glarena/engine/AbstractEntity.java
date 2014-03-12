@@ -20,57 +20,52 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
-import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.nio.FloatBuffer;
+import static uk.co.zutty.glarena.util.MathUtils.degreesToRadians;
 
 /**
- * Vertex definition for interleaved VBOs.
+ * A game object.
  */
-public class EntityVertex implements Vertex {
+public abstract class AbstractEntity implements Entity {
 
-    private float positionX;
-    private float positionY;
-    private float positionZ;
+    protected Vector3f position = new Vector3f();
 
-    private float normalX;
-    private float normalY;
-    private float normalZ;
+    protected float roll;
+    protected float pitch;
+    protected float yaw;
 
-    private float texCoordS;
-    private float texCoordT;
+    private ModelInstance modelInstance;
 
-    public void setPosition(Vector3f position) {
-        positionX = position.x;
-        positionY = position.y;
-        positionZ = position.z;
+    @Override
+    public ModelInstance getModelInstance() {
+        return modelInstance;
     }
 
-    public void setNormal(Vector3f normal) {
-        normalX = normal.x;
-        normalY = normal.y;
-        normalZ = normal.z;
+    public void setModelInstance(ModelInstance modelInstance) {
+        this.modelInstance = modelInstance;
     }
 
-    public void setTexCoord(Vector2f texCoord) {
-        texCoordS = texCoord.x;
-        texCoordT = texCoord.y;
+    public Vector3f getPosition() {
+        return position;
+    }
+
+    public void setPosition(float x, float y, float z) {
+        position.x = x;
+        position.y = y;
+        position.z = z;
     }
 
     @Override
-    public void put(FloatBuffer vertexBuffer) {
-        vertexBuffer.put(positionX);
-        vertexBuffer.put(positionY);
-        vertexBuffer.put(positionZ);
-
-        vertexBuffer.put(normalX);
-        vertexBuffer.put(normalY);
-        vertexBuffer.put(normalZ);
-
-        vertexBuffer.put(texCoordS);
-        vertexBuffer.put(texCoordT);
+    public void update() {
+        Matrix4f matrix = modelInstance.getMatrix();
+        matrix.setIdentity();
+        matrix.translate(position);
+        matrix.rotate(degreesToRadians(pitch), new Vector3f(1, 0, 0));
+        matrix.rotate(degreesToRadians(yaw), new Vector3f(0, 1, 0));
+        matrix.rotate(degreesToRadians(roll), new Vector3f(0, 0, 1));
     }
 }

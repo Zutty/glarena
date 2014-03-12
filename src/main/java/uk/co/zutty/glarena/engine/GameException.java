@@ -20,10 +20,17 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
-public interface Entity {
-    ModelInstance getModelInstance();
+/**
+ * Base exception
+ */
+public class GameException extends RuntimeException {
+    public GameException(String message) {
+        super(message);
+    }
 
-    void update();
+    public GameException(Throwable cause) {
+        super(cause);
+    }
 }

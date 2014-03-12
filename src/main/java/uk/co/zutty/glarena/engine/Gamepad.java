@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
 import net.java.games.input.Component;
 import net.java.games.input.Controller;

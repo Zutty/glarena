@@ -23,7 +23,7 @@
 package uk.co.zutty.glarena.gl;
 
 import org.lwjgl.opengl.GL15;
-import uk.co.zutty.glarena.Technique;
+import uk.co.zutty.glarena.engine.Technique;
 
 import java.nio.ShortBuffer;
 

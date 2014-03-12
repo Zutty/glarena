@@ -26,9 +26,10 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
+import uk.co.zutty.glarena.engine.*;
 
-import static uk.co.zutty.glarena.Tween.Easing.EXPO_OUT;
-import static uk.co.zutty.glarena.Tween.Easing.LINEAR;
+import static uk.co.zutty.glarena.engine.Tween.Easing.EXPO_OUT;
+import static uk.co.zutty.glarena.engine.Tween.Easing.LINEAR;
 
 /**
  * Player controlled entity.

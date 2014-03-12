@@ -23,6 +23,7 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.util.vector.Vector3f;
+import uk.co.zutty.glarena.engine.Tween;
 
 import java.nio.FloatBuffer;
 

@@ -20,41 +20,51 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
-import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-import uk.co.zutty.glarena.engine.Vertex;
+import uk.co.zutty.glarena.util.MatrixUtils;
 
-import java.nio.FloatBuffer;
+/**
+ * Class to encapsulate the view matrix.
+ */
+public class Camera {
 
-public class UnlitVertex implements Vertex {
+    private Vector3f position;
+    private Vector3f center;
+    private Matrix4f matrix;
 
-    private float positionX;
-    private float positionY;
-    private float positionZ;
-
-    private float texCoordS;
-    private float texCoordT;
-
-    public void setPosition(Vector3f position) {
-        positionX = position.x;
-        positionY = position.y;
-        positionZ = position.z;
+    public Camera() {
+        position = new Vector3f();
+        center = new Vector3f();
+        matrix = new Matrix4f();
     }
 
-    public void setTexCoord(Vector2f texCoord) {
-        texCoordS = texCoord.x;
-        texCoordT = texCoord.y;
+    public Vector3f getDirection() {
+        Vector3f dir = Vector3f.sub(position, center, null);
+        return dir.normalise(dir);
     }
 
-    @Override
-    public void put(FloatBuffer vertexBuffer) {
-        vertexBuffer.put(positionX);
-        vertexBuffer.put(positionY);
-        vertexBuffer.put(positionZ);
+    public void setPosition(float x, float y, float z) {
+        position.x = x;
+        position.y = y;
+        position.z = z;
+    }
 
-        vertexBuffer.put(texCoordS);
-        vertexBuffer.put(texCoordT);
+    public void setCenter(float x, float y, float z) {
+        center.x = x;
+        center.y = y;
+        center.z = z;
+    }
+
+    public void update() {
+        matrix = MatrixUtils.lookAt(position.x, position.y, position.z,
+                center.x, center.y, center.z,
+                0f, 1f, 0f);
+    }
+
+    public Matrix4f getViewMatrix() {
+        return matrix;
     }
 }

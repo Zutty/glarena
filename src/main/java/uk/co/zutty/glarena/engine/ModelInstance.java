@@ -20,43 +20,32 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
-import java.nio.FloatBuffer;
+import org.lwjgl.util.vector.Matrix4f;
+import uk.co.zutty.glarena.gl.Model;
+import uk.co.zutty.glarena.gl.Texture;
 
-public class BillboardParticle extends Particle {
+public class ModelInstance {
 
-    private float rotation;
-    private float rotationSpeed;
+    private Model model;
+    private Texture texture;
+    private Matrix4f matrix = new Matrix4f();
 
-    public float getRotation() {
-        return rotation;
+    public ModelInstance(Model model, Texture texture) {
+        this.model = model;
+        this.texture = texture;
     }
 
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
+    public Model getModel() {
+        return model;
     }
 
-    public float getRotationSpeed() {
-        return rotationSpeed;
+    public Texture getTexture() {
+        return texture;
     }
 
-    public void setRotationSpeed(float rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
-    }
-
-    @Override
-    public void update() {
-        super.update();
-        rotation += rotationSpeed;
-    }
-
-    public void put(FloatBuffer buffer) {
-        buffer.put(position.x);
-        buffer.put(position.y);
-        buffer.put(position.z);
-        buffer.put(rotation);
-        buffer.put(scale.getValue(getTweenFactor()));
-        buffer.put(fade.getValue(getTweenFactor()));
+    public Matrix4f getMatrix() {
+        return matrix;
     }
 }

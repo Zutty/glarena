@@ -22,7 +22,7 @@
 
 package uk.co.zutty.glarena.gl;
 
-import uk.co.zutty.glarena.Technique;
+import uk.co.zutty.glarena.engine.Technique;
 import uk.co.zutty.glarena.vertex.Attribute;
 
 import java.nio.FloatBuffer;

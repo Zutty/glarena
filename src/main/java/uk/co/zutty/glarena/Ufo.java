@@ -23,6 +23,10 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.util.vector.Vector3f;
+import uk.co.zutty.glarena.engine.AbstractEntity;
+import uk.co.zutty.glarena.engine.Emitter;
+import uk.co.zutty.glarena.engine.Game;
+import uk.co.zutty.glarena.engine.ModelInstance;
 
 /**
  * AI controlled enemy entity.

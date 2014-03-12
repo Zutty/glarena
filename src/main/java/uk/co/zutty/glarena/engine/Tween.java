@@ -1,4 +1,4 @@
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
 public class Tween {
 

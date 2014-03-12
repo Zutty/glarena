@@ -20,51 +20,38 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-import uk.co.zutty.glarena.util.MatrixUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Class to encapsulate the view matrix.
+ * Represents the raw data for a 3D mesh
  */
-public class Camera {
+public class Mesh {
 
-    private Vector3f position;
-    private Vector3f center;
-    private Matrix4f matrix;
+    private List<Vertex> vertices;
+    private List<Short> indices;
 
-    public Camera() {
-        position = new Vector3f();
-        center = new Vector3f();
-        matrix = new Matrix4f();
+    public Mesh() {
+        vertices = new ArrayList<>();
+        indices = new ArrayList<>();
     }
 
-    public Vector3f getDirection() {
-        Vector3f dir = Vector3f.sub(position, center, null);
-        return dir.normalise(dir);
+    public int addVertex(Vertex vertex) {
+        vertices.add(vertex);
+        return vertices.size() - 1;
     }
 
-    public void setPosition(float x, float y, float z) {
-        position.x = x;
-        position.y = y;
-        position.z = z;
+    public void addIndex(int index) {
+        indices.add((short) index);
     }
 
-    public void setCenter(float x, float y, float z) {
-        center.x = x;
-        center.y = y;
-        center.z = z;
+    public List<Vertex> getVertices() {
+        return vertices;
     }
 
-    public void update() {
-        matrix = MatrixUtils.lookAt(position.x, position.y, position.z,
-                center.x, center.y, center.z,
-                0f, 1f, 0f);
-    }
-
-    public Matrix4f getViewMatrix() {
-        return matrix;
+    public List<Short> getIndices() {
+        return indices;
     }
 }

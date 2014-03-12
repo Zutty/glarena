@@ -20,21 +20,21 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
-import java.nio.FloatBuffer;
+import org.lwjgl.util.vector.Matrix4f;
+import uk.co.zutty.glarena.vertex.VertexFormat;
 
-public class BulletParticle extends Particle {
-    public void put(FloatBuffer buffer) {
-        buffer.put(position.x);
-        buffer.put(position.y);
-        buffer.put(position.z);
+/**
+ * Encapsulates a vertex format and a shader.
+ */
+public interface Technique {
 
-        buffer.put(velocity.x);
-        buffer.put(velocity.y);
-        buffer.put(velocity.z);
+    VertexFormat getFormat();
 
-        buffer.put(scale.getValue(getTweenFactor()));
-        buffer.put(fade.getValue(getTweenFactor()));
-    }
+    void setProjectionMatrix(Matrix4f projectionMatrix);
+
+    void setCamera(Camera camera);
+
+    void renderInstance(ModelInstance instance);
 }

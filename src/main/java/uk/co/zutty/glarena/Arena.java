@@ -27,15 +27,17 @@ import net.java.games.input.ControllerEnvironment;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Util;
 import org.lwjgl.util.vector.Vector3f;
+import uk.co.zutty.glarena.engine.*;
 import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
+import uk.co.zutty.glarena.shaders.*;
 import uk.co.zutty.glarena.util.MathUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-import static uk.co.zutty.glarena.Tween.Easing.LINEAR;
-import static uk.co.zutty.glarena.Tween.Easing.QUAD_INOUT;
+import static uk.co.zutty.glarena.engine.Tween.Easing.LINEAR;
+import static uk.co.zutty.glarena.engine.Tween.Easing.QUAD_INOUT;
 import static uk.co.zutty.glarena.util.MathUtils.randAngle;
 import static uk.co.zutty.glarena.util.MathUtils.randRange;
 
@@ -109,19 +111,19 @@ public class Arena extends Game {
         arenaCentre = new Vector3f(0, 0, 0);
 
         Marker ringMarker = new Marker(new ModelInstance(ringModel, TextureLoader.loadTexture("/textures/circle.png")));
-        ringMarker.position.y = -1;
+        ringMarker.getPosition().y = -1;
         add(ringMarker, false);
 
         Util.checkGLError();
     }
 
     public void explode(Vector3f at) {
-        BillboardParticle flashParticle = (BillboardParticle)explosionFlashEmitter.emitFrom(at, new Vector3f(0f, 1f, 0f), 0f, 10);
+        BillboardParticle flashParticle = (BillboardParticle) explosionFlashEmitter.emitFrom(at, new Vector3f(0f, 1f, 0f), 0f, 10);
         flashParticle.setFade(new Tween(0f, 1f, QUAD_INOUT));
         flashParticle.setScale(new Tween(0f, 5f, QUAD_INOUT));
 
         int numSparks = randRange(5, 10);
-        for (int i = 0; i < numSparks; i ++) {
+        for (int i = 0; i < numSparks; i++) {
             Particle spark = explosionSparkEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(.6f, .8f), randRange(5, 20));
             spark.setScale(new Tween(1f, 1f, LINEAR));
             spark.setFade(new Tween(1f, 0f, LINEAR));
@@ -129,7 +131,7 @@ public class Arena extends Game {
 
         int numFireballs = randRange(10, 20);
         for (int i = 0; i < numFireballs; i++) {
-            BillboardParticle billboard = (BillboardParticle)explosionFireballEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(0.05f, 0.2f), randRange(15, 25));
+            BillboardParticle billboard = (BillboardParticle) explosionFireballEmitter.emitFrom(at, MathUtils.randomDirection(), randRange(0.05f, 0.2f), randRange(15, 25));
             billboard.setRotation(randAngle());
             billboard.setRotationSpeed(randRange(0.01f, 0.02f));
             billboard.setScale(new Tween(randRange(.8f, 1.2f), randRange(3f, 6f), LINEAR));
@@ -187,7 +189,7 @@ public class Arena extends Game {
 
         super.update();
 
-        Vector3f.sub(arenaCentre, player.position, V);
+        Vector3f.sub(arenaCentre, player.getPosition(), V);
         V.scale(0.9f);
 
         camera.setPosition(arenaCentre.x - V.x, 20f, arenaCentre.z - 25f - V.z);

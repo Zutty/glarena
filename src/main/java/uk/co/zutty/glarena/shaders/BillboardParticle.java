@@ -20,41 +20,45 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.shaders;
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import uk.co.zutty.glarena.engine.Vertex;
+import uk.co.zutty.glarena.Particle;
 
 import java.nio.FloatBuffer;
 
-public class UnlitVertex implements Vertex {
+public class BillboardParticle extends Particle {
 
-    private float positionX;
-    private float positionY;
-    private float positionZ;
+    private float rotation;
+    private float rotationSpeed;
 
-    private float texCoordS;
-    private float texCoordT;
-
-    public void setPosition(Vector3f position) {
-        positionX = position.x;
-        positionY = position.y;
-        positionZ = position.z;
+    public float getRotation() {
+        return rotation;
     }
 
-    public void setTexCoord(Vector2f texCoord) {
-        texCoordS = texCoord.x;
-        texCoordT = texCoord.y;
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+    }
+
+    public float getRotationSpeed() {
+        return rotationSpeed;
+    }
+
+    public void setRotationSpeed(float rotationSpeed) {
+        this.rotationSpeed = rotationSpeed;
     }
 
     @Override
-    public void put(FloatBuffer vertexBuffer) {
-        vertexBuffer.put(positionX);
-        vertexBuffer.put(positionY);
-        vertexBuffer.put(positionZ);
+    public void update() {
+        super.update();
+        rotation += rotationSpeed;
+    }
 
-        vertexBuffer.put(texCoordS);
-        vertexBuffer.put(texCoordT);
+    public void put(FloatBuffer buffer) {
+        buffer.put(position.x);
+        buffer.put(position.y);
+        buffer.put(position.z);
+        buffer.put(rotation);
+        buffer.put(scale.getValue(getTweenFactor()));
+        buffer.put(fade.getValue(getTweenFactor()));
     }
 }

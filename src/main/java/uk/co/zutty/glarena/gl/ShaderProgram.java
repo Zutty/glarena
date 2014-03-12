@@ -25,7 +25,7 @@ package uk.co.zutty.glarena.gl;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-import uk.co.zutty.glarena.GameException;
+import uk.co.zutty.glarena.engine.GameException;
 
 import java.nio.FloatBuffer;
 import java.util.HashMap;

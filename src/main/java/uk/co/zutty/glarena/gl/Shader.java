@@ -22,7 +22,7 @@
 
 package uk.co.zutty.glarena.gl;
 
-import uk.co.zutty.glarena.GameException;
+import uk.co.zutty.glarena.engine.GameException;
 
 import java.nio.charset.Charset;
 

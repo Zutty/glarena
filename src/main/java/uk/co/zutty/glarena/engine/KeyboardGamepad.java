@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector2f;

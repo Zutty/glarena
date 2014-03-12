@@ -20,10 +20,11 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.engine;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
+import uk.co.zutty.glarena.Particle;
 import uk.co.zutty.glarena.gl.ArrayModel;
 import uk.co.zutty.glarena.gl.Texture;
 
@@ -43,7 +44,7 @@ public class Emitter implements Entity {
     private Class<? extends Particle> particleType;
     private List<Particle> particles = new ArrayList<>();
 
-    protected Emitter(Technique technique, Texture texture, Class<? extends Particle> particleType) {
+    public Emitter(Technique technique, Texture texture, Class<? extends Particle> particleType) {
         this.technique = technique;
         this.particleType = particleType;
         model = new ArrayModel(technique);

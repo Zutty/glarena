@@ -20,32 +20,23 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.shaders;
 
-import org.lwjgl.util.vector.Matrix4f;
-import uk.co.zutty.glarena.gl.Model;
-import uk.co.zutty.glarena.gl.Texture;
+import uk.co.zutty.glarena.Particle;
 
-public class ModelInstance {
+import java.nio.FloatBuffer;
 
-    private Model model;
-    private Texture texture;
-    private Matrix4f matrix = new Matrix4f();
+public class BulletParticle extends Particle {
+    public void put(FloatBuffer buffer) {
+        buffer.put(position.x);
+        buffer.put(position.y);
+        buffer.put(position.z);
 
-    public ModelInstance(Model model, Texture texture) {
-        this.model = model;
-        this.texture = texture;
-    }
+        buffer.put(velocity.x);
+        buffer.put(velocity.y);
+        buffer.put(velocity.z);
 
-    public Model getModel() {
-        return model;
-    }
-
-    public Texture getTexture() {
-        return texture;
-    }
-
-    public Matrix4f getMatrix() {
-        return matrix;
+        buffer.put(scale.getValue(getTweenFactor()));
+        buffer.put(fade.getValue(getTweenFactor()));
     }
 }

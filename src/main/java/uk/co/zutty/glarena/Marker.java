@@ -22,6 +22,9 @@
 
 package uk.co.zutty.glarena;
 
+import uk.co.zutty.glarena.engine.AbstractEntity;
+import uk.co.zutty.glarena.engine.ModelInstance;
+
 /**
  * Marker graphic that shows the game arena
  */

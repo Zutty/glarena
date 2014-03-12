@@ -23,6 +23,9 @@
 package uk.co.zutty.glarena;
 
 import org.lwjgl.util.vector.Matrix4f;
+import uk.co.zutty.glarena.engine.Camera;
+import uk.co.zutty.glarena.engine.ModelInstance;
+import uk.co.zutty.glarena.engine.Technique;
 import uk.co.zutty.glarena.gl.Shader;
 import uk.co.zutty.glarena.gl.ShaderProgram;
 import uk.co.zutty.glarena.gl.ShaderType;

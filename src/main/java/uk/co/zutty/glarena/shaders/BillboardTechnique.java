@@ -20,9 +20,12 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena;
+package uk.co.zutty.glarena.shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import uk.co.zutty.glarena.engine.Camera;
+import uk.co.zutty.glarena.engine.ModelInstance;
+import uk.co.zutty.glarena.engine.Technique;
 import uk.co.zutty.glarena.gl.Shader;
 import uk.co.zutty.glarena.gl.ShaderProgram;
 import uk.co.zutty.glarena.gl.ShaderType;
@@ -30,33 +33,33 @@ import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class BulletTechnique implements Technique {
+public class BillboardTechnique implements Technique {
 
     private ShaderProgram shader;
     private VertexFormat format;
     private Matrix4f projectionMatrix;
     private Camera camera;
 
-    public BulletTechnique() {
+    public BillboardTechnique() {
         shader = new ShaderProgram();
 
         Shader vertexShader = new Shader(ShaderType.VERTEX);
-        vertexShader.loadSource("/shaders/bullet/vertex.glsl");
+        vertexShader.loadSource("/shaders/billboard/vertex.glsl");
         vertexShader.compile();
         shader.attachShader(vertexShader);
 
         Shader geometryShader = new Shader(ShaderType.GEOMETRY);
-        geometryShader.loadSource("/shaders/bullet/geometry.glsl");
+        geometryShader.loadSource("/shaders/billboard/geometry.glsl");
         geometryShader.compile();
         shader.attachShader(geometryShader);
 
         Shader fragmentShader = new Shader(ShaderType.FRAGMENT);
-        fragmentShader.loadSource("/shaders/bullet/fragment.glsl");
+        fragmentShader.loadSource("/shaders/billboard/fragment.glsl");
         fragmentShader.compile();
         shader.attachShader(fragmentShader);
 
         shader.bindAttribLocation(0, "position");
-        shader.bindAttribLocation(1, "velocity");
+        shader.bindAttribLocation(1, "rotation");
         shader.bindAttribLocation(2, "scale");
         shader.bindAttribLocation(3, "fade");
 
@@ -64,10 +67,11 @@ public class BulletTechnique implements Technique {
         shader.validate();
 
         shader.initUniform("gVP");
+        shader.initUniform("gCameraDir");
 
         format = VertexFormat.Builder.format()
                 .withAttribute(3)
-                .withAttribute(3)
+                .withAttribute(1)
                 .withAttribute(1)
                 .withAttribute(1)
                 .build();
@@ -97,12 +101,14 @@ public class BulletTechnique implements Technique {
 
         shader.use();
         shader.setUniform("gVP", viewProjectionMatrix);
+        shader.setUniform("gCameraDir", camera.getDirection());
 
         instance.getTexture().bind();
 
         instance.getModel().draw(GL_POINTS);
 
         ShaderProgram.useNone();
+        instance.getTexture().unbind();
 
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
