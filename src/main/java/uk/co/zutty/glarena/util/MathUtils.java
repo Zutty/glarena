@@ -27,6 +27,7 @@ import org.lwjgl.util.vector.Vector3f;
 public class MathUtils {
 
     public static final float DEGTORAD = (float) (Math.PI / 180d);
+    public static final Vector3f UP = new Vector3f(0f, 1f, 0f);
 
     public static float cot(float angle) {
         return (float) (1f / Math.tan(angle));
