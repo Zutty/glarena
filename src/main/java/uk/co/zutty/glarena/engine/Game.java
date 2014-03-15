@@ -107,6 +107,12 @@ public class Game {
         (transparent ? transparentInstances : instances).add(entity.getModelInstance());
     }
 
+    public void add(Effect effect) {
+        for(Entity entity : effect.getEmitters()) {
+            add(entity, true);
+        }
+    }
+
     public void remove(Entity entity) {
         toRemove.add(entity);
     }

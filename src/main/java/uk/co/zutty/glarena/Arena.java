@@ -54,10 +54,7 @@ public class Arena extends Game {
     private Gamepad gamepad;
 
     private Emitter playerBulletEmitter;
-    private Emitter explosionFireballEmitter;
-    private Emitter explosionFlashEmitter;
-    private Emitter explosionSparkEmitter;
-    private Emitter explosionWakeEmitter;
+    private Effect explosionEffect;
 
     private Vector3f arenaCentre;
 
@@ -94,17 +91,8 @@ public class Arena extends Game {
         playerBulletEmitter = new Emitter(bulletTechnique, TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
         add(playerBulletEmitter, true);
 
-        explosionFireballEmitter = new Emitter(billboardTechnique, TextureLoader.loadTexture("/textures/explosion.png"), BillboardParticle.class);
-        add(explosionFireballEmitter, true);
-
-        explosionFlashEmitter = new Emitter(billboardTechnique, TextureLoader.loadTexture("/textures/flash.png"), BillboardParticle.class);
-        add(explosionFlashEmitter, true);
-
-        explosionSparkEmitter = new Emitter(bulletTechnique, TextureLoader.loadTexture("/textures/spark.png"), BulletParticle.class);
-        add(explosionSparkEmitter, true);
-
-        explosionWakeEmitter = new Emitter(planarTechnique, TextureLoader.loadTexture("/textures/wake.png"), BillboardParticle.class);
-        add(explosionWakeEmitter, true);
+        explosionEffect = new Explosion(billboardTechnique, bulletTechnique, planarTechnique);
+        add(explosionEffect);
 
         player = new Gunship(new ModelInstance(gunshipModel, TextureLoader.loadTexture("/textures/gunship_diffuse.png")));
         player.setPosition(4.5f, 0, -1);
@@ -119,33 +107,6 @@ public class Arena extends Game {
         add(ringMarker, false);
 
         Util.checkGLError();
-    }
-
-    public void explode(Vector3f at) {
-        BillboardParticle flashParticle = (BillboardParticle) explosionFlashEmitter.emitFrom(at, UP, 0f, 10);
-        flashParticle.setFade(new Tween(0f, 1f, QUAD_INOUT));
-        flashParticle.setScale(new Tween(0f, 5f, QUAD_INOUT));
-
-        BillboardParticle wakeParticle = (BillboardParticle) explosionWakeEmitter.emitFrom(at, UP, 0f, randRange(15, 25));
-        wakeParticle.setRotation(randAngle());
-        wakeParticle.setFade(new Tween(1f, 0f, LINEAR));
-        wakeParticle.setScale(new Tween(0f, randRange(15f, 20f), LINEAR));
-
-        int numSparks = randRange(5, 10);
-        for (int i = 0; i < numSparks; i++) {
-            Particle spark = explosionSparkEmitter.emitFrom(at, randomDirection(), randRange(.6f, .8f), randRange(5, 20));
-            spark.setScale(new Tween(1f, 1f, LINEAR));
-            spark.setFade(new Tween(1f, 0f, LINEAR));
-        }
-
-        int numFireballs = randRange(10, 20);
-        for (int i = 0; i < numFireballs; i++) {
-            BillboardParticle billboard = (BillboardParticle) explosionFireballEmitter.emitFrom(at, randomDirection(), randRange(0.05f, 0.2f), randRange(15, 25));
-            billboard.setRotation(randAngle());
-            billboard.setRotationSpeed(randRange(0.01f, 0.02f));
-            billboard.setScale(new Tween(randRange(.8f, 1.2f), randRange(3f, 6f), LINEAR));
-            billboard.setFade(new Tween(1f, 0f, LINEAR));
-        }
     }
 
     private Model createModel(Technique technique, Mesh mesh) {
@@ -173,7 +134,7 @@ public class Arena extends Game {
     }
 
     public void spawnUfo() {
-        Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter);
+        Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter, explosionEffect);
         ufo.setGame(this);
         ufo.setPosition(-4.5f, 0, -1);
         add(ufo, false);

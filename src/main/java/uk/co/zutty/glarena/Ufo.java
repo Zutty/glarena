@@ -34,11 +34,13 @@ public class Ufo extends AbstractEntity {
     protected Game game;
 
     private Emitter playerBulletEmitter;
+    private Effect explosionEffect;
     private int timer = 0;
 
-    public Ufo(ModelInstance modelInstance, Emitter playerBulletEmitter) {
+    public Ufo(ModelInstance modelInstance, Emitter playerBulletEmitter, Effect explosionEffect) {
         setModelInstance(modelInstance);
         this.playerBulletEmitter = playerBulletEmitter;
+        this.explosionEffect = explosionEffect;
     }
 
     public void setGame(Game game) {
@@ -58,7 +60,7 @@ public class Ufo extends AbstractEntity {
             Vector3f.sub(p.getPosition(), position, Arena.V);
             if (Arena.V.lengthSquared() < HIT_RADIUS_SQUARED) {
                 game.remove(this);
-                ((Arena)game).explode(position);
+                explosionEffect.trigger(position);
                 p.setLifetime((short) 0);
             }
         }
