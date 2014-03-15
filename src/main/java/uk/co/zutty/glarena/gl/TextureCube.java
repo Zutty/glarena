@@ -23,30 +23,20 @@
 package uk.co.zutty.glarena.gl;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 
-public abstract class Texture {
+public class TextureCube extends Texture {
+    public TextureCube() {
+        super(GL_TEXTURE_CUBE_MAP);
 
-    protected int glTexture;
-    protected final int glTarget;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, glTexture);
 
-    protected Texture(int glTarget) {
-        this.glTarget = glTarget;
-        glTexture = glGenTextures();
-    }
-
-    public void bind() {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(glTarget, glTexture);
-    }
-
-    public void unbind() {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(glTarget, 0);
-    }
-
-    public void delete() {
-        glDeleteTextures(glTexture);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     }
 }

@@ -25,6 +25,8 @@ package uk.co.zutty.glarena.engine;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import org.lwjgl.BufferUtils;
 import uk.co.zutty.glarena.gl.Texture;
+import uk.co.zutty.glarena.gl.Texture2D;
+import uk.co.zutty.glarena.gl.TextureCube;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,7 +53,7 @@ public class TextureLoader {
             decoder.decode(buffer, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
             buffer.flip();
             in.close();
-            texture = new Texture(buffer, decoder.getWidth(), decoder.getHeight());
+            texture = new Texture2D(buffer, decoder.getWidth(), decoder.getHeight());
 
         } catch (FileNotFoundException e) {
             System.err.println("Texture file could not be found.");
@@ -61,20 +63,11 @@ public class TextureLoader {
         return texture;
     }
 
-    public static int loadCubemap(String location) {
-        int texture = glGenTextures();
-        glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+    public static TextureCube loadCubemap(String location) {
+        TextureCube texture = new TextureCube();
 
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-        ByteBuffer buffer;
-
-        buffer = loadPNG(location + "_right1.png");
-        int size = 512;
+        ByteBuffer buffer = loadPNG(location + "_right1.png");
+        int size = 2048;
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
         buffer = loadPNG(location + "_left2.png");
         glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -86,8 +79,6 @@ public class TextureLoader {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
         buffer = loadPNG(location + "_back6.png");
         glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-
-        //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
         return texture;
     }

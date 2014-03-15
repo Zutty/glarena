@@ -39,6 +39,7 @@ public class Game {
     protected Camera camera;
     private List<Entity> entities;
     private Collection<Entity> toRemove = new ArrayList<>();
+    private List<ModelInstance> backgroundInstances = new ArrayList<>();
     private List<ModelInstance> instances = new ArrayList<>();
     private List<ModelInstance> transparentInstances = new ArrayList<>();
 
@@ -88,11 +89,12 @@ public class Game {
         }
 
         // Setup an XNA like background color
-        //GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
-        GL11.glClearColor(0f, 0f, 0f, 0f);
+        GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
+        //GL11.glClearColor(0f, 0f, 0f, 0f);
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
+        glEnable(ARBSeamlessCubeMap.GL_TEXTURE_CUBE_MAP_SEAMLESS);
         glCullFace(GL_BACK);
         glClearDepth(1);
 
@@ -102,14 +104,23 @@ public class Game {
     protected void init() {
     }
 
-    public void add(Entity entity, boolean transparent) {
+    public void addBackground(ModelInstance instance) {
+        backgroundInstances.add(instance);
+    }
+
+    public void add(Entity entity) {
         entities.add(entity);
-        (transparent ? transparentInstances : instances).add(entity.getModelInstance());
+        instances.add(entity.getModelInstance());
+    }
+
+    public void addTransparent(Entity entity) {
+        entities.add(entity);
+        transparentInstances.add(entity.getModelInstance());
     }
 
     public void add(Effect effect) {
         for(Entity entity : effect.getEmitters()) {
-            add(entity, true);
+            addTransparent(entity);
         }
     }
 
@@ -135,6 +146,11 @@ public class Game {
 
     protected void render() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDepthMask(false);
+
+        renderList(backgroundInstances);
+
+        glDepthMask(true);
 
         renderList(instances);
 

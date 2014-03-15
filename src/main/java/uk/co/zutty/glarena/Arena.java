@@ -28,17 +28,13 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Util;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.engine.*;
+import uk.co.zutty.glarena.gl.ArrayModel;
 import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
 import uk.co.zutty.glarena.shaders.*;
-import uk.co.zutty.glarena.util.MathUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-
-import static uk.co.zutty.glarena.engine.Tween.Easing.LINEAR;
-import static uk.co.zutty.glarena.engine.Tween.Easing.QUAD_INOUT;
-import static uk.co.zutty.glarena.util.MathUtils.*;
 
 /**
  * Concrete game class for the glArena game.
@@ -84,12 +80,20 @@ public class Arena extends Game {
         Technique unlitTechnique = new UnlitTechnique();
         Model ringModel = createModel(unlitTechnique, objLoader.loadUnlitMesh("/models/circle.obj"));
 
+        ArrayModel skyQuadModel = new ArrayModel(new SkyboxTechnique());
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(8);
+        buffer.put(new float[]{-1, -1, 1, -1, -1, 1, 1, 1});
+        buffer.flip();
+        skyQuadModel.setVertexData(buffer, 4);
+        ModelInstance skyQuad = new ModelInstance(skyQuadModel, TextureLoader.loadCubemap("/textures/skybox/basic"));
+        addBackground(skyQuad);
+
         BulletTechnique bulletTechnique = new BulletTechnique();
         BillboardTechnique billboardTechnique = new BillboardTechnique();
         PlanarTechnique planarTechnique = new PlanarTechnique();
 
         playerBulletEmitter = new Emitter(bulletTechnique, TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
-        add(playerBulletEmitter, true);
+        addTransparent(playerBulletEmitter);
 
         explosionEffect = new Explosion(billboardTechnique, bulletTechnique, planarTechnique);
         add(explosionEffect);
@@ -98,13 +102,13 @@ public class Arena extends Game {
         player.setPosition(4.5f, 0, -1);
         player.setBulletEmitter(playerBulletEmitter);
         player.setGamepad(gamepad);
-        add(player, false);
+        add(player);
 
         arenaCentre = new Vector3f(0, 0, 0);
 
         Marker ringMarker = new Marker(new ModelInstance(ringModel, TextureLoader.loadTexture("/textures/circle.png")));
         ringMarker.getPosition().y = -1;
-        add(ringMarker, false);
+        add(ringMarker);
 
         Util.checkGLError();
     }
@@ -137,7 +141,7 @@ public class Arena extends Game {
         Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter, explosionEffect);
         ufo.setGame(this);
         ufo.setPosition(-4.5f, 0, -1);
-        add(ufo, false);
+        add(ufo);
     }
 
     @Override

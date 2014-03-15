@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 George Weller
+ * Copyright (c) 2013 George Weller
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,19 @@
 
 package uk.co.zutty.glarena.gl;
 
+import java.nio.ByteBuffer;
+
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-public abstract class Texture {
+public class Texture2D extends Texture {
 
-    protected int glTexture;
-    protected final int glTarget;
+    public Texture2D(ByteBuffer textureData, int width, int height) {
+        super(GL_TEXTURE_2D);
 
-    protected Texture(int glTarget) {
-        this.glTarget = glTarget;
-        glTexture = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, glTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
     }
 
-    public void bind() {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(glTarget, glTexture);
-    }
-
-    public void unbind() {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(glTarget, 0);
-    }
-
-    public void delete() {
-        glDeleteTextures(glTexture);
-    }
 }
