@@ -33,11 +33,12 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Game {
+public abstract class Game {
 
     protected Matrix4f projectionMatrix = null;
     protected Camera camera;
-    private List<Entity> entities;
+
+    private List<Entity> entities = new ArrayList<>();
     private Collection<Entity> toRemove = new ArrayList<>();
     private List<ModelInstance> backgroundInstances = new ArrayList<>();
     private List<ModelInstance> instances = new ArrayList<>();
@@ -61,13 +62,12 @@ public class Game {
             Display.sync(60);
         }
 
-        this.destroyOpenGL();
+        destroyOpenGL();
     }
 
     private void setup() {
         projectionMatrix = MatrixUtils.frustum(Display.getWidth(), Display.getHeight(), 60, 0.1f, 100.0f);
         camera = new Camera();
-        entities = new ArrayList<>();
     }
 
     private void setupOpenGL() {
@@ -82,15 +82,15 @@ public class Game {
             Display.setTitle("3D Game");
             Display.create(pixelFormat, contextAttributes);
 
-            GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
+            glViewport(0, 0, Display.getWidth(), Display.getHeight());
         } catch (LWJGLException e) {
             e.printStackTrace();
             System.exit(-1);
         }
 
         // Setup an XNA like background color
-        GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
-        //GL11.glClearColor(0f, 0f, 0f, 0f);
+        glClearColor(0.4f, 0.6f, 0.9f, 0f);
+        //glClearColor(0f, 0f, 0f, 0f);
 
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
@@ -101,8 +101,7 @@ public class Game {
         Util.checkGLError();
     }
 
-    protected void init() {
-    }
+    protected abstract void init();
 
     public void addBackground(ModelInstance instance) {
         backgroundInstances.add(instance);
@@ -119,7 +118,7 @@ public class Game {
     }
 
     public void add(Effect effect) {
-        for(Entity entity : effect.getEmitters()) {
+        for (Entity entity : effect.getEmitters()) {
             addTransparent(entity);
         }
     }
@@ -145,7 +144,7 @@ public class Game {
     }
 
     protected void render() {
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDepthMask(false);
 
         renderList(backgroundInstances);
