@@ -31,16 +31,6 @@ import java.io.Reader;
  * General IO utils
  */
 public class IOUtils {
-    public static void closeSilently(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException e) {
-                System.err.println("Could not close stream: " + e.getMessage()); // TODO proper logger
-            }
-        }
-    }
-
     public static CharSequence readSource(String filename) {
         Reader reader = new InputStreamReader(IOUtils.class.getResourceAsStream(filename));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 George Weller
+ * Copyright (c) 2014 George Weller
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,19 +20,37 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena.gl;
+package uk.co.zutty.glarena.engine;
 
-import uk.co.zutty.glarena.engine.Image;
+import java.nio.ByteBuffer;
 
-import static org.lwjgl.opengl.GL11.*;
+public class Image {
 
-public class Texture2D extends Texture {
-    public Texture2D(Image image) {
-        super(GL_TEXTURE_2D);
+    private ByteBuffer buffer;
+    private int width;
+    private int height;
 
-        glBindTexture(GL_TEXTURE_2D, glTexture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getBuffer());
+    public ByteBuffer getBuffer() {
+        return buffer;
+    }
+
+    public void setBuffer(ByteBuffer buffer) {
+        this.buffer = buffer;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }
