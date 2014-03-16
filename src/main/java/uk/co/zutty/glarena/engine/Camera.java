@@ -31,15 +31,9 @@ import uk.co.zutty.glarena.util.MatrixUtils;
  */
 public class Camera {
 
-    private Vector3f position;
-    private Vector3f center;
-    private Matrix4f matrix;
-
-    public Camera() {
-        position = new Vector3f();
-        center = new Vector3f();
-        matrix = new Matrix4f();
-    }
+    private Vector3f position = new Vector3f();
+    private Vector3f center = new Vector3f();
+    private Matrix4f matrix = new Matrix4f();
 
     public Vector3f getDirection() {
         Vector3f dir = Vector3f.sub(position, center, null);
