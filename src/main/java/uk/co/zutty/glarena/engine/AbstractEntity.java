@@ -25,7 +25,7 @@ package uk.co.zutty.glarena.engine;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import static uk.co.zutty.glarena.util.MathUtils.degreesToRadians;
+import static uk.co.zutty.glarena.util.MathUtils.*;
 
 /**
  * A game object.
@@ -64,8 +64,8 @@ public abstract class AbstractEntity implements Entity {
         Matrix4f matrix = modelInstance.getMatrix();
         matrix.setIdentity();
         matrix.translate(position);
-        matrix.rotate(degreesToRadians(pitch), new Vector3f(1, 0, 0));
-        matrix.rotate(degreesToRadians(yaw), new Vector3f(0, 1, 0));
-        matrix.rotate(degreesToRadians(roll), new Vector3f(0, 0, 1));
+        matrix.rotate(degreesToRadians(pitch), EAST);
+        matrix.rotate(degreesToRadians(yaw), UP);
+        matrix.rotate(degreesToRadians(roll), NORTH);
     }
 }
