@@ -37,6 +37,8 @@ import uk.co.zutty.glarena.shaders.*;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import static uk.co.zutty.glarena.gl.enums.BufferUsage.STATIC;
+
 /**
  * Concrete game class for the glArena game.
  */
@@ -83,11 +85,11 @@ public class Arena extends Game {
         Technique unlitTechnique = new UnlitTechnique();
         Model ringModel = createModel(unlitTechnique, objLoader.loadUnlitMesh("/models/circle.obj"));
 
-        ArrayModel skyQuadModel = new ArrayModel(new SkyboxTechnique());
+        ArrayModel skyQuadModel = new ArrayModel(new SkyboxTechnique(), STATIC);
         FloatBuffer buffer = BufferUtils.createFloatBuffer(8);
         buffer.put(new float[]{-1, -1, 1, -1, -1, 1, 1, 1});
         buffer.flip();
-        skyQuadModel.setVertexData(buffer, 4);
+        skyQuadModel.getVertexBuffer().setData(buffer, 4);
         ModelInstance skyQuad = new ModelInstance(skyQuadModel, TextureLoader.loadCubemap("/textures/skybox/basic"));
         addBackground(skyQuad);
 
@@ -113,8 +115,8 @@ public class Arena extends Game {
         ringMarker.getPosition().y = -1;
         add(ringMarker);
 
-        ArrayModel hudModel = new ArrayModel(new HudTechnique());
-        hudModel.setVertexData(makePanelLeft(.1f, .7f, .2f, .2f), 4);
+        ArrayModel hudModel = new ArrayModel(new HudTechnique(), STATIC);
+        hudModel.getVertexBuffer().setData(makePanelLeft(.1f, .7f, .2f, .2f), 4);
         ModelInstance hudQuad = new ModelInstance(hudModel, TextureLoader.loadTexture("/textures/cross.png"));
         addForeground(hudQuad);
 
@@ -138,7 +140,7 @@ public class Arena extends Game {
     }
 
     private Model createModel(Technique technique, Mesh mesh) {
-        ElementArrayModel model = new ElementArrayModel(technique);
+        ElementArrayModel model = new ElementArrayModel(technique, STATIC);
 
         FloatBuffer vertexData = BufferUtils.createFloatBuffer(mesh.getVertices().size() * technique.getFormat().getElements());
 
@@ -147,7 +149,7 @@ public class Arena extends Game {
         }
 
         vertexData.flip();
-        model.setVertexData(vertexData, mesh.getVertices().size());
+        model.getVertexBuffer().setData(vertexData, mesh.getVertices().size());
 
         ShortBuffer indexData = BufferUtils.createShortBuffer(mesh.getIndices().size());
 
@@ -156,7 +158,7 @@ public class Arena extends Game {
         }
 
         indexData.flip();
-        model.setIndexData(indexData);
+        model.getIndexBuffer().setData(indexData);
 
         return model;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 George Weller
+ * Copyright (c) 2014 George Weller
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,46 +22,55 @@
 
 package uk.co.zutty.glarena.gl;
 
-import uk.co.zutty.glarena.engine.Technique;
+import uk.co.zutty.glarena.gl.enums.BufferType;
 import uk.co.zutty.glarena.gl.enums.BufferUsage;
 
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_SHORT;
-import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static uk.co.zutty.glarena.gl.enums.BufferType.ELEMENT_ARRAY;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
+import static org.lwjgl.opengl.GL15.*;
 
 /**
- * Represents a model stored on the GPU that can be rendered.
+ * Encapsulates a VBO.
  */
-public class ElementArrayModel extends ArrayModel {
+public class Buffer {
 
-    private Buffer indexBuffer;
+    private int glVbo;
+    private int glType;
+    private int glUsage;
+    private int numElements = 0;
 
-    public ElementArrayModel(Technique technique, BufferUsage usage) {
-        super(technique, usage);
-
-        glBindVertexArray(glVao);
-
-        indexBuffer = new Buffer(ELEMENT_ARRAY, usage);
-        indexBuffer.bind();
-
-        glBindVertexArray(0);
+    public Buffer(BufferType type, BufferUsage usage) {
+        glVbo = glGenBuffers();
+        glType = type.getGlType();
+        glUsage = usage.getGlUsage();
     }
 
-    public Buffer getIndexBuffer() {
-        return indexBuffer;
+    public int getNumElements() {
+        return numElements;
     }
 
-    @Override
-    public void draw(int mode) {
-        glBindVertexArray(glVao);
-        glDrawElements(mode, indexBuffer.getNumElements(), GL_UNSIGNED_SHORT, 0);
-        glBindVertexArray(0);
+    public void bind() {
+        glBindBuffer(glType, glVbo);
     }
 
-    @Override
+    public void setData(FloatBuffer data, int numElements) {
+        this.numElements = numElements;
+
+        glBindBuffer(glType, glVbo);
+        glBufferData(glType, data, glUsage);
+        glBindBuffer(glType, 0);
+    }
+
+    public void setData(ShortBuffer data) {
+        this.numElements = data.capacity();
+
+        glBindBuffer(glType, glVbo);
+        glBufferData(glType, data, glUsage);
+        glBindBuffer(glType, 0);
+    }
+
     public void destroy() {
-        super.destroy();
-        indexBuffer.destroy();
+        glDeleteBuffers(glVbo);
     }
 }

@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static uk.co.zutty.glarena.gl.enums.BufferUsage.STREAM;
+
 /**
  * A container for particles that controls their position and other properties.
  */
@@ -46,7 +48,7 @@ public class Emitter implements Entity {
     public Emitter(Technique technique, Texture texture, Class<? extends Particle> particleType) {
         this.technique = technique;
         this.particleType = particleType;
-        model = new ArrayModel(technique);
+        model = new ArrayModel(technique, STREAM);
         modelInstance = new ModelInstance(model, texture);
     }
 
@@ -95,6 +97,6 @@ public class Emitter implements Entity {
 
         positions.flip();
 
-        model.updateVertexData(positions, particles.size());
+        model.getVertexBuffer().setData(positions, particles.size());
     }
 }
