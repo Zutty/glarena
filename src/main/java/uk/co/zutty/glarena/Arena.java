@@ -59,6 +59,8 @@ public class Arena extends Game {
     private int waveTimer = 0;
     private int waveSpawn = 0;
 
+    private long score = 0L;
+
     @Override
     protected void init() {
         camera.setPosition(0f, 20f, -25f);
@@ -164,6 +166,11 @@ public class Arena extends Game {
         ufo.setGame(this);
         ufo.setPosition(-4.5f, 0, -1);
         add(ufo);
+    }
+
+    public void addScore(long points) {
+        score += points;
+        System.out.println(score);
     }
 
     @Override
