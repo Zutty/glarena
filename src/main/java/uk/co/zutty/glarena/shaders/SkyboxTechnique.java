@@ -23,19 +23,16 @@
 package uk.co.zutty.glarena.shaders;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Matrix4f;
 import uk.co.zutty.glarena.engine.Camera;
 import uk.co.zutty.glarena.engine.ModelInstance;
 import uk.co.zutty.glarena.engine.Technique;
 import uk.co.zutty.glarena.gl.Shader;
 import uk.co.zutty.glarena.gl.ShaderProgram;
-import uk.co.zutty.glarena.gl.ShaderType;
+import uk.co.zutty.glarena.gl.enums.ShaderType;
 import uk.co.zutty.glarena.util.MatrixUtils;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 import static uk.co.zutty.glarena.vertex.VertexFormat.Builder.format;
 

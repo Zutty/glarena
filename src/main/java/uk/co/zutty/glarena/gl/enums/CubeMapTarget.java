@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 George Weller
+ * Copyright (c) 2014 George Weller
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,25 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena.gl;
+package uk.co.zutty.glarena.gl.enums;
 
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
+import static org.lwjgl.opengl.GL13.*;
 
-public enum ShaderType {
-    VERTEX(GL_VERTEX_SHADER),
-    GEOMETRY(GL_GEOMETRY_SHADER),
-    FRAGMENT(GL_FRAGMENT_SHADER);
+public enum CubeMapTarget {
+    POSITIVE_X(GL_TEXTURE_CUBE_MAP_POSITIVE_X),
+    NEGATIVE_X(GL_TEXTURE_CUBE_MAP_NEGATIVE_X),
+    POSITIVE_Y(GL_TEXTURE_CUBE_MAP_POSITIVE_Y),
+    NEGATIVE_Y(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y),
+    POSITIVE_Z(GL_TEXTURE_CUBE_MAP_POSITIVE_Z),
+    NEGATIVE_Z(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
 
-    private int glType;
+    private final int glTarget;
 
-    ShaderType(int glType) {
-        this.glType = glType;
+    private CubeMapTarget(int glTarget) {
+        this.glTarget = glTarget;
     }
 
-    public int getGlType() {
-        return glType;
+    public int getGlTarget() {
+        return glTarget;
     }
 }

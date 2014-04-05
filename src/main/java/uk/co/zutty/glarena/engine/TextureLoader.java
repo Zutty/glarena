@@ -28,14 +28,11 @@ import uk.co.zutty.glarena.gl.Texture;
 import uk.co.zutty.glarena.gl.Texture2D;
 import uk.co.zutty.glarena.gl.TextureCube;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static uk.co.zutty.glarena.gl.TextureCube.Target.*;
+import static uk.co.zutty.glarena.gl.enums.CubeMapTarget.*;
 
 /**
  * Loader for PNG format textures.

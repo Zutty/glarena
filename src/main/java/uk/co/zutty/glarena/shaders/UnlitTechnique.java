@@ -28,7 +28,7 @@ import uk.co.zutty.glarena.engine.ModelInstance;
 import uk.co.zutty.glarena.engine.Technique;
 import uk.co.zutty.glarena.gl.Shader;
 import uk.co.zutty.glarena.gl.ShaderProgram;
-import uk.co.zutty.glarena.gl.ShaderType;
+import uk.co.zutty.glarena.gl.enums.ShaderType;
 import uk.co.zutty.glarena.vertex.VertexFormat;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;

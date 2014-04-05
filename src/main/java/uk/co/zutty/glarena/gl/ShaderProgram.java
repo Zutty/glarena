@@ -26,6 +26,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.engine.GameException;
+import uk.co.zutty.glarena.gl.enums.ShaderType;
 
 import java.nio.FloatBuffer;
 import java.util.HashMap;

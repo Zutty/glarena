@@ -23,6 +23,7 @@
 package uk.co.zutty.glarena.gl;
 
 import uk.co.zutty.glarena.engine.GameException;
+import uk.co.zutty.glarena.gl.enums.ShaderType;
 
 import java.nio.charset.Charset;
 
