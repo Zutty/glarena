@@ -35,7 +35,6 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class ArrayModel implements Model {
 
-    private static final int FLOAT_BYTES = 4;
     protected Technique technique;
     protected int glVao = GL_INVALID_VALUE;
     protected int glArrayVbo = GL_INVALID_VALUE;
@@ -69,13 +68,10 @@ public class ArrayModel implements Model {
 
     public void updateVertexData(FloatBuffer vertexData, int numVertices) {
         this.numVertices = numVertices;
-        int dataSize = vertexData.capacity() * FLOAT_BYTES;
 
         glBindBuffer(GL_ARRAY_BUFFER, glArrayVbo);
-        glBufferData(GL_ARRAY_BUFFER, dataSize, GL_STREAM_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertexData);
+        glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-
     }
 
     @Override
