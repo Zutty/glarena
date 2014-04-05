@@ -25,6 +25,7 @@ package uk.co.zutty.glarena;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.Util;
 import org.lwjgl.util.vector.Vector3f;
 import uk.co.zutty.glarena.engine.*;
@@ -110,7 +111,28 @@ public class Arena extends Game {
         ringMarker.getPosition().y = -1;
         add(ringMarker);
 
+        ArrayModel hudModel = new ArrayModel(new HudTechnique());
+        hudModel.setVertexData(makePanelLeft(.1f, .7f, .2f, .2f), 4);
+        ModelInstance hudQuad = new ModelInstance(hudModel, TextureLoader.loadTexture("/textures/cross.png"));
+        addForeground(hudQuad);
+
         Util.checkGLError();
+    }
+
+    private FloatBuffer makePanelLeft(float xOffset, float y, float width, float height) {
+        float ratio = (float)Display.getWidth() / (float)Display.getHeight();
+        float x = -1f + xOffset/ratio;
+        width /= ratio;
+
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+        buffer.put(new float[]{
+                x, y,                   0,0,
+                x + width, y,           1,0,
+                x, y + height,          0,1,
+                x + width, y + height,  1,1
+        });
+        buffer.flip();
+        return buffer;
     }
 
     private Model createModel(Technique technique, Mesh mesh) {

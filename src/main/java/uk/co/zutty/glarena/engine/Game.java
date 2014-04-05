@@ -43,6 +43,7 @@ public abstract class Game {
     private List<ModelInstance> backgroundInstances = new ArrayList<>();
     private List<ModelInstance> instances = new ArrayList<>();
     private List<ModelInstance> transparentInstances = new ArrayList<>();
+    private List<ModelInstance> foreground = new ArrayList<>();
 
     public Game() {
         // Initialize OpenGL (Display)
@@ -123,6 +124,10 @@ public abstract class Game {
         }
     }
 
+    public void addForeground(ModelInstance instance) {
+        foreground.add(instance);
+    }
+
     public void remove(Entity entity) {
         toRemove.add(entity);
     }
@@ -159,6 +164,11 @@ public abstract class Game {
 
         renderList(transparentInstances);
 
+        glDisable(GL_DEPTH_TEST);
+
+        renderList(foreground);
+
+        glEnable(GL_DEPTH_TEST);
         glDepthMask(true);
         glDisable(GL_BLEND);
 
