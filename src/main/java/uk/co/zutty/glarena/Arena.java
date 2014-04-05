@@ -117,7 +117,7 @@ public class Arena extends Game {
 
         ArrayModel hudModel = new ArrayModel(new HudTechnique(), STATIC);
         hudModel.getVertexBuffer().setData(makePanelLeft(.1f, .7f, .2f, .2f), 4);
-        ModelInstance hudQuad = new ModelInstance(hudModel, TextureLoader.loadTexture("/textures/cross.png"));
+        ModelInstance hudQuad = new ModelInstance(hudModel, TextureLoader.loadTexture("/textures/test.png"));
         addForeground(hudQuad);
 
         Util.checkGLError();
@@ -130,10 +130,10 @@ public class Arena extends Game {
 
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         buffer.put(new float[]{
-                x, y,                   0,0,
-                x + width, y,           1,0,
-                x, y + height,          0,1,
-                x + width, y + height,  1,1
+                x, y,                   0,1,
+                x + width, y,           1,1,
+                x, y + height,          0,0,
+                x + width, y + height,  1,0
         });
         buffer.flip();
         return buffer;
