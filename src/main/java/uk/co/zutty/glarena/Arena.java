@@ -32,6 +32,7 @@ import uk.co.zutty.glarena.engine.*;
 import uk.co.zutty.glarena.gl.ArrayModel;
 import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
+import uk.co.zutty.glarena.gl.enums.TextureFormat;
 import uk.co.zutty.glarena.shaders.*;
 
 import java.nio.FloatBuffer;
@@ -62,6 +63,7 @@ public class Arena extends Game {
     private int waveSpawn = 0;
 
     private long score = 0L;
+    private TextInstance scoreText;
 
     @Override
     protected void init() {
@@ -120,20 +122,25 @@ public class Arena extends Game {
         ModelInstance hudQuad = new ModelInstance(hudModel, TextureLoader.loadTexture("/textures/test.png"));
         addForeground(hudQuad);
 
+        Text text = new Text(new TextTechnique(), TextureLoader.loadTexture("/textures/numbers.png", TextureFormat.RED));
+        scoreText = new TextInstance(.4f, .7f, "0");
+        text.add(scoreText);
+        addForeground(text);
+
         Util.checkGLError();
     }
 
     private FloatBuffer makePanelLeft(float xOffset, float y, float width, float height) {
-        float ratio = (float)Display.getWidth() / (float)Display.getHeight();
-        float x = -1f + xOffset/ratio;
+        float ratio = (float) Display.getWidth() / (float) Display.getHeight();
+        float x = -1f + xOffset / ratio;
         width /= ratio;
 
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         buffer.put(new float[]{
-                x, y,                   0,1,
-                x + width, y,           1,1,
-                x, y + height,          0,0,
-                x + width, y + height,  1,0
+                x, y, 0, 1,
+                x + width, y, 1, 1,
+                x, y + height, 0, 0,
+                x + width, y + height, 1, 0
         });
         buffer.flip();
         return buffer;
@@ -172,7 +179,7 @@ public class Arena extends Game {
 
     public void addScore(long points) {
         score += points;
-        System.out.println(score);
+        scoreText.setText(String.valueOf(score));
     }
 
     @Override

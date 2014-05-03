@@ -27,6 +27,7 @@ import org.lwjgl.BufferUtils;
 import uk.co.zutty.glarena.gl.Texture;
 import uk.co.zutty.glarena.gl.Texture2D;
 import uk.co.zutty.glarena.gl.TextureCube;
+import uk.co.zutty.glarena.gl.enums.TextureFormat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,23 +40,27 @@ import static uk.co.zutty.glarena.gl.enums.CubeMapTarget.*;
  */
 public class TextureLoader {
     public static Texture loadTexture(String location) {
-        return new Texture2D(loadPNG(location));
+        return loadTexture(location, TextureFormat.RGBA);
+    }
+
+    public static Texture loadTexture(String location, TextureFormat format) {
+        return new Texture2D(loadPNG(location, format.getDecoderFormat()), format);
     }
 
     public static TextureCube loadCubemap(String location) {
         TextureCube texture = new TextureCube();
 
-        texture.setImage(POSITIVE_X, loadPNG(location + "_right1.png"));
-        texture.setImage(NEGATIVE_X, loadPNG(location + "_left2.png"));
-        texture.setImage(POSITIVE_Y, loadPNG(location + "_top3.png"));
-        texture.setImage(NEGATIVE_Y, loadPNG(location + "_bottom4.png"));
-        texture.setImage(POSITIVE_Z, loadPNG(location + "_front5.png"));
-        texture.setImage(NEGATIVE_Z, loadPNG(location + "_back6.png"));
+        texture.setImage(POSITIVE_X, loadPNG(location + "_right1.png", PNGDecoder.Format.RGBA));
+        texture.setImage(NEGATIVE_X, loadPNG(location + "_left2.png", PNGDecoder.Format.RGBA));
+        texture.setImage(POSITIVE_Y, loadPNG(location + "_top3.png", PNGDecoder.Format.RGBA));
+        texture.setImage(NEGATIVE_Y, loadPNG(location + "_bottom4.png", PNGDecoder.Format.RGBA));
+        texture.setImage(POSITIVE_Z, loadPNG(location + "_front5.png", PNGDecoder.Format.RGBA));
+        texture.setImage(NEGATIVE_Z, loadPNG(location + "_back6.png", PNGDecoder.Format.RGBA));
 
         return texture;
     }
 
-    public static Image loadPNG(String filename) {
+    public static Image loadPNG(String filename, PNGDecoder.Format format) {
         Image data = new Image();
 
         try (InputStream in = TextureLoader.class.getResourceAsStream(filename)) {
@@ -64,7 +69,7 @@ public class TextureLoader {
             data.setHeight(decoder.getHeight());
 
             ByteBuffer buffer = BufferUtils.createByteBuffer(4 * decoder.getWidth() * decoder.getHeight());
-            decoder.decode(buffer, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
+            decoder.decode(buffer, decoder.getWidth() * 4, format);
             buffer.flip();
             data.setBuffer(buffer);
 

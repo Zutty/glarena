@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 George Weller
+ * Copyright (c) 2014 George Weller
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +20,35 @@
  * THE SOFTWARE.
  */
 
-package uk.co.zutty.glarena.gl;
+package uk.co.zutty.glarena.gl.enums;
 
-import org.lwjgl.opengl.Util;
-import uk.co.zutty.glarena.engine.Image;
-import uk.co.zutty.glarena.gl.enums.TextureFormat;
+import de.matthiasmann.twl.utils.PNGDecoder;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
-import static org.lwjgl.opengl.GL11.*;
+public enum TextureFormat {
+    RGBA(GL11.GL_RGBA8, GL11.GL_RGBA, PNGDecoder.Format.RGBA),
+    RED(GL30.GL_R8, GL11.GL_RGBA, PNGDecoder.Format.RGBA);
 
-public class Texture2D extends Texture {
-    public Texture2D(Image image, TextureFormat format) {
-        super(GL_TEXTURE_2D);
+    private final int glInternalFormat;
+    private final int glUploadFormat;
+    private final PNGDecoder.Format decoderFormat;
 
-        glBindTexture(GL_TEXTURE_2D, glTexture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexImage2D(GL_TEXTURE_2D, 0, format.getGlInternalFormat(), image.getWidth(), image.getHeight(), 0, format.getGlUploadFormat(), GL_UNSIGNED_BYTE, image.getBuffer());
-        Util.checkGLError();
+    private TextureFormat(int glInternalFormat, int glUploadFormat, PNGDecoder.Format decoderFormat) {
+        this.glInternalFormat = glInternalFormat;
+        this.glUploadFormat = glUploadFormat;
+        this.decoderFormat = decoderFormat;
+    }
+
+    public int getGlInternalFormat() {
+        return glInternalFormat;
+    }
+
+    public int getGlUploadFormat() {
+        return glUploadFormat;
+    }
+
+    public PNGDecoder.Format getDecoderFormat() {
+        return decoderFormat;
     }
 }

@@ -127,6 +127,10 @@ public abstract class Game {
     public void addForeground(ModelInstance instance) {
         foreground.add(instance);
     }
+    public void addForeground(Entity entity) {
+        entities.add(entity);
+        foreground.add(entity.getModelInstance());
+    }
 
     public void remove(Entity entity) {
         toRemove.add(entity);
