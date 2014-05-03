@@ -39,20 +39,20 @@ public final class MatrixUtils {
     private static final Vector3f eye = new Vector3f();
 
     public static Matrix4f frustum(float width, float height, float fieldOfView, float near, float far) {
-        Matrix4f projectionMatrix = new Matrix4f();
+        Matrix4f frustum = new Matrix4f();
         float aspectRatio = width / height;
 
         float yScale = cot(degreesToRadians(fieldOfView / 2f));
         float xScale = yScale / aspectRatio;
         float frustumLength = far - near;
 
-        projectionMatrix.m00 = xScale;
-        projectionMatrix.m11 = yScale;
-        projectionMatrix.m22 = -((far + near) / frustumLength);
-        projectionMatrix.m23 = -1;
-        projectionMatrix.m32 = -((2 * near * far) / frustumLength);
+        frustum.m00 = xScale;
+        frustum.m11 = yScale;
+        frustum.m22 = -((far + near) / frustumLength);
+        frustum.m23 = -1;
+        frustum.m32 = -((2 * near * far) / frustumLength);
 
-        return projectionMatrix;
+        return frustum;
     }
 
     public static Matrix4f lookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ) {
