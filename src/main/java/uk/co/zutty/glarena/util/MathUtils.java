@@ -45,7 +45,7 @@ public class MathUtils {
     }
 
     public static int randRange(int from, int to) {
-        return (int)(Math.random() * (double)(to - from)) + from;
+        return (int) (Math.random() * (double) (to - from)) + from;
     }
 
     public static float randAngle() {
@@ -57,5 +57,9 @@ public class MathUtils {
         float z = (float) ((Math.random() * 2.0) - 1.0);
         float f = (float) Math.sqrt(1.0 - z * z);
         return new Vector3f((float) Math.cos(azimuth) * f, (float) Math.sin(azimuth) * f, z);
+    }
+
+    public static float clamp(float val, float min, float max) {
+        return Math.max(min, Math.min(max, val));
     }
 }

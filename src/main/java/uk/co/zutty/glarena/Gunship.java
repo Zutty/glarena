@@ -22,11 +22,9 @@
 
 package uk.co.zutty.glarena;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
+import org.lwjgl.util.vector.*;
 import uk.co.zutty.glarena.engine.*;
+import uk.co.zutty.glarena.util.MathUtils;
 
 import static uk.co.zutty.glarena.engine.Tween.Easing.EXPO_OUT;
 import static uk.co.zutty.glarena.engine.Tween.Easing.LINEAR;
@@ -36,22 +34,27 @@ import static uk.co.zutty.glarena.engine.Tween.Easing.LINEAR;
  */
 public class Gunship extends AbstractEntity {
 
-    public static final float SPEED = .4f;
+    public static final float SPEED = 1f;
+    public static final float FIRING_SPEED = 0.9f;
     public static final float DEAD_ZONE = 0.1f;
+    public static final float ROLL_ANGLE = 10f;
+
+    public static final Vector2f BOUNDS = new Vector2f(40f, 30f);
+    public static final float BULLET_SPEED = 3f;
 
     private long timer = 10L;
-    private float yawRadians = 0;
     private Emitter bulletEmitter;
     private Vector4f emitPointL;
     private Vector4f emitPointR;
-    private boolean emitAlt;
     private Gamepad gamepad;
+
+    private Vector3f levelPosition = new Vector3f();
+    private Vector2f screenPosition = new Vector2f();
 
     public Gunship(ModelInstance modelInstance) {
         setModelInstance(modelInstance);
         emitPointL = new Vector4f(0.7f, 0, 2.9f, 1);
         emitPointR = new Vector4f(-0.7f, 0, 2.9f, 1);
-        emitAlt = true;
     }
 
     public void setGamepad(Gamepad gamepad) {
@@ -62,34 +65,55 @@ public class Gunship extends AbstractEntity {
         this.bulletEmitter = bulletEmitter;
     }
 
+    public void setLevelPosition(Vector3f levelPosition) {
+        this.levelPosition = levelPosition;
+        //this.
+
+    }
+
     @Override
     public void update() {
+        float prevX = screenPosition.x;
+
+        float currentSpeed = gamepad.isButtonDown() ? FIRING_SPEED : SPEED;
+
         if (gamepad.getLeftStick().lengthSquared() > DEAD_ZONE) {
-            position.x -= gamepad.getLeftStick().x * SPEED;
-            position.z -= gamepad.getLeftStick().y * SPEED;
+            screenPosition.x -= gamepad.getLeftStick().x * currentSpeed;
+            screenPosition.y -= gamepad.getLeftStick().y * currentSpeed;
+
+            screenPosition.x = MathUtils.clamp(screenPosition.x, -BOUNDS.x, BOUNDS.x);
+            screenPosition.y = MathUtils.clamp(screenPosition.y, -BOUNDS.y, BOUNDS.y);
         }
 
-        Vector2f direction = (gamepad.getRightStick().lengthSquared() > DEAD_ZONE) ? gamepad.getRightStick() : ((gamepad.getLeftStick().lengthSquared() > DEAD_ZONE) ? gamepad.getLeftStick() : null);
+        position.set(levelPosition);
+        position.x += screenPosition.x;
+        position.z += screenPosition.y;
 
-        float prevYaw = yaw;
+        float rollFactor = prevX - position.x;
+        float rollClamp = (rollFactor < 0f) ? -1f : (rollFactor > 0f) ? 1f : 0f;
 
-        if (direction != null) {
-            yawRadians = (float) Math.atan2(-direction.x, -direction.y);
-            yaw = yawRadians * (180f / (float) Math.PI);
-        }
-
-        roll = easeAngle(roll, (prevYaw - yaw) * 10f);
+        roll = easeAngle(roll, rollClamp * ROLL_ANGLE);
 
         super.update();
 
         ++timer;
-        if (gamepad.getRightStick().lengthSquared() > DEAD_ZONE || gamepad.isButtonDown()) {
+        if (gamepad.isButtonDown()) {
             if (timer >= 3L) {
                 timer = 0;
-                Vector4f emitPosition = new Vector4f((emitAlt = !emitAlt) ? emitPointL : emitPointR);
-                Matrix4f.transform(getModelInstance().getMatrix(), emitPosition, emitPosition); //TODO a bit of a hack
+                Vector4f emitPosition = new Vector4f();
+                Matrix4f.transform(getModelInstance().getMatrix(), emitPointL, emitPosition);
 
-                Particle particle = bulletEmitter.emitFrom(xyz(emitPosition), new Vector3f((float) Math.sin(yawRadians), 0, (float) Math.cos(yawRadians)), 1.2f, 100);
+                float yawRadians = 0;
+                //yawRadians = (float) Math.atan2(-direction.x, -direction.y);
+                Vector3f direction = new Vector3f((float) Math.sin(yawRadians), 0, (float) Math.cos(yawRadians));
+
+                Particle particle = bulletEmitter.emitFrom(xyz(emitPosition), direction, BULLET_SPEED, 100);
+                particle.setScale(new Tween(1f, 1f, LINEAR));
+                particle.setFade(new Tween(1f, 0f, EXPO_OUT));
+
+                Matrix4f.transform(getModelInstance().getMatrix(), emitPointR, emitPosition);
+
+                particle = bulletEmitter.emitFrom(xyz(emitPosition), direction, BULLET_SPEED, 100);
                 particle.setScale(new Tween(1f, 1f, LINEAR));
                 particle.setFade(new Tween(1f, 0f, EXPO_OUT));
             }
@@ -97,7 +121,7 @@ public class Gunship extends AbstractEntity {
     }
 
     private float easeAngle(float current, float target) {
-        return current + delta(target, current) / 10f;
+        return current + delta(target, current) / 2f;
     }
 
     private float delta(float a, float b) {

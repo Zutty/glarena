@@ -37,7 +37,10 @@ import uk.co.zutty.glarena.shaders.*;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.LinkedList;
+import java.util.Queue;
 
+import static uk.co.zutty.glarena.EventType.SPAWN_UFO;
 import static uk.co.zutty.glarena.gl.enums.BufferUsage.STATIC;
 
 /**
@@ -46,6 +49,8 @@ import static uk.co.zutty.glarena.gl.enums.BufferUsage.STATIC;
 public class Arena extends Game {
 
     public static final Vector3f V = new Vector3f();
+
+    public static final float TIMESCALE = 0.2f;
 
     private ObjLoader objLoader;
     private Gunship player;
@@ -56,14 +61,13 @@ public class Arena extends Game {
     private Emitter playerBulletEmitter;
     private Effect explosionEffect;
 
-    private Vector3f arenaCentre;
-
-    private int spawnTimer = 0;
-    private int waveTimer = 0;
-    private int waveSpawn = 0;
-
     private long score = 0L;
     private TextInstance scoreText;
+
+    private long timer = 0;
+    private Vector3f currentPosition;
+
+    private Queue<Event> eventQueue;
 
     @Override
     protected void init() {
@@ -111,7 +115,7 @@ public class Arena extends Game {
         player.setGamepad(gamepad);
         add(player);
 
-        arenaCentre = new Vector3f(0, 0, 0);
+        currentPosition = new Vector3f(0f, 0f, 0f);
 
         Marker ringMarker = new Marker(new ModelInstance(ringModel, TextureLoader.loadTexture("/textures/circle.png")));
         ringMarker.getPosition().y = -1;
@@ -127,7 +131,24 @@ public class Arena extends Game {
         text.add(scoreText);
         addForeground(text);
 
+        eventQueue = new LinkedList<>();
+        eventQueue.add(event(0, new Vector3f(45f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
+        eventQueue.add(event(0, new Vector3f(50f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
+        eventQueue.add(event(0, new Vector3f(55f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
+        eventQueue.add(event(50, new Vector3f(45f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
+        eventQueue.add(event(50, new Vector3f(50f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
+        eventQueue.add(event(50, new Vector3f(55f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
+
         Util.checkGLError();
+    }
+
+    private Event event(long time, Vector3f position, Vector3f direction, EventType type) {
+        Event event = new Event();
+        event.setTime(time);
+        event.setPosition(position);
+        event.setDirection(direction);
+        event.setType(type);
+        return event;
     }
 
     private FloatBuffer makePanelLeft(float xOffset, float y, float width, float height) {
@@ -170,10 +191,11 @@ public class Arena extends Game {
         return model;
     }
 
-    public void spawnUfo() {
+    public void handleEvent(Event event) {
         Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter, explosionEffect);
         ufo.setGame(this);
-        ufo.setPosition(-4.5f, 0, -1);
+        ufo.setPosition(event.getPosition());
+        ufo.setVelocity(event.getDirection());
         add(ufo);
     }
 
@@ -188,24 +210,22 @@ public class Arena extends Game {
             gamepad.update();
         }
 
-        if (++waveTimer > 200) {
-            waveSpawn = 0;
-            waveTimer = 0;
+        while(eventQueue.peek() != null && eventQueue.peek().getTime() <= timer) {
+            handleEvent(eventQueue.poll());
         }
 
-        if (++spawnTimer > 15 && waveSpawn < 6) {
-            spawnTimer = 0;
-            ++waveSpawn;
-            spawnUfo();
-        }
+        ++timer;
+        currentPosition.z = timer * TIMESCALE; // TODO is this going to cause bugs?
+
+        player.setLevelPosition(currentPosition);
 
         super.update();
 
-        Vector3f.sub(arenaCentre, player.getPosition(), V);
-        V.scale(0.9f);
+        Vector3f.sub(currentPosition, player.getPosition(), V);
+        V.scale(0.1f);
 
-        camera.setPosition(arenaCentre.x - V.x, 20f, arenaCentre.z - 25f - V.z);
-        camera.setCenter(arenaCentre.x - V.x, 0f, arenaCentre.z - V.z);
+        camera.setPosition(currentPosition.x - V.x, 50f, currentPosition.z - V.z - 15f);
+        camera.setCenter(currentPosition.x - V.x, 0f, currentPosition.z - V.z);
         camera.update();
     }
 

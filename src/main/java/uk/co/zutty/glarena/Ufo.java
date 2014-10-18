@@ -31,11 +31,12 @@ import uk.co.zutty.glarena.engine.*;
 public class Ufo extends AbstractEntity {
 
     private static final float HIT_RADIUS_SQUARED = 1.8f * 1.8f;
+    private static final float SPEED = 0.6f;
     protected Game game;
 
     private Emitter playerBulletEmitter;
     private Effect explosionEffect;
-    private int timer = 0;
+    private Vector3f velocity;
 
     public Ufo(ModelInstance modelInstance, Emitter playerBulletEmitter, Effect explosionEffect) {
         setModelInstance(modelInstance);
@@ -47,20 +48,23 @@ public class Ufo extends AbstractEntity {
         this.game = game;
     }
 
+    public void setVelocity(Vector3f velocity) {
+        this.velocity = velocity;
+        this.velocity.normalise();
+        this.velocity.scale(SPEED);
+    }
+
     @Override
     public void update() {
         yaw -= 3;
 
-        ++timer;
-
-        position.x += Math.sin((double) timer / (50.0 - ((double) timer / 20.0))) * 0.5f;
-        position.z += Math.cos((double) timer / (50.0 - ((double) timer / 20.0))) * 0.5f;
+        Vector3f.add(position, velocity, position);
 
         for (Particle p : playerBulletEmitter.particles()) {
             Vector3f.sub(p.getPosition(), position, Arena.V);
             if (Arena.V.lengthSquared() < HIT_RADIUS_SQUARED) {
                 game.remove(this);
-                ((Arena)game).addScore(1);
+                ((Arena) game).addScore(1);
                 explosionEffect.trigger(position);
                 p.setLifetime((short) 0);
             }

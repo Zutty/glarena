@@ -59,6 +59,10 @@ public abstract class AbstractEntity implements Entity {
         position.z = z;
     }
 
+    public void setPosition(Vector3f position) {
+        this.position.set(position);
+    }
+
     @Override
     public void update() {
         Matrix4f matrix = modelInstance.getMatrix();
