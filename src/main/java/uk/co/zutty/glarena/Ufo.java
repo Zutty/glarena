@@ -67,6 +67,7 @@ public class Ufo extends AbstractEntity {
                 ((Arena) game).addScore(1);
                 explosionEffect.trigger(position);
                 p.setLifetime((short) 0);
+                break;
             }
         }
 
