@@ -89,9 +89,6 @@ public class Arena extends Game {
         ufoModel = createModel(entityTechnique, objLoader.loadEntityMesh("/models/ufo.obj"));
         Model spaceStationModel = createModel(entityTechnique, objLoader.loadEntityMesh("/models/space_station.obj"));
 
-        Technique unlitTechnique = new UnlitTechnique();
-        Model ringModel = createModel(unlitTechnique, objLoader.loadUnlitMesh("/models/circle.obj"));
-
         ArrayModel skyQuadModel = new ArrayModel(new SkyboxTechnique(), STATIC);
         FloatBuffer buffer = BufferUtils.createFloatBuffer(8);
         buffer.put(new float[]{-1, -1, 1, -1, -1, 1, 1, 1});
@@ -117,10 +114,6 @@ public class Arena extends Game {
         add(player);
 
         currentPosition = new Vector3f(0f, 0f, 0f);
-
-        Marker ringMarker = new Marker(new ModelInstance(ringModel, TextureLoader.loadTexture("/textures/circle.png")));
-        ringMarker.getPosition().y = -1;
-        add(ringMarker);
 
         SpaceStation spaceStation = new SpaceStation(new ModelInstance(spaceStationModel, TextureLoader.loadTexture("/textures/space_station_texture.png")));
         spaceStation.setPosition(-30f, -150f, 150f);
