@@ -87,6 +87,7 @@ public class Arena extends Game {
         Technique entityTechnique = new EntityTechnique();
         Model gunshipModel = createModel(entityTechnique, objLoader.loadEntityMesh("/models/gunship.obj"));
         ufoModel = createModel(entityTechnique, objLoader.loadEntityMesh("/models/ufo.obj"));
+        Model spaceStationModel = createModel(entityTechnique, objLoader.loadEntityMesh("/models/space_station.obj"));
 
         Technique unlitTechnique = new UnlitTechnique();
         Model ringModel = createModel(unlitTechnique, objLoader.loadUnlitMesh("/models/circle.obj"));
@@ -120,6 +121,10 @@ public class Arena extends Game {
         Marker ringMarker = new Marker(new ModelInstance(ringModel, TextureLoader.loadTexture("/textures/circle.png")));
         ringMarker.getPosition().y = -1;
         add(ringMarker);
+
+        SpaceStation spaceStation = new SpaceStation(new ModelInstance(spaceStationModel, TextureLoader.loadTexture("/textures/space_station_texture.png")));
+        spaceStation.setPosition(-30f, -150f, 150f);
+        add(spaceStation);
 
         ArrayModel hudModel = new ArrayModel(new HudTechnique(), STATIC);
         hudModel.getVertexBuffer().setData(makePanelLeft(.1f, .7f, .2f, .2f), 4);
