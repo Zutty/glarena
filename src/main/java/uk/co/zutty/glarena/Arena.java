@@ -216,7 +216,7 @@ public class Arena extends Game {
             gamepad.update();
         }
 
-        while(eventQueue.peek() != null && eventQueue.peek().getTime() <= timer) {
+        while (eventQueue.peek() != null && eventQueue.peek().getTime() <= timer) {
             handleEvent(eventQueue.poll());
         }
 
