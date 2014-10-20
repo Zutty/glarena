@@ -34,6 +34,7 @@ import uk.co.zutty.glarena.gl.ElementArrayModel;
 import uk.co.zutty.glarena.gl.Model;
 import uk.co.zutty.glarena.gl.enums.TextureFormat;
 import uk.co.zutty.glarena.shaders.*;
+import uk.co.zutty.glarena.util.MathUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -130,23 +131,30 @@ public class Arena extends Game {
         addForeground(text);
 
         eventQueue = new LinkedList<>();
-        eventQueue.add(event(0, new Vector3f(45f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
-        eventQueue.add(event(0, new Vector3f(50f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
-        eventQueue.add(event(0, new Vector3f(55f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
-        eventQueue.add(event(50, new Vector3f(45f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
-        eventQueue.add(event(50, new Vector3f(50f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
-        eventQueue.add(event(50, new Vector3f(55f, 0f, 20f), new Vector3f(-1f, 0, 0), SPAWN_UFO));
+
+        addWave(80, new Vector3f(50f, 0f, 0f), MathUtils.unitVector(150), 3);
+        addWave(250, new Vector3f(-50f, 0f, 0f), MathUtils.unitVector(30), 3);
+        addWave(420, new Vector3f(50f, 0f, 0f), MathUtils.unitVector(150), 3);
+        addWave(500, new Vector3f(20f, 0f, -40f), new Vector3f(0, 0, 1f), 3);
+        addWave(600, new Vector3f(-20f, 0f, -40f), new Vector3f(0, 0, 1f), 3);
 
         Util.checkGLError();
     }
 
-    private Event event(long time, Vector3f position, Vector3f direction, EventType type) {
-        Event event = new Event();
-        event.setTime(time);
-        event.setPosition(position);
-        event.setDirection(direction);
-        event.setType(type);
-        return event;
+    private void addWave(long time, Vector3f startPosition, Vector3f direction, int size) {
+        startPosition.z += (float) time * TIMESCALE;
+
+        for (int i = 0; i < size; i++) {
+            V.set(direction);
+            V.scale(i * 10f);
+
+            Event event = new Event();
+            event.setTime(time);
+            event.setPosition(Vector3f.sub(startPosition, V, new Vector3f()));
+            event.setDirection(direction);
+            event.setType(SPAWN_UFO);
+            eventQueue.add(event);
+        }
     }
 
     private FloatBuffer makePanelLeft(float xOffset, float y, float width, float height) {
