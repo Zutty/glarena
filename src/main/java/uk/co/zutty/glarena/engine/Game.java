@@ -67,7 +67,7 @@ public abstract class Game {
     }
 
     private void setup() {
-        projectionMatrix = MatrixUtils.frustum(Display.getWidth(), Display.getHeight(), 60, 0.1f, 100.0f);
+        projectionMatrix = MatrixUtils.frustum(Display.getWidth(), Display.getHeight(), 60, 5f, 1000f);
         camera = new Camera();
     }
 

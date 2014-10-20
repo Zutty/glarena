@@ -49,8 +49,8 @@ public final class MatrixUtils {
         frustum.m00 = xScale;
         frustum.m11 = yScale;
         frustum.m22 = -((far + near) / frustumLength);
-        frustum.m23 = -1;
-        frustum.m32 = -((2 * near * far) / frustumLength);
+        frustum.m23 = -1f;
+        frustum.m32 = -((2f * near * far) / frustumLength);
 
         return frustum;
     }
