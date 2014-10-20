@@ -55,6 +55,8 @@ public class Gunship extends AbstractEntity {
         setModelInstance(modelInstance);
         emitPointL = new Vector4f(0.7f, 0, 2.9f, 1);
         emitPointR = new Vector4f(-0.7f, 0, 2.9f, 1);
+
+        screenPosition.y = -15f;
     }
 
     public void setGamepad(Gamepad gamepad) {

@@ -109,7 +109,7 @@ public class Arena extends Game {
         add(explosionEffect);
 
         player = new Gunship(new ModelInstance(gunshipModel, TextureLoader.loadTexture("/textures/gunship_diffuse.png")));
-        player.setPosition(4.5f, 0, -1);
+        player.setPosition(0f, 0f, 0f);
         player.setBulletEmitter(playerBulletEmitter);
         player.setGamepad(gamepad);
         add(player);
