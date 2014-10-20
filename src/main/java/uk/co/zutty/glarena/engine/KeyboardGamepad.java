@@ -33,10 +33,11 @@ public class KeyboardGamepad extends Gamepad {
 
     private Vector2f leftAxis = new Vector2f();
     private Vector2f rightAxis = new Vector2f();
+    private boolean button = false;
 
     @Override
     public boolean isButtonDown() {
-        return false;
+        return button;
     }
 
     @Override
@@ -91,5 +92,7 @@ public class KeyboardGamepad extends Gamepad {
 
         if (leftAxis.lengthSquared() != 0) leftAxis.normalise();
         if (rightAxis.lengthSquared() != 0) rightAxis.normalise();
+
+        button = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
     }
 }
