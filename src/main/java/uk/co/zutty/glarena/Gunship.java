@@ -36,16 +36,19 @@ public class Gunship extends AbstractEntity {
 
     public static final float SPEED = 1f;
     public static final float FIRING_SPEED = 0.9f;
+    private static final long FIRE_INTERVAL = 5L;
     public static final float DEAD_ZONE = 0.1f;
     public static final float ROLL_ANGLE = 10f;
 
     public static final Vector2f BOUNDS = new Vector2f(40f, 30f);
-    public static final float BULLET_SPEED = 3f;
+    public static final float BULLET_SPEED = 1.6f;
 
     private long timer = 10L;
     private Emitter bulletEmitter;
     private Vector4f emitPointL;
     private Vector4f emitPointR;
+    private Vector4f emitPointBL;
+    private Vector4f emitPointBR;
     private Gamepad gamepad;
 
     private Vector3f levelPosition = new Vector3f();
@@ -55,6 +58,8 @@ public class Gunship extends AbstractEntity {
         setModelInstance(modelInstance);
         emitPointL = new Vector4f(0.7f, 0, 2.9f, 1);
         emitPointR = new Vector4f(-0.7f, 0, 2.9f, 1);
+        emitPointBL = new Vector4f(1.1f, 0, 2.2f, 1);
+        emitPointBR = new Vector4f(-1.1f, 0, 2.2f, 1);
 
         screenPosition.y = -15f;
     }
@@ -100,7 +105,7 @@ public class Gunship extends AbstractEntity {
 
         ++timer;
         if (gamepad.isButtonDown()) {
-            if (timer >= 3L) {
+            if (timer >= FIRE_INTERVAL) {
                 timer = 0;
                 Vector4f emitPosition = new Vector4f();
                 Matrix4f.transform(getModelInstance().getMatrix(), emitPointL, emitPosition);
@@ -108,15 +113,29 @@ public class Gunship extends AbstractEntity {
                 float yawRadians = 0;
                 //yawRadians = (float) Math.atan2(-direction.x, -direction.y);
                 Vector3f direction = new Vector3f((float) Math.sin(yawRadians), 0, (float) Math.cos(yawRadians));
+                Vector3f directionL = new Vector3f((float) Math.sin(yawRadians + .1f), 0, (float) Math.cos(yawRadians + .1f));
+                Vector3f directionR = new Vector3f((float) Math.sin(yawRadians - .1f), 0, (float) Math.cos(yawRadians - .1f));
 
                 Particle particle = bulletEmitter.emitFrom(xyz(emitPosition), direction, BULLET_SPEED, 100);
-                particle.setScale(new Tween(1f, 1f, LINEAR));
+                particle.setScale(new Tween(2f, 2f, LINEAR));
                 particle.setFade(new Tween(1f, 0f, EXPO_OUT));
 
                 Matrix4f.transform(getModelInstance().getMatrix(), emitPointR, emitPosition);
 
                 particle = bulletEmitter.emitFrom(xyz(emitPosition), direction, BULLET_SPEED, 100);
-                particle.setScale(new Tween(1f, 1f, LINEAR));
+                particle.setScale(new Tween(2f, 2f, LINEAR));
+                particle.setFade(new Tween(1f, 0f, EXPO_OUT));
+
+                Matrix4f.transform(getModelInstance().getMatrix(), emitPointBL, emitPosition);
+
+                particle = bulletEmitter.emitFrom(xyz(emitPosition), directionL, BULLET_SPEED, 100);
+                particle.setScale(new Tween(2f, 2f, LINEAR));
+                particle.setFade(new Tween(1f, 0f, EXPO_OUT));
+
+                Matrix4f.transform(getModelInstance().getMatrix(), emitPointBR, emitPosition);
+
+                particle = bulletEmitter.emitFrom(xyz(emitPosition), directionR, BULLET_SPEED, 100);
+                particle.setScale(new Tween(2f, 2f, LINEAR));
                 particle.setFade(new Tween(1f, 0f, EXPO_OUT));
             }
         }
