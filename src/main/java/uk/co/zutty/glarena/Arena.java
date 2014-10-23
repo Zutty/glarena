@@ -60,6 +60,7 @@ public class Arena extends Game {
     private Gamepad gamepad;
 
     private Emitter playerBulletEmitter;
+    private Emitter enemyBulletEmitter;
     private Effect explosionEffect;
 
     private long score = 0L;
@@ -104,6 +105,9 @@ public class Arena extends Game {
 
         playerBulletEmitter = new Emitter(bulletTechnique, TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
         addTransparent(playerBulletEmitter);
+
+        enemyBulletEmitter = new Emitter(billboardTechnique, TextureLoader.loadTexture("/textures/enemy_bullet.png"), BillboardParticle.class);
+        addForeground(enemyBulletEmitter);
 
         explosionEffect = new Explosion(billboardTechnique, bulletTechnique, planarTechnique);
         add(explosionEffect);
@@ -202,6 +206,7 @@ public class Arena extends Game {
         ufo.setGame(this);
         ufo.setPosition(event.getPosition());
         ufo.setVelocity(event.getDirection());
+        ufo.setBulletEmitter(enemyBulletEmitter);
         add(ufo);
     }
 
