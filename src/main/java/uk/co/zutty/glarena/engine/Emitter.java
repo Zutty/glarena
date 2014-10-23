@@ -70,6 +70,7 @@ public class Emitter implements Entity {
         particle.setPosition(new Vector3f(source));
         particle.setVelocity(new Vector3f(direction));
         particle.getVelocity().normalise().scale(speed);
+        particle.getVelocity().z += 0.2; // TODO factor this out somehow
         particles.add(particle);
 
         return particle;
