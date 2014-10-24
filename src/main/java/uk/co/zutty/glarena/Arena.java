@@ -103,7 +103,7 @@ public class Arena extends Game {
         BillboardTechnique billboardTechnique = new BillboardTechnique();
         PlanarTechnique planarTechnique = new PlanarTechnique();
 
-        playerBulletEmitter = new Emitter(bulletTechnique, TextureLoader.loadTexture("/textures/shot.png"), BulletParticle.class);
+        playerBulletEmitter = new Emitter(bulletTechnique, TextureLoader.loadTexture("/textures/shot2.png"), BulletParticle.class);
         addTransparent(playerBulletEmitter);
 
         enemyBulletEmitter = new Emitter(billboardTechnique, TextureLoader.loadTexture("/textures/enemy_bullet.png"), BillboardParticle.class);
