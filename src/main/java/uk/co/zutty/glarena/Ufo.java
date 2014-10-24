@@ -45,6 +45,7 @@ public class Ufo extends AbstractEntity {
     private Emitter bulletEmitter;
     private int fireTimer = 0;
     private double angleOffset = 0f;
+    private Gunship target;
 
     public Ufo(ModelInstance modelInstance, Emitter playerBulletEmitter, Effect explosionEffect) {
         setModelInstance(modelInstance);
@@ -66,6 +67,10 @@ public class Ufo extends AbstractEntity {
         this.velocity.scale(SPEED);
     }
 
+    public void setTarget(Gunship target) {
+        this.target = target;
+    }
+
     @Override
     public void update() {
         yaw -= 3;
@@ -77,11 +82,11 @@ public class Ufo extends AbstractEntity {
             fireTimer = 0;
             angleOffset += 5.0;
 
-            for (double angle = 0; angle < 360; angle += 10) {
-                Particle particle = bulletEmitter.emitFrom(position, MathUtils.unitVector(angle + angleOffset), BULLET_SPEED, 250);
+            //for (double angle = 0; angle < 360; angle += 10) {
+                Particle particle = bulletEmitter.emitFrom(position, Vector3f.sub(target.getPosition(), position, null), BULLET_SPEED, 250);
                 particle.setScale(new Tween(1f, 1f, LINEAR));
                 particle.setFade(new Tween(1f, 1f, LINEAR));
-            }
+            //}
         }
 
         for (Particle p : playerBulletEmitter.particles()) {
