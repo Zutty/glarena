@@ -235,8 +235,8 @@ public class Arena extends Game {
         Vector3f.sub(currentPosition, player.getPosition(), V);
         V.scale(0.1f);
 
-        camera.setPosition(currentPosition.x - V.x, 50f, currentPosition.z - V.z - 15f);
-        camera.setCenter(currentPosition.x - V.x, 0f, currentPosition.z - V.z);
+        camera.setPosition(currentPosition.x - V.x, 50f, currentPosition.z - 15f);
+        camera.setCenter(currentPosition.x - V.x, 0f, currentPosition.z);
         camera.update();
     }
 
