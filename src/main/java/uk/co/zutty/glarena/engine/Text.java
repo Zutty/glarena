@@ -62,10 +62,10 @@ public class Text implements Entity {
 
     @Override
     public void update() {
-        float ratio = (float) Display.getWidth() / (float)Display.getHeight();
+        float ratio = (float) Display.getWidth() / (float) Display.getHeight();
 
         int totalChars = 0;
-        for(TextInstance text : instances) {
+        for (TextInstance text : instances) {
             totalChars += text.getText().length();
         }
 
@@ -73,28 +73,28 @@ public class Text implements Entity {
         ShortBuffer indexData = BufferUtils.createShortBuffer(totalChars * 6);
 
         short index = 0;
-        for(TextInstance text : instances) {
+        for (TextInstance text : instances) {
             float totalWidth = 0f;
 
-            for(int i = 0; i < text.getText().length(); i++) {
+            for (int i = 0; i < text.getText().length(); i++) {
                 char c = text.getText().charAt(i);
 
-                float x = -1f + (text.getXOffset() + totalWidth)/ratio;
+                float x = -1f + (text.getXOffset() + totalWidth) / ratio;
                 float y = text.getY();
                 float width = 0.1f;
                 totalWidth += width;
                 float height = 0.2f;
                 width /= ratio;
 
-                int val = Integer.valueOf(""+c);
-                float u = (float)(val % 8)/8f;
-                float v = (float)Math.floor((double)val / 8.0) / 4f;
+                int val = Integer.valueOf("" + c);
+                float u = (float) (val % 8) / 8f;
+                float v = (float) Math.floor((double) val / 8.0) / 4f;
 
                 vertexData.put(new float[]{
-                        x, y,                  u, v + 0.25f,                   255f, 255f, 255f,
-                        x + width, y,          u + 0.125f, v + 0.25f,          255f, 255f, 255f,
-                        x, y + height,         u, v,           255f, 255f, 255f,
-                        x + width, y + height, u + 0.125f, v,  255f, 255f, 255f
+                        x, y, u, v + 0.25f, 255f, 255f, 255f,
+                        x + width, y, u + 0.125f, v + 0.25f, 255f, 255f, 255f,
+                        x, y + height, u, v, 255f, 255f, 255f,
+                        x + width, y + height, u + 0.125f, v, 255f, 255f, 255f
                 });
                 indexData.put(new short[]{
                         index, (short) (index + 1), (short) (index + 2),

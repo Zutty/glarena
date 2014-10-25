@@ -22,16 +22,12 @@
 
 package uk.co.zutty.glarena.engine;
 
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.Util;
 import org.lwjgl.util.vector.Matrix4f;
-import uk.co.zutty.glarena.util.MatrixUtils;
 
 import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static uk.co.zutty.glarena.engine.Layer.*;
 
 public class World {
@@ -44,7 +40,7 @@ public class World {
     private Map<Layer, List<ModelInstance>> instances = new HashMap<>();
 
     public World() {
-        for(Layer l : Layer.values()) {
+        for (Layer l : Layer.values()) {
             instances.put(l, new ArrayList<ModelInstance>());
         }
     }
@@ -79,7 +75,7 @@ public class World {
         // Update list
         for (Entity r : toRemove) {
             entities.remove(r);
-            for(List<ModelInstance> list : instances.values()) {
+            for (List<ModelInstance> list : instances.values()) {
                 list.remove(r.getModelInstance());
             }
         }

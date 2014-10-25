@@ -23,7 +23,6 @@
 package uk.co.zutty.glarena.engine;
 
 import org.lwjgl.util.vector.Vector3f;
-import uk.co.zutty.glarena.engine.Tween;
 
 import java.nio.FloatBuffer;
 
@@ -98,7 +97,7 @@ public abstract class Particle {
     }
 
     public float getTweenFactor() {
-        return (float)(lifetime - timeToLive) / (float)lifetime;
+        return (float) (lifetime - timeToLive) / (float) lifetime;
     }
 
     public abstract void put(FloatBuffer buffer);

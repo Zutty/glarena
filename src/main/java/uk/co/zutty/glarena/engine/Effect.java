@@ -26,5 +26,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 public interface Effect {
     Iterable<Emitter> getEmitters();
+
     void trigger(Vector3f position);
 }
