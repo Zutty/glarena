@@ -206,7 +206,6 @@ public class Arena extends World {
 
     public void handleEvent(Event event) {
         Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter, explosionEffect);
-        ufo.setWorld(this);
         ufo.setTarget(player);
         ufo.setPosition(event.getPosition());
         ufo.setVelocity(event.getDirection());

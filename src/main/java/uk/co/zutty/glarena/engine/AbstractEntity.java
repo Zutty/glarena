@@ -39,6 +39,7 @@ public abstract class AbstractEntity implements Entity {
     protected float yaw;
 
     private ModelInstance modelInstance;
+    protected World world;
 
     @Override
     public ModelInstance getModelInstance() {
@@ -47,6 +48,11 @@ public abstract class AbstractEntity implements Entity {
 
     public void setModelInstance(ModelInstance modelInstance) {
         this.modelInstance = modelInstance;
+    }
+
+    @Override
+    public void setWorld(World world) {
+        this.world = world;
     }
 
     public Vector3f getPosition() {

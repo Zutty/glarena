@@ -58,6 +58,9 @@ public class Text implements Entity {
     }
 
     @Override
+    public void setWorld(World world) {}
+
+    @Override
     public void update() {
         float ratio = (float) Display.getWidth() / (float)Display.getHeight();
 

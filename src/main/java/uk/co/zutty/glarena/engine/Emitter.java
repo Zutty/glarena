@@ -57,6 +57,9 @@ public class Emitter implements Entity {
         return modelInstance;
     }
 
+    @Override
+    public void setWorld(World world) {}
+
     public Particle emitFrom(Vector3f source, Vector3f direction, float speed, int lifetime) {
         Particle particle;
 

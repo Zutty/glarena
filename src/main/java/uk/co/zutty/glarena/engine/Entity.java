@@ -25,5 +25,7 @@ package uk.co.zutty.glarena.engine;
 public interface Entity {
     ModelInstance getModelInstance();
 
+    void setWorld(World world);
+
     void update();
 }

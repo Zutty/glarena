@@ -57,6 +57,7 @@ public class World {
 
     public void add(Entity entity, Layer layer) {
         entities.add(entity);
+        entity.setWorld(this);
         instances.get(layer).add(entity.getModelInstance());
     }
 
