@@ -42,6 +42,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import static uk.co.zutty.glarena.EventType.SPAWN_UFO;
+import static uk.co.zutty.glarena.engine.Layer.*;
 import static uk.co.zutty.glarena.gl.enums.BufferUsage.STATIC;
 
 /**
@@ -97,17 +98,17 @@ public class Arena extends Game {
         buffer.flip();
         skyQuadModel.getVertexBuffer().setData(buffer, 4);
         ModelInstance skyQuad = new ModelInstance(skyQuadModel, TextureLoader.loadCubemap("/textures/skybox/basic"));
-        addBackground(skyQuad);
+        add(skyQuad, BACKGROUND);
 
         BulletTechnique bulletTechnique = new BulletTechnique();
         BillboardTechnique billboardTechnique = new BillboardTechnique();
         PlanarTechnique planarTechnique = new PlanarTechnique();
 
         playerBulletEmitter = new Emitter(bulletTechnique, TextureLoader.loadTexture("/textures/shot2.png"), BulletParticle.class);
-        addTransparent(playerBulletEmitter);
+        add(playerBulletEmitter, TRANSPARENT);
 
         enemyBulletEmitter = new Emitter(billboardTechnique, TextureLoader.loadTexture("/textures/enemy_bullet.png"), BillboardParticle.class);
-        addForeground(enemyBulletEmitter);
+        add(enemyBulletEmitter, FOREGROUND);
 
         explosionEffect = new Explosion(billboardTechnique, bulletTechnique, planarTechnique);
         add(explosionEffect);
@@ -116,23 +117,23 @@ public class Arena extends Game {
         player.setPosition(0f, 0f, 0f);
         player.setBulletEmitter(playerBulletEmitter);
         player.setGamepad(gamepad);
-        add(player);
+        add(player, DEFAULT);
 
         currentPosition = new Vector3f(0f, 0f, 0f);
 
         SpaceStation spaceStation = new SpaceStation(new ModelInstance(spaceStationModel, TextureLoader.loadTexture("/textures/space_station_texture.png")));
         spaceStation.setPosition(-30f, -150f, 150f);
-        add(spaceStation);
+        add(spaceStation, DEFAULT);
 
         ArrayModel hudModel = new ArrayModel(new HudTechnique(), STATIC);
         hudModel.getVertexBuffer().setData(makePanelLeft(.1f, .7f, .2f, .2f), 4);
         ModelInstance hudQuad = new ModelInstance(hudModel, TextureLoader.loadTexture("/textures/test.png"));
-        addForeground(hudQuad);
+        add(hudQuad, FOREGROUND);
 
         Text text = new Text(new TextTechnique(), TextureLoader.loadTexture("/textures/numbers.png", TextureFormat.RED));
         scoreText = new TextInstance(.4f, .7f, "0");
         text.add(scoreText);
-        addForeground(text);
+        add(text, FOREGROUND);
 
         eventQueue = new LinkedList<>();
 
@@ -208,7 +209,7 @@ public class Arena extends Game {
         ufo.setPosition(event.getPosition());
         ufo.setVelocity(event.getDirection());
         ufo.setBulletEmitter(enemyBulletEmitter);
-        add(ufo);
+        add(ufo, DEFAULT);
     }
 
     public void addScore(long points) {

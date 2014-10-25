@@ -27,11 +27,10 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
 import uk.co.zutty.glarena.util.MatrixUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
+import static uk.co.zutty.glarena.engine.Layer.*;
 
 public abstract class Game {
 
@@ -40,12 +39,13 @@ public abstract class Game {
 
     private List<Entity> entities = new ArrayList<>();
     private Collection<Entity> toRemove = new ArrayList<>();
-    private List<ModelInstance> backgroundInstances = new ArrayList<>();
-    private List<ModelInstance> instances = new ArrayList<>();
-    private List<ModelInstance> transparentInstances = new ArrayList<>();
-    private List<ModelInstance> foreground = new ArrayList<>();
+    private Map<Layer, List<ModelInstance>> instances = new HashMap<>();
 
     public Game() {
+        for(Layer l : Layer.values()) {
+            instances.put(l, new ArrayList<ModelInstance>());
+        }
+
         // Initialize OpenGL (Display)
         this.setupOpenGL();
 
@@ -104,32 +104,19 @@ public abstract class Game {
 
     protected abstract void init();
 
-    public void addBackground(ModelInstance instance) {
-        backgroundInstances.add(instance);
+    public void add(ModelInstance instance, Layer layer) {
+        instances.get(layer).add(instance);
     }
 
-    public void add(Entity entity) {
+    public void add(Entity entity, Layer layer) {
         entities.add(entity);
-        instances.add(entity.getModelInstance());
-    }
-
-    public void addTransparent(Entity entity) {
-        entities.add(entity);
-        transparentInstances.add(entity.getModelInstance());
+        instances.get(layer).add(entity.getModelInstance());
     }
 
     public void add(Effect effect) {
         for (Entity entity : effect.getEmitters()) {
-            addTransparent(entity);
+            add(entity, TRANSPARENT);
         }
-    }
-
-    public void addForeground(ModelInstance instance) {
-        foreground.add(instance);
-    }
-    public void addForeground(Entity entity) {
-        entities.add(entity);
-        foreground.add(entity.getModelInstance());
     }
 
     public void remove(Entity entity) {
@@ -144,8 +131,9 @@ public abstract class Game {
         // Update list
         for (Entity r : toRemove) {
             entities.remove(r);
-            instances.remove(r.getModelInstance());
-            transparentInstances.remove(r.getModelInstance());
+            for(List<ModelInstance> list : instances.values()) {
+                list.remove(r.getModelInstance());
+            }
         }
         toRemove.clear();
 
@@ -156,21 +144,21 @@ public abstract class Game {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDepthMask(false);
 
-        renderList(backgroundInstances);
+        renderList(BACKGROUND);
 
         glDepthMask(true);
 
-        renderList(instances);
+        renderList(DEFAULT);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthMask(false);
 
-        renderList(transparentInstances);
+        renderList(TRANSPARENT);
 
         glDisable(GL_DEPTH_TEST);
 
-        renderList(foreground);
+        renderList(FOREGROUND);
 
         glEnable(GL_DEPTH_TEST);
         glDepthMask(true);
@@ -179,8 +167,8 @@ public abstract class Game {
         Util.checkGLError();
     }
 
-    private void renderList(List<ModelInstance> list) {
-        for (ModelInstance instance : list) {
+    private void renderList(Layer layer) {
+        for (ModelInstance instance : instances.get(layer)) {
             Technique technique = instance.getModel().getTechnique();
             technique.setCamera(camera);
             technique.setProjectionMatrix(projectionMatrix);
