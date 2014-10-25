@@ -24,51 +24,34 @@ package uk.co.zutty.glarena.engine;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.vector.Matrix4f;
-import uk.co.zutty.glarena.util.MatrixUtils;
-
-import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
-import static uk.co.zutty.glarena.engine.Layer.*;
 
-public abstract class Game {
+public class Game {
 
-    protected Matrix4f projectionMatrix = null;
-    protected Camera camera;
+    private World world;
 
-    private List<Entity> entities = new ArrayList<>();
-    private Collection<Entity> toRemove = new ArrayList<>();
-    private Map<Layer, List<ModelInstance>> instances = new HashMap<>();
+    public Game(World world) {
+        this.world = world;
+    }
 
-    public Game() {
-        for(Layer l : Layer.values()) {
-            instances.put(l, new ArrayList<ModelInstance>());
-        }
+    public void run() {
+        setupOpenGL();
 
-        // Initialize OpenGL (Display)
-        this.setupOpenGL();
-
-        setup();
-        init();
+        world.init();
         Util.checkGLError();
 
         Display.setVSyncEnabled(true);
 
         while (!Display.isCloseRequested()) {
-            update();
-            render();
+            world.update();
+            world.render();
 
             Display.update();
             Display.sync(60);
         }
 
         destroyOpenGL();
-    }
-
-    private void setup() {
-        projectionMatrix = MatrixUtils.frustum(Display.getWidth(), Display.getHeight(), 60, 5f, 1000f);
-        camera = new Camera();
     }
 
     private void setupOpenGL() {
@@ -100,81 +83,6 @@ public abstract class Game {
         glClearDepth(1);
 
         Util.checkGLError();
-    }
-
-    protected abstract void init();
-
-    public void add(ModelInstance instance, Layer layer) {
-        instances.get(layer).add(instance);
-    }
-
-    public void add(Entity entity, Layer layer) {
-        entities.add(entity);
-        instances.get(layer).add(entity.getModelInstance());
-    }
-
-    public void add(Effect effect) {
-        for (Entity entity : effect.getEmitters()) {
-            add(entity, TRANSPARENT);
-        }
-    }
-
-    public void remove(Entity entity) {
-        toRemove.add(entity);
-    }
-
-    protected void update() {
-        for (Entity entity : entities) {
-            entity.update();
-        }
-
-        // Update list
-        for (Entity r : toRemove) {
-            entities.remove(r);
-            for(List<ModelInstance> list : instances.values()) {
-                list.remove(r.getModelInstance());
-            }
-        }
-        toRemove.clear();
-
-        Util.checkGLError();
-    }
-
-    protected void render() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glDepthMask(false);
-
-        renderList(BACKGROUND);
-
-        glDepthMask(true);
-
-        renderList(DEFAULT);
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDepthMask(false);
-
-        renderList(TRANSPARENT);
-
-        glDisable(GL_DEPTH_TEST);
-
-        renderList(FOREGROUND);
-
-        glEnable(GL_DEPTH_TEST);
-        glDepthMask(true);
-        glDisable(GL_BLEND);
-
-        Util.checkGLError();
-    }
-
-    private void renderList(Layer layer) {
-        for (ModelInstance instance : instances.get(layer)) {
-            Technique technique = instance.getModel().getTechnique();
-            technique.setCamera(camera);
-            technique.setProjectionMatrix(projectionMatrix);
-
-            technique.renderInstance(instance);
-        }
     }
 
     private void destroyOpenGL() {

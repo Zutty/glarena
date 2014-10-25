@@ -37,7 +37,7 @@ public class Ufo extends AbstractEntity {
     private static final int FIRE_INTERVAL = 30;
     private static final float BULLET_SPEED = 0.3f;
     private static final float SPEED = 0.6f;
-    protected Game game;
+    protected World world;
 
     private Emitter playerBulletEmitter;
     private Effect explosionEffect;
@@ -57,8 +57,8 @@ public class Ufo extends AbstractEntity {
         this.bulletEmitter = bulletEmitter;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public void setWorld(World world) {
+        this.world = world;
     }
 
     public void setVelocity(Vector3f velocity) {
@@ -92,8 +92,8 @@ public class Ufo extends AbstractEntity {
         for (Particle p : playerBulletEmitter.particles()) {
             Vector3f.sub(p.getPosition(), position, Arena.V);
             if (Arena.V.lengthSquared() < HIT_RADIUS_SQUARED) {
-                game.remove(this);
-                ((Arena) game).addScore(1);
+                world.remove(this);
+                ((Arena) world).addScore(1);
                 explosionEffect.trigger(position);
                 p.setLifetime((short) 0);
                 break;

@@ -35,6 +35,7 @@ import uk.co.zutty.glarena.gl.Model;
 import uk.co.zutty.glarena.gl.enums.TextureFormat;
 import uk.co.zutty.glarena.shaders.*;
 import uk.co.zutty.glarena.util.MathUtils;
+import uk.co.zutty.glarena.util.MatrixUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -48,7 +49,7 @@ import static uk.co.zutty.glarena.gl.enums.BufferUsage.STATIC;
 /**
  * Concrete game class for the glArena game.
  */
-public class Arena extends Game {
+public class Arena extends World {
 
     public static final Vector3f V = new Vector3f();
 
@@ -73,7 +74,8 @@ public class Arena extends Game {
     private Queue<Event> eventQueue;
 
     @Override
-    protected void init() {
+    public void init() {
+        projectionMatrix = MatrixUtils.frustum(Display.getWidth(), Display.getHeight(), 60, 5f, 1000f);
         camera.setPosition(0f, 20f, -25f);
 
         for (Controller controller : ControllerEnvironment.getDefaultEnvironment().getControllers()) {
@@ -204,7 +206,7 @@ public class Arena extends Game {
 
     public void handleEvent(Event event) {
         Ufo ufo = new Ufo(new ModelInstance(ufoModel, TextureLoader.loadTexture("/textures/ufo.png")), playerBulletEmitter, explosionEffect);
-        ufo.setGame(this);
+        ufo.setWorld(this);
         ufo.setTarget(player);
         ufo.setPosition(event.getPosition());
         ufo.setVelocity(event.getDirection());
@@ -218,7 +220,7 @@ public class Arena extends Game {
     }
 
     @Override
-    protected void update() {
+    public void update() {
         if (gamepad != null) {
             gamepad.update();
         }
@@ -243,6 +245,6 @@ public class Arena extends Game {
     }
 
     public static void main(String... args) {
-        new Arena();
+        new Game(new Arena()).run();
     }
 }
